@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>YouTube Subtitles Viewer</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <h1>YouTube Subtitles Viewer</h1>
-    <input type="text" id="videoId" placeholder="Enter Video ID">
-    <button onclick="fetchSubtitles()">Fetch Subtitles</button>
+    <input type="text" id="videoId" placeholder="Enter YouTube Video ID">
+    <!-- 按钮用于触发获取字幕的操作 -->
+    <button id="fetchSubtitlesButton">Fetch Subtitles</button>
     <div id="subtitlesList" style="margin-top: 20px;">
         <!-- 字幕列表将在这里显示 -->
     </div>
-    <div id="subtitlesContent" style="white-space: pre-wrap; margin-top: 20px;">
+    <div id="subtitlesContent" style="margin-top: 20px; white-space: pre-wrap;">
         <!-- 字幕内容将在这里显示 -->
     </div>
 
-    <script src="app.js"></script>
+    <!-- 在页面底部引入JavaScript文件 -->
+    <script src="js/app.js"></script>
 </body>
 </html>
