@@ -12,12 +12,12 @@
 
     <script>
         function fetchSubtitles() {
-            var videoId = document.getElementById('videoId').value;
-            fetch('/get_subtitles?video_id=' + videoId)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('subtitles').innerHTML = data.join('<br>');
-                });
+    var videoId = document.getElementById('videoId').value;
+    fetch('http://localhost:5000/get_subtitles?video_id=' + videoId)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('subtitles').innerHTML = data.join('<br>');
+        });
         }
     </script>
 </body>
