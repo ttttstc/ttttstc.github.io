@@ -2,23 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>YouTube Subtitles Extractor</title>
+    <title>YouTube Subtitles Viewer</title>
 </head>
 <body>
-    <h1>YouTube Subtitles Extractor</h1>
+    <h1>YouTube Subtitles Viewer</h1>
     <input type="text" id="videoId" placeholder="Enter Video ID">
-    <button onclick="fetchSubtitles()">Get Subtitles</button>
-    <div id="subtitles"></div>
+    <button onclick="fetchSubtitles()">Fetch Subtitles</button>
+    <div id="subtitlesList" style="margin-top: 20px;">
+        <!-- 字幕列表将在这里显示 -->
+    </div>
+    <div id="subtitlesContent" style="white-space: pre-wrap; margin-top: 20px;">
+        <!-- 字幕内容将在这里显示 -->
+    </div>
 
-    <script>
-        function fetchSubtitles() {
-    var videoId = document.getElementById('videoId').value;
-    fetch('http://localhost:5000/get_subtitles?video_id=' + videoId)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('subtitles').innerHTML = data.join('<br>');
-        });
-        }
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
