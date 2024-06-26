@@ -2,11 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your GitHub Pages</title>
+    <title>YouTube Subtitles Extractor</title>
 </head>
 <body>
-    <h1>Welcome to NI's GitHub Pages</h1>
-    <p>Here is the link to my Python service: <a href="fuxi.huawei.com">Python Service</a></p>
+    <h1>YouTube Subtitles Extractor</h1>
+    <input type="text" id="videoId" placeholder="Enter Video ID">
+    <button onclick="fetchSubtitles()">Get Subtitles</button>
+    <div id="subtitles"></div>
+
+    <script>
+        function fetchSubtitles() {
+            var videoId = document.getElementById('videoId').value;
+            fetch('/get_subtitles?video_id=' + videoId)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('subtitles').innerHTML = data.join('<br>');
+                });
+        }
+    </script>
 </body>
 </html>
