@@ -1,0 +1,126 @@
+have_func: checking for onig_region_memsize() in ruby.h... -------------------- yes
+
+PATH=".;C:/Ruby33-x64/lib;C:\Ruby33-x64\bin;C:\Ruby33-x64\msys64\ucrt64\bin;C:\Ruby33-x64\msys64\usr\bin;C:\Ruby33-x64\bin;C:\5-workspace\tool\Python3.11\Scripts\;C:\5-workspace\tool\Python3.11\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\dotnet\;C:\5-workspace\tool\Python3.11\;D:\soft\Git\cmd;D:\soft\Git\bin;C:\Users\泥巴猪\AppData\Local\Microsoft\WindowsApps;D:\soft\Microsoft VS Code\bin" "gcc -o conftest.exe -IC:/Ruby33-x64/include/ruby-3.3.0/x64-mingw-ucrt -IC:/Ruby33-x64/include/ruby-3.3.0/ruby/backward -IC:/Ruby33-x64/include/ruby-3.3.0 -I. -D__USE_MINGW_ANSI_STDIO=1 -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math -fstack-protector-strong conftest.c  -L. -LC:/Ruby33-x64/lib -L. -pipe -s -fstack-protector-strong -Wl,--no-as-needed     -lx64-ucrt-ruby330  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi -lbcrypt  "
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <winsock2.h>
+4: #include <windows.h>
+5: int main(int argc, char **argv)
+6: {
+7:   return !!argv[argc];
+8: }
+/* end */
+
+PATH=".;C:/Ruby33-x64/lib;C:\Ruby33-x64\bin;C:\Ruby33-x64\msys64\ucrt64\bin;C:\Ruby33-x64\msys64\usr\bin;C:\Ruby33-x64\bin;C:\5-workspace\tool\Python3.11\Scripts\;C:\5-workspace\tool\Python3.11\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\dotnet\;C:\5-workspace\tool\Python3.11\;D:\soft\Git\cmd;D:\soft\Git\bin;C:\Users\泥巴猪\AppData\Local\Microsoft\WindowsApps;D:\soft\Microsoft VS Code\bin" "gcc -o conftest.exe -IC:/Ruby33-x64/include/ruby-3.3.0/x64-mingw-ucrt -IC:/Ruby33-x64/include/ruby-3.3.0/ruby/backward -IC:/Ruby33-x64/include/ruby-3.3.0 -I. -D__USE_MINGW_ANSI_STDIO=1 -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math -fstack-protector-strong conftest.c  -L. -LC:/Ruby33-x64/lib -L. -pipe -s -fstack-protector-strong -Wl,--no-as-needed     -lx64-ucrt-ruby330  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi -lbcrypt  "
+conftest.c: In function 't':
+conftest.c:18:57: error: 'onig_region_memsize' undeclared (first use in this function)
+   18 | int t(void) { void ((*volatile p)()); p = (void ((*)()))onig_region_memsize; return !p; }
+      |                                                         ^~~~~~~~~~~~~~~~~~~
+conftest.c:18:57: note: each undeclared identifier is reported only once for each function it appears in
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <winsock2.h>
+ 4: #include <windows.h>
+ 5: #include <ruby.h>
+ 6: 
+ 7: /*top*/
+ 8: extern int t(void);
+ 9: int main(int argc, char **argv)
+10: {
+11:   if (argc > 1000000) {
+12:     int (* volatile tp)(void)=(int (*)(void))&t;
+13:     printf("%d", (*tp)());
+14:   }
+15: 
+16:   return !!argv[argc];
+17: }
+18: int t(void) { void ((*volatile p)()); p = (void ((*)()))onig_region_memsize; return !p; }
+/* end */
+
+PATH=".;C:/Ruby33-x64/lib;C:\Ruby33-x64\bin;C:\Ruby33-x64\msys64\ucrt64\bin;C:\Ruby33-x64\msys64\usr\bin;C:\Ruby33-x64\bin;C:\5-workspace\tool\Python3.11\Scripts\;C:\5-workspace\tool\Python3.11\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\dotnet\;C:\5-workspace\tool\Python3.11\;D:\soft\Git\cmd;D:\soft\Git\bin;C:\Users\泥巴猪\AppData\Local\Microsoft\WindowsApps;D:\soft\Microsoft VS Code\bin" "gcc -o conftest.exe -IC:/Ruby33-x64/include/ruby-3.3.0/x64-mingw-ucrt -IC:/Ruby33-x64/include/ruby-3.3.0/ruby/backward -IC:/Ruby33-x64/include/ruby-3.3.0 -I. -D__USE_MINGW_ANSI_STDIO=1 -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math -fstack-protector-strong conftest.c  -L. -LC:/Ruby33-x64/lib -L. -pipe -s -fstack-protector-strong -Wl,--no-as-needed     -lx64-ucrt-ruby330  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi -lbcrypt  "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <winsock2.h>
+ 4: #include <windows.h>
+ 5: #include <ruby.h>
+ 6: 
+ 7: /*top*/
+ 8: extern int t(void);
+ 9: int main(int argc, char **argv)
+10: {
+11:   if (argc > 1000000) {
+12:     int (* volatile tp)(void)=(int (*)(void))&t;
+13:     printf("%d", (*tp)());
+14:   }
+15: 
+16:   return !!argv[argc];
+17: }
+18: extern void onig_region_memsize();
+19: int t(void) { onig_region_memsize(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_reg_onig_match() in ruby.h... -------------------- yes
+
+PATH=".;C:/Ruby33-x64/lib;C:\Ruby33-x64\bin;C:\Ruby33-x64\msys64\ucrt64\bin;C:\Ruby33-x64\msys64\usr\bin;C:\Ruby33-x64\bin;C:\5-workspace\tool\Python3.11\Scripts\;C:\5-workspace\tool\Python3.11\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\dotnet\;C:\5-workspace\tool\Python3.11\;D:\soft\Git\cmd;D:\soft\Git\bin;C:\Users\泥巴猪\AppData\Local\Microsoft\WindowsApps;D:\soft\Microsoft VS Code\bin" "gcc -o conftest.exe -IC:/Ruby33-x64/include/ruby-3.3.0/x64-mingw-ucrt -IC:/Ruby33-x64/include/ruby-3.3.0/ruby/backward -IC:/Ruby33-x64/include/ruby-3.3.0 -I. -D__USE_MINGW_ANSI_STDIO=1 -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math -fstack-protector-strong conftest.c  -L. -LC:/Ruby33-x64/lib -L. -pipe -s -fstack-protector-strong -Wl,--no-as-needed     -lx64-ucrt-ruby330  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi -lbcrypt  "
+conftest.c: In function 't':
+conftest.c:18:57: error: 'rb_reg_onig_match' undeclared (first use in this function); did you mean 'rb_reg_nth_match'?
+   18 | int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_reg_onig_match; return !p; }
+      |                                                         ^~~~~~~~~~~~~~~~~
+      |                                                         rb_reg_nth_match
+conftest.c:18:57: note: each undeclared identifier is reported only once for each function it appears in
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <winsock2.h>
+ 4: #include <windows.h>
+ 5: #include <ruby.h>
+ 6: 
+ 7: /*top*/
+ 8: extern int t(void);
+ 9: int main(int argc, char **argv)
+10: {
+11:   if (argc > 1000000) {
+12:     int (* volatile tp)(void)=(int (*)(void))&t;
+13:     printf("%d", (*tp)());
+14:   }
+15: 
+16:   return !!argv[argc];
+17: }
+18: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_reg_onig_match; return !p; }
+/* end */
+
+PATH=".;C:/Ruby33-x64/lib;C:\Ruby33-x64\bin;C:\Ruby33-x64\msys64\ucrt64\bin;C:\Ruby33-x64\msys64\usr\bin;C:\Ruby33-x64\bin;C:\5-workspace\tool\Python3.11\Scripts\;C:\5-workspace\tool\Python3.11\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\dotnet\;C:\5-workspace\tool\Python3.11\;D:\soft\Git\cmd;D:\soft\Git\bin;C:\Users\泥巴猪\AppData\Local\Microsoft\WindowsApps;D:\soft\Microsoft VS Code\bin" "gcc -o conftest.exe -IC:/Ruby33-x64/include/ruby-3.3.0/x64-mingw-ucrt -IC:/Ruby33-x64/include/ruby-3.3.0/ruby/backward -IC:/Ruby33-x64/include/ruby-3.3.0 -I. -D__USE_MINGW_ANSI_STDIO=1 -DFD_SETSIZE=2048 -D_WIN32_WINNT=0x0600 -D__MINGW_USE_VC2005_COMPAT -D_FILE_OFFSET_BITS=64  -O3 -fno-fast-math -fstack-protector-strong conftest.c  -L. -LC:/Ruby33-x64/lib -L. -pipe -s -fstack-protector-strong -Wl,--no-as-needed     -lx64-ucrt-ruby330  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi -lbcrypt  "
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: #include <winsock2.h>
+ 4: #include <windows.h>
+ 5: #include <ruby.h>
+ 6: 
+ 7: /*top*/
+ 8: extern int t(void);
+ 9: int main(int argc, char **argv)
+10: {
+11:   if (argc > 1000000) {
+12:     int (* volatile tp)(void)=(int (*)(void))&t;
+13:     printf("%d", (*tp)());
+14:   }
+15: 
+16:   return !!argv[argc];
+17: }
+18: extern void rb_reg_onig_match();
+19: int t(void) { rb_reg_onig_match(); return 0; }
+/* end */
+
+--------------------
+

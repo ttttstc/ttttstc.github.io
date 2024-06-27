@@ -1,0 +1,20 @@
+current directory: D:/workspace/test/ni-blog/vendor/bundle/ruby/3.3.0/gems/eventmachine-1.2.7/ext/fastfilereader
+C:/Ruby33-x64/bin/ruby.exe extconf.rb
+creating Makefile
+
+current directory: D:/workspace/test/ni-blog/vendor/bundle/ruby/3.3.0/gems/eventmachine-1.2.7/ext/fastfilereader
+make DESTDIR\= sitearchdir\=./.gem.20240628-30600-p72ni4 sitelibdir\=./.gem.20240628-30600-p72ni4 clean
+
+current directory: D:/workspace/test/ni-blog/vendor/bundle/ruby/3.3.0/gems/eventmachine-1.2.7/ext/fastfilereader
+make DESTDIR\= sitearchdir\=./.gem.20240628-30600-p72ni4 sitelibdir\=./.gem.20240628-30600-p72ni4
+generating fastfilereaderext-x64-mingw-ucrt.def
+compiling mapper.cpp
+compiling rubymain.cpp
+linking shared-object fastfilereaderext.so
+
+current directory: D:/workspace/test/ni-blog/vendor/bundle/ruby/3.3.0/gems/eventmachine-1.2.7/ext/fastfilereader
+make DESTDIR\= sitearchdir\=./.gem.20240628-30600-p72ni4 sitelibdir\=./.gem.20240628-30600-p72ni4 install
+/usr/bin/install -c -m 0755 fastfilereaderext.so ./.gem.20240628-30600-p72ni4
+
+current directory: D:/workspace/test/ni-blog/vendor/bundle/ruby/3.3.0/gems/eventmachine-1.2.7/ext/fastfilereader
+make DESTDIR\= sitearchdir\=./.gem.20240628-30600-p72ni4 sitelibdir\=./.gem.20240628-30600-p72ni4 clean
