@@ -65,7 +65,7 @@
     <script>
         async function extractCaptions() {
             const videoUrl = document.getElementById('videoUrl').value;
-            const response = await fetch(`http://localhost:5000/get_captions?video_url=${encodeURIComponent(videoUrl)}`);
+            const response = await fetch(`http://localhost:8080/get_captions?video_url=${encodeURIComponent(videoUrl)}`);
             const data = await response.text();
             document.getElementById('captions').innerText = data;
         }
