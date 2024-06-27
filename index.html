@@ -2,22 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>YouTube Subtitles Viewer</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Subtitle Extractor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #captions {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
-    <h1>YouTube Subtitles Viewer</h1>
-    <input type="text" id="videoId" placeholder="Enter YouTube Video ID">
-    <!-- 按钮用于触发获取字幕的操作 -->
-    <button id="fetchSubtitlesButton">Fetch Subtitles</button>
-    <div id="subtitlesList" style="margin-top: 20px;">
-        <!-- 字幕列表将在这里显示 -->
-    </div>
-    <div id="subtitlesContent" style="margin-top: 20px; white-space: pre-wrap;">
-        <!-- 字幕内容将在这里显示 -->
+    <div id="container">
+        <h1>YouTube Subtitle Extractor</h1>
+        <input type="text" id="videoUrl" placeholder="Enter YouTube video URL">
+        <button onclick="extractCaptions()">Extract Captions</button>
+        <div id="captions"></div>
     </div>
 
-    <!-- 在页面底部引入JavaScript文件 -->
-    <script src="js/app.js"></script>
+    <script>
+        async function extractCaptions() {
+            const videoUrl = document.getElementById('videoUrl').value;
+            const response = await fetch(`http://localhost:5000/get_captions?video_url=${encodeURIComponent(videoUrl)}`);
+            const data = await response.text();
+            document.getElementById('captions').innerText = data;
+        }
+    </script>
 </body>
 </html>
