@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function fetchSubtitles() {
     var videoId = document.getElementById('videoId').value;
-    fetch(`http://localhost:5000/get_subtitles?video_id=${encodeURIComponent(videoId)}`)
+    fetch(`http://localhost:8080/get_subtitles?video_id=${encodeURIComponent(videoId)}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -31,7 +31,7 @@ function updateSubtitlesList(subtitles) {
 }
 
 function showSubtitleContent(videoId, language) {
-    fetch(`http://localhost:5000/get_subtitles_content?video_id=${encodeURIComponent(videoId)}&language=${encodeURIComponent(language)}`)
+    fetch(`http://localhost:8080/get_subtitles_content?video_id=${encodeURIComponent(videoId)}&language=${encodeURIComponent(language)}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
