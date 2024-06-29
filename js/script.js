@@ -37,7 +37,12 @@ async function sendMessage() {
 
     userInput.value = '';
 }
-
+// 绑定回车键事件
+userInput.form.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+});
 userInput.form.addEventListener('submit', (event) => {
     event.preventDefault();
     sendMessage();
