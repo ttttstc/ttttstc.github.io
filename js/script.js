@@ -16,7 +16,7 @@ async function sendMessage() {
     displayMessage('user', message);
 
     try {
-        const response = await fetch('https://localhost:8080/chat', {
+        const response = await fetch('https://127.0.0.1:8080/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
