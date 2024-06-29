@@ -14,36 +14,6 @@
         </div>
     </div>
 
-    <script>
-        function sendMessage() {
-            const userInput = document.getElementById('userInput').value;
-            const chatBox = document.getElementById('chat');
-            if (userInput.trim()) {
-                const userMsg = document.createElement('div');
-                userMsg.className = 'message user';
-                userMsg.textContent = `You: ${userInput}`;
-                chatBox.appendChild(userMsg);
-
-                // 调用后端接口
-                fetch('http://localhost:8080/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ message: userInput })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    const aiMsg = document.createElement('div');
-                    aiMsg.className = 'message ai';
-                    aiMsg.textContent = `ChatGPT: ${data.response}`;
-                    chatBox.appendChild(aiMsg);
-                })
-                .catch(error => console.error('Error:', error));
-
-                document.getElementById('userInput').value = '';
-            }
-        }
-    </script>
+    <script src="js/script.js"></script>
 </body>
 </html>
