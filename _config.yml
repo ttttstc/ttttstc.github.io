@@ -1,9 +1,9 @@
 # Basic
-title: 倪从正
+title: 泥巴猪
 subtitle: 个人站
 description: 欢迎来到我的个人站~
 # 头像里面的标题
-avatarTitle: nibazhu
+avatarTitle: 泥巴猪
 # 头像里面的描述
 avatarDesc: Java / DevOps / 流水线
 url: "http://ttttstc.github.io"
@@ -19,13 +19,13 @@ comment:
 
 # Social
 social:
-    weibo: 5366874726 
-    github: nibazhu
+    # weibo: 5366874726 
+    github: ttttstc
     # zhihu: panpanleopard
     # juejin: xxx
-    jianshu: 2ada30d8d0f7
+    # jianshu: 2ada30d8d0f7
     # twitter: 
-    mail: leopardpan@icloud.com
+    mail: ncz1993107@gmail.com
 
 
 # 百度统计 
