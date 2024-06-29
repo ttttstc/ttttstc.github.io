@@ -2,20 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chat with AI</title>
-    <!-- CSS 文件位于 /css 目录下 -->
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Chat with ChatGPT</title>
+    <style>
+        /* 在这里添加 CSS 样式 */
+        #chat {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #messages {
+            padding: 20px;
+            border: 1px solid #ddd;
+            min-height: 300px;
+            overflow-y: auto;
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .user {
+            background-color: #e1f5fe;
+        }
+        .ai {
+            background-color: #b3e5fc;
+            text-align: right;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+        #userInput {
+            flex: 1;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-<body>
     <div id="chat">
-        <div id="css/messages"></div>
+        <div id="messages"></div>
         <div class="input-group">
-            <input type="text" id="userInput" placeholder="提出你的问题">
+            <input type="text" id="userInput" placeholder="Type your message...">
             <button onclick="sendMessage()">聊聊</button>
         </div>
     </div>
 
-    <script src="js/script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
