@@ -67,7 +67,7 @@ blog_button:
 nav:
     - {title: 所有文章, description: archive, url: '/archive'} 
     - {title: 标签, description: tags, url: '/tags'}      
-    - {title: 好玩的小功能, description: tools, url: '/tools'}      
+    - {title: 聊天机器人, description: chat, url: '/chat'}      
     - {title: 关于我, description: about, url: '/about'}   
     
 
