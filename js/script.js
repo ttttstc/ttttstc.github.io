@@ -1,4 +1,4 @@
-const apiKey = 'sk-KFAYcOqq5iPTOB5yF77b363b97C54c34BaC4045a113559Fc'; // Replace with your actual API key
+// const apiKey = 'sk-KFAYcOqq5iPTOB5yF77b363b97C54c34BaC4045a113559Fc'; // Replace with your actual API key
 const messagesDiv = document.getElementById('messages');
 const userInput = document.getElementById('userInput');
 
@@ -7,15 +7,10 @@ async function sendMessage() {
     if (!message) return;
 
     try {
-        const response = await fetch('https://free.gpt.ge/v1/chat/completions', {
+        const response = await fetch('https://localhost:8080/chat/prompt='+message, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model: 'gpt-3.5-turbo',
-                messages: [{role: 'user', content: message}]
             })
         });
 
