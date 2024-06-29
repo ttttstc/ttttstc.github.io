@@ -2,24 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chat with ChatGPT</title>
-    <!-- 添加一些基本的样式 -->
-    <style>
-        body { font-family: Arial, sans-serif; }
-        #chat { width: 80%; margin: 20px auto; border: 1px solid #ddd; padding: 10px; }
-        .message { margin: 10px 0; padding: 5px; border-radius: 5px; }
-        .user { background-color: #f0f0f0; }
-        .ai { background-color: #e9f5fe; }
-        #inputArea { width: 80%; margin: 20px auto; }
-        #userInput { width: calc(100% - 100px); padding: 10px; margin-right: 10px; }
-        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    </style>
+    <title>Chat with AI</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div id="chat"></div>
-    <div id="inputArea">
-        <input type="text" id="userInput" placeholder="Type your message...">
-        <button onclick="sendMessage()">Send</button>
+    <div id="chatContainer">
+        <div id="messages"></div>
+        <div id="inputArea">
+            <input type="text" id="userInput" placeholder="说点什么...">
+            <button onclick="sendMessage()">聊聊</button>
+        </div>
     </div>
 
     <script>
