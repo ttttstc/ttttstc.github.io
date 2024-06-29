@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+#chat {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#messages {
+    padding: 20px;
+    border: 1px solid #ddd;
+    min-height: 300px;
+    margin-bottom: 20px;
+    overflow-y: auto; /* Add scrolling for the messages area */
+}
+
+.message {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.user {
+    background-color: #e1f5fe;
+}
+
+.ai {
+    background-color: #b3e5fc;
+    margin-left: auto;
+}
+
+.input-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#userInput {
+    flex: 1;
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #1a78c2;
+}
