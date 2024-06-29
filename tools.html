@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat with ChatGPT</title>
+</head>
+<body>
+    <div id="chat">
+        <div id="messages"></div>
+        <input type="text" id="userInput" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        const apiKey = 'sk-KFAYcOqq5iPTOB5yF77b363b97C54c34BaC4045a113559Fc';
+        const messagesDiv = document.getElementById('messages');
+        const userInput = document.getElementById('userInput');
+
+        async function sendMessage() {
+            const message = userInput.value;
+            const response = await fetch('https://free.gpt.ge/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: 'gpt-3.5-turbo',
+                    messages: [{role: 'user', content: message}]
+                })
+            });
+            const data = await response.json();
+            messagesDiv.innerHTML += `<p>User: ${message}</p><p>AI: ${data.choices[0].message.content}</p>`;
+            userInput.value = '';
+        }
+    </script>
+</body>
+</html>
