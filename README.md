@@ -10,10 +10,6 @@
 ### 使用手册
 
 
-
-
-
-
 #### 安装Jekyll
 
 [Jekyll中文官方文档](http://jekyll.bootcss.com/) ， 如果你已经安装过了 Jekyll，可以忽略此处。
@@ -22,11 +18,10 @@
 
 #### 获取博客模板
 
-> $ git clone https://github.com/leopardpan/leopardpan.github.io.git
+> $ git clone https://github.com/ttttstc/ttttstc.github.io.git
 
-或者直接[下载博客](https://github.com/leopardpan/leopardpan.github.io/archive/master.zip)   
 
-进leopardpan.github.io/ 目录下， 开启本地服务 
+进ttttstc.github.io/ 目录下， 开启本地服务 
 
 > $ jekyll server
 
