@@ -1,0 +1,16 @@
+{
+  "name": "lobster-adventures",
+  "version": "1.0.0",
+  "description": "龙虾历险记个人技术博客",
+  "scripts": {
+    "start": "eleventy --serve",
+    "build": "eleventy"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.1"
+  },
+  "dependencies": {
+    "marked": "^11.1.1",
+    "prismjs": "^1.29.0"
+  }
+}

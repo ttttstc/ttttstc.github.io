@@ -1,0 +1,45 @@
+---
+layout: base.njk
+title: 架构介绍 - 龙虾历险记
+---
+
+<header class="page-header">
+  <h1 class="page-title">OpenCRAW 架构介绍</h1>
+  <p class="page-description">深入了解系统的设计理念和核心组件</p>
+</header>
+
+<article class="content">
+  <h2>系统架构总览</h2>
+  <p>OpenCRAW 是一个现代化的大规模网页爬取框架，采用微内核架构设计，具有高度可扩展性和模块化特性。</p>
+
+  <h2>核心设计原则</h2>
+  <ul>
+    <li><strong>模块化</strong> - 各个组件解耦，便于独立开发和测试</li>
+    <li><strong>可扩展</strong> - 插件系统支持自定义解析器、存储后端</li>
+    <li><strong>高性能</strong> - 异步 IO + 连接池，最大化并发效率</li>
+    <li><strong>容错性</strong> - 完善的错误处理和重试机制</li>
+  </ul>
+
+  <h2>架构分层</h2>
+
+  <h3>1. 调度层 (Scheduler)</h3>
+  <p>负责任务调度和队列管理，支持优先级调度、分布式调度。</p>
+
+  <h3>2. 采集层 (Crawler)</h3>
+  <p>核心爬取引擎，支持 HTTP/2、代理池、请求去重。</p>
+
+  <h3>3. 解析层 (Parser)</h3>
+  <p>可插拔的解析器系统，支持 JS 渲染、增量更新。</p>
+
+  <h3>4. 存储层 (Storage)</h3>
+  <p>抽象的存储接口，支持 PostgreSQL、MySQL、MongoDB、ES 等。</p>
+
+  <h2>技术栈</h2>
+  <ul>
+    <li>核心语言：Python 3.10+ / Node.js</li>
+    <li>异步框架：asyncio / FastAPI</li>
+    <li>数据存储：PostgreSQL + Redis</li>
+    <li>消息队列：RabbitMQ / Kafka</li>
+    <li>容器化：Docker + Kubernetes</li>
+  </ul>
+</article>

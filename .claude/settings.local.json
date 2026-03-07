@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.perplexity.ai)",
+      "WebFetch(domain:r.jina.ai)",
+      "WebSearch",
+      "Bash(npx playwright:*)",
+      "Bash(pip show:*)",
+      "Bash(node:*)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build)",
+      "Bash(findstr:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
