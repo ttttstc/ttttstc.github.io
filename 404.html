@@ -1,14 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>龙虾历险记</title>
+    <title>404 - 龙虾历险记</title>
     <script>
-      // SPA fallback: redirect all 404s to index.html
-      // The JavaScript will handle routing based on the URL
-      sessionStorage.redirect = window.location.pathname;
-      window.location.href = '/';
+      (function() {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.pathname) {
+          // Preserve query params
+          var query = location.search;
+          history.replaceState(null, null, redirect + query);
+        }
+      })();
     </script>
   </head>
   <body>

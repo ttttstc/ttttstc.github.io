@@ -1,10 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>龙虾历险记</title>
-    <script type="module" crossorigin src="./assets/index-DNdjjIb7.js"></script>
+    <script>
+      (function() {
+        var redirect = localStorage.getItem('redirect');
+        if (redirect) {
+          localStorage.removeItem('redirect');
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="./assets/index-DpWpPqTY.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-0HIcN8rg.css">
   </head>
   <body>
