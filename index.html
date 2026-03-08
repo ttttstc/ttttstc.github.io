@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>龙虾历险记</title>
+  <meta name="description" content="OpenCRAW 开源项目的技术探索之旅">
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/effects.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+  <nav class="nav glass">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <span class="logo-icon">🦞</span>
+      <span class="logo-text">龙虾历险记</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/architecture/">架构</a></li>
+      <li><a href="/tutorial/">教程</a></li>
+      <li><a href="/demo/">演示</a></li>
+      <li><a href="/diary/">日记</a></li>
+    </ul>
+  </div>
+</nav>
+
+<style>
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  z-index: 1000;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text-primary);
+}
+
+.logo-icon {
+  font-size: 24px;
+}
+
+.nav-links {
+  display: flex;
+  gap: var(--space-lg);
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: color var(--transition);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--text-primary);
+}
+
+@media (max-width: 640px) {
+  .nav-links {
+    gap: var(--space-sm);
+  }
+  .nav-links a {
+    font-size: 12px;
+  }
+}
+</style>
+
+  <main>
+    
+<section class="hero">
+  <h1 class="hero-title glow-text">龙虾历险记</h1>
+  <p class="hero-subtitle">OpenCRAW 开源项目的技术探索之旅<br>架构设计 · 安装教程 · 效果展示 · 开发日志</p>
+  <div class="scroll-hint">
+    <span class="scroll-indicator">↓</span>
+    <p>向下滚动开始探索</p>
+  </div>
+</section>
+
+<section class="container">
+  <div class="section-grid">
+    <a href="/architecture/" class="section-card card fade-in-up stagger-1">
+      <div class="section-card-icon">🏗️</div>
+      <h2 class="section-card-title">架构介绍</h2>
+      <p class="section-card-desc">深入了解 OpenCRAW 的系统架构和核心组件设计</p>
+    </a>
+
+    <a href="/tutorial/" class="section-card card fade-in-up stagger-2">
+      <div class="section-card-icon">📖</div>
+      <h2 class="section-card-title">安装教程</h2>
+      <p class="section-card-desc">保姆级入门指南，从零开始搭建开发环境</p>
+    </a>
+
+    <a href="/demo/" class="section-card card fade-in-up stagger-3">
+      <div class="section-card-icon">🎬</div>
+      <h2 class="section-card-title">效果展示</h2>
+      <p class="section-card-desc">在线演示系统功能，直观感受项目能力</p>
+    </a>
+
+    <a href="/diary/" class="section-card card fade-in-up stagger-4">
+      <div class="section-card-icon">📝</div>
+      <h2 class="section-card-title">龙虾日记</h2>
+      <p class="section-card-desc">开发过程中的点滴记录和技术思考</p>
+    </a>
+  </div>
+</section>
+
+  </main>
+  <footer class="footer">
+  <div class="footer-container">
+    <p>&copy; 2026 龙虾历险记. OpenCRAW 技术博客.</p>
+  </div>
+</footer>
+
+<style>
+.footer {
+  padding: var(--space-lg) 0;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+</style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

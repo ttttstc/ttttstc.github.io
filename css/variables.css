@@ -1,0 +1,39 @@
+:root {
+  /* 背景色 */
+  --bg-primary: #000000;
+  --bg-secondary: #0A0A0C;
+  --bg-card: rgba(20, 20, 25, 0.8);
+  --bg-glass: rgba(10, 10, 15, 0.7);
+
+  /* 文字色 */
+  --text-primary: #FFFFFF;
+  --text-secondary: #9CA3AF;
+
+  /* 强调色 */
+  --accent-primary: #8B5CF6;
+  --accent-secondary: #3B82F6;
+  --gradient: linear-gradient(135deg, #8B5CF6, #3B82F6);
+
+  /* 边框色 */
+  --border-color: #1F1F23;
+
+  /* 字体 */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", "Fira Code", Monaco, Consolas, monospace;
+
+  /* 间距 */
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+
+  /* 圆角 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  /* 过渡 */
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
