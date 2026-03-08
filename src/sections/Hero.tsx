@@ -25,7 +25,7 @@ const Hero = () => {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: 'url(/woshou.png)',
+            backgroundImage: 'url(/assets/images/woshou.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -74,7 +74,7 @@ const Hero = () => {
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              龙虾历险记
+              小泥巴的进化历程
             </h1>
 
             {/* Subtitle */}
@@ -101,11 +101,11 @@ const Hero = () => {
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
-              <a href="#tutorials" className="btn-primary w-full sm:w-auto">
+              <a href="/tutorial" className="btn-primary w-full sm:w-auto">
                 <Terminal className="w-4 h-4 mr-2" />
                 开始探索
               </a>
-              <a href="#features" className="btn-secondary w-full sm:w-auto">
+              <a href="/#features" className="btn-secondary w-full sm:w-auto">
                 了解更多
               </a>
             </div>

@@ -12,25 +12,25 @@ const layers: Layer[] = [
   {
     icon: MessageSquare,
     title: '接口层',
-    items: ['Telegram', 'WhatsApp', 'Discord', 'Slack'],
+    items: ['Telegram', '飞书', 'Discord', 'Slack'],
     color: '#FF6B35',
   },
   {
     icon: Cpu,
     title: '核心层',
-    items: ['Agent Runtime', 'LLM Router', 'Memory Manager'],
+    items: ['Agent Runtime', 'LLM Router', 'Memory Manager', 'Task Scheduler'],
     color: '#F7931E',
   },
   {
     icon: Wrench,
     title: '技能层',
-    items: ['Browser Control', 'File System', 'Code Execution'],
+    items: ['Browser Control', 'File System', 'Code Execution', 'API Integration'],
     color: '#FF6B35',
   },
   {
     icon: Cloud,
     title: '模型层',
-    items: ['Claude', 'GPT', 'Gemini'],
+    items: ['Claude', 'GPT-5', 'Gemini', 'DeepSeek', 'GLM', 'MiniMax', 'Kimi'],
     color: '#F7931E',
   },
 ];
@@ -84,8 +84,8 @@ const Architecture = () => {
           >
             <div className="relative rounded-2xl overflow-hidden bg-lobster-dark border border-white/10">
               <img
-                src="/architecture-diagram.png"
-                alt="Openclaw Architecture"
+                src="/assets/images/longxiajiagou.png"
+                alt="OpenCLAW 架构图"
                 className="w-full h-auto"
               />
               {/* Overlay gradient */}

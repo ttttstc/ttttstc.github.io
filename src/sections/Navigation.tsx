@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X, Github } from 'lucide-react';
 
 type NavigationProps = {
-  onNavigate?: (page: 'home' | 'skill' | 'tutorial') => void;
+  onNavigate?: (page: 'home' | 'skill' | 'tutorial' | 'diary' | 'workspace' | 'tech') => void;
 };
 
 const Navigation = ({ onNavigate }: NavigationProps) => {
@@ -17,10 +17,14 @@ const Navigation = ({ onNavigate }: NavigationProps) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks: { label: string; href: string; isRoute?: boolean; isAnchor?: boolean; routeName?: 'home' | 'skill' | 'tutorial' }[] = [
+  const navLinks: { label: string; href: string; isRoute?: boolean; isAnchor?: boolean; routeName?: 'home' | 'skill' | 'tutorial' | 'diary' | 'workspace' | 'tech' }[] = [
     { label: '首页', href: '/', routeName: 'home' },
+    { label: '特性', href: '/#features', isAnchor: true },
     { label: '教程', href: '/tutorial', isRoute: true, routeName: 'tutorial' },
+    { label: '工作室', href: '/workspace', isRoute: true, routeName: 'workspace' },
+    { label: '日记', href: '/diary', isRoute: true, routeName: 'diary' },
     { label: '技能', href: '/skill', isRoute: true, routeName: 'skill' },
+    { label: '技术分析', href: '/tech-eden', isRoute: true, routeName: 'tech' },
   ];
 
   const handleLinkClick = (link: typeof navLinks[0]) => {
@@ -44,7 +48,7 @@ const Navigation = ({ onNavigate }: NavigationProps) => {
           <a href="/" onClick={() => onNavigate?.('home')} className="flex items-center gap-2 group">
             <span className="text-2xl">🦞</span>
             <span className="font-semibold text-white group-hover:text-lobster-orange transition-colors">
-              龙虾历险记
+              小泥巴的进化历程
             </span>
           </a>
 
@@ -74,7 +78,7 @@ const Navigation = ({ onNavigate }: NavigationProps) => {
               <span>GitHub</span>
             </a>
             <a
-              href="#tutorials"
+              href="/tutorial"
               className="btn-primary text-sm py-2.5 px-5"
             >
               开始搭建

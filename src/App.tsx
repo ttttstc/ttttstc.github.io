@@ -9,8 +9,11 @@ import Stats from './sections/Stats';
 import Footer from './sections/Footer';
 import SkillsPage from './sections/SkillsPage';
 import TutorialInstallPage from './sections/TutorialInstallPage';
+import DiaryPage from './sections/DiaryPage';
+import WorkspacePage from './sections/WorkspacePage';
+import TechEdenPage from './sections/TechEdenPage';
 
-type PageType = 'home' | 'skill' | 'tutorial';
+type PageType = 'home' | 'skill' | 'tutorial' | 'diary' | 'workspace' | 'tech';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('home');
@@ -23,6 +26,12 @@ function App() {
         setCurrentPage('skill');
       } else if (path === '/tutorial' || path.startsWith('/docs/')) {
         setCurrentPage('tutorial');
+      } else if (path === '/diary') {
+        setCurrentPage('diary');
+      } else if (path === '/workspace') {
+        setCurrentPage('workspace');
+      } else if (path === '/tech-eden') {
+        setCurrentPage('tech');
       } else {
         setCurrentPage('home');
       }
@@ -39,6 +48,9 @@ function App() {
       home: '/',
       skill: '/skill',
       tutorial: '/tutorial',
+      diary: '/diary',
+      workspace: '/workspace',
+      tech: '/tech-eden',
     };
     window.history.pushState({}, '', pathMap[page]);
   };
@@ -49,6 +61,12 @@ function App() {
         return <SkillsPage />;
       case 'tutorial':
         return <TutorialInstallPage />;
+      case 'diary':
+        return <DiaryPage />;
+      case 'workspace':
+        return <WorkspacePage />;
+      case 'tech':
+        return <TechEdenPage />;
       default:
         return (
           <main>
