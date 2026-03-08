@@ -10,14 +10,14 @@ import Footer from './sections/Footer';
 import SkillsPage from './sections/SkillsPage';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'skills'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'skill'>('home');
 
   useEffect(() => {
     const handleNavigation = () => {
       const path = window.location.pathname;
 
-      if (path === '/skills') {
-        setCurrentPage('skills');
+      if (path === '/skill') {
+        setCurrentPage('skill');
       } else {
         setCurrentPage('home');
       }
@@ -28,10 +28,10 @@ function App() {
     return () => window.removeEventListener('popstate', handleNavigation);
   }, []);
 
-  const navigateTo = (page: 'home' | 'skills') => {
+  const navigateTo = (page: 'home' | 'skill') => {
     setCurrentPage(page);
-    if (page === 'skills') {
-      window.history.pushState({}, '', '/skills');
+    if (page === 'skill') {
+      window.history.pushState({}, '', '/skill');
     } else {
       window.history.pushState({}, '', '/');
     }
@@ -40,7 +40,7 @@ function App() {
   return (
     <div className="min-h-screen bg-lobster-dark text-white">
       <Navigation onNavigate={navigateTo} />
-      {currentPage === 'skills' ? (
+      {currentPage === 'skill' ? (
         <SkillsPage />
       ) : (
         <main>

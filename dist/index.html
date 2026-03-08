@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>龙虾历险记</title>
+    <script>
+      (function() {
+        var redirect = localStorage.getItem('redirect');
+        if (redirect) {
+          localStorage.removeItem('redirect');
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="./assets/index-D9az1yvr.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-0HIcN8rg.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
