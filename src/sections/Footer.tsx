@@ -7,8 +7,11 @@ const Footer = () => {
     navigation: [
       { label: '首页', href: '#hero' },
       { label: '特性', href: '#features' },
-      { label: '架构', href: '#architecture' },
-      { label: '教程', href: '#tutorials' },
+      { label: '教程', href: '/tutorial' },
+      { label: '工作室', href: '/workspace' },
+      { label: '日记', href: '/diary' },
+      { label: '技能', href: '/skill' },
+      { label: '技术分析', href: '/tech-eden' },
     ],
     resources: [
       { label: '官方文档', href: 'https://docs.openclaw.ai', external: true },
@@ -24,10 +27,10 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="md:col-span-2">
-            <a href="#hero" className="flex items-center gap-2 mb-4">
+            <a href="/" className="flex items-center gap-2 mb-4">
               <span className="text-3xl">🦞</span>
               <span className="text-xl font-semibold text-white">
-                龙虾历险记
+                小泥巴的进化历程
               </span>
             </a>
             <p className="text-white/50 max-w-sm mb-6 leading-relaxed">
@@ -93,7 +96,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-white/40 text-sm flex items-center gap-1">
-            © {currentYear} 龙虾历险记. Built with{' '}
+            © {currentYear} 小泥巴的进化历程. Built with{' '}
             <Heart className="w-4 h-4 text-red-500 fill-red-500" /> and 🦞
           </p>
           <p className="text-white/30 text-sm">
