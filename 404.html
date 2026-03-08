@@ -5,19 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>404 - 小泥巴的进化历程</title>
     <script>
+      // GitHub Pages SPA 路由处理
       (function() {
-        var redirect = sessionStorage.redirect;
-        delete sessionStorage.redirect;
-        if (redirect && redirect !== location.pathname) {
-          // Preserve query params
-          var query = location.search;
-          history.replaceState(null, null, redirect + query);
+        var path = location.pathname;
+        var search = location.search;
+
+        // 如果访问的是 SPA 路由（非根路径），重定向到 index.html
+        // 让 JavaScript 处理路由
+        if (path !== '/' && !path.endsWith('.html') && !path.endsWith('.js') && !path.endsWith('.css')) {
+          sessionStorage.redirect = path + search;
+          location.href = '/' + search;
         }
       })();
     </script>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
