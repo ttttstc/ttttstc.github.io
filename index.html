@@ -6,9 +6,9 @@
     <title>小泥巴的进化历程</title>
     <script>
       (function() {
-        var redirect = localStorage.getItem('redirect');
+        var redirect = sessionStorage.getItem('redirect');
         if (redirect) {
-          localStorage.removeItem('redirect');
+          sessionStorage.removeItem('redirect');
           history.replaceState(null, null, redirect);
         }
       })();
