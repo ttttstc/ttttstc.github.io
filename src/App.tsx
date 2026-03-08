@@ -14,14 +14,7 @@ function App() {
 
   useEffect(() => {
     const handleNavigation = () => {
-      let path = window.location.pathname;
-
-      // Handle redirect from 404.html
-      const redirectPath = sessionStorage.getItem('redirect');
-      if (redirectPath) {
-        sessionStorage.removeItem('redirect');
-        path = redirectPath;
-      }
+      const path = window.location.pathname;
 
       if (path === '/skills') {
         setCurrentPage('skills');
