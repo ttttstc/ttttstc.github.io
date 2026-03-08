@@ -170,7 +170,15 @@ const TutorialPreview = () => {
 
                 {/* Read More */}
                 <div className="mt-6 pt-4 border-t border-white/10">
-                  <button className="flex items-center gap-2 text-sm text-lobster-orange hover:gap-3 transition-all">
+                  <button
+                    onClick={() => {
+                      if (index === 0) {
+                        window.history.pushState({}, '', '/tutorial');
+                        window.dispatchEvent(new PopStateEvent('popstate'));
+                      }
+                    }}
+                    className="flex items-center gap-2 text-sm text-lobster-orange hover:gap-3 transition-all cursor-pointer"
+                  >
                     阅读教程
                     <ArrowRight className="w-4 h-4" />
                   </button>

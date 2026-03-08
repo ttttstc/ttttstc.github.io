@@ -8,9 +8,12 @@ import CodeDemo from './sections/CodeDemo';
 import Stats from './sections/Stats';
 import Footer from './sections/Footer';
 import SkillsPage from './sections/SkillsPage';
+import TutorialInstallPage from './sections/TutorialInstallPage';
+
+type PageType = 'home' | 'skill' | 'tutorial';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'skill'>('home');
+  const [currentPage, setCurrentPage] = useState<PageType>('home');
 
   useEffect(() => {
     const handleNavigation = () => {
@@ -18,6 +21,8 @@ function App() {
 
       if (path === '/skill') {
         setCurrentPage('skill');
+      } else if (path === '/tutorial' || path.startsWith('/docs/')) {
+        setCurrentPage('tutorial');
       } else {
         setCurrentPage('home');
       }
@@ -28,30 +33,40 @@ function App() {
     return () => window.removeEventListener('popstate', handleNavigation);
   }, []);
 
-  const navigateTo = (page: 'home' | 'skill') => {
+  const navigateTo = (page: PageType) => {
     setCurrentPage(page);
-    if (page === 'skill') {
-      window.history.pushState({}, '', '/skill');
-    } else {
-      window.history.pushState({}, '', '/');
+    const pathMap: Record<PageType, string> = {
+      home: '/',
+      skill: '/skill',
+      tutorial: '/tutorial',
+    };
+    window.history.pushState({}, '', pathMap[page]);
+  };
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'skill':
+        return <SkillsPage />;
+      case 'tutorial':
+        return <TutorialInstallPage />;
+      default:
+        return (
+          <main>
+            <Hero />
+            <Features />
+            <Architecture />
+            <TutorialPreview />
+            <CodeDemo />
+            <Stats />
+          </main>
+        );
     }
   };
 
   return (
     <div className="min-h-screen bg-lobster-dark text-white">
       <Navigation onNavigate={navigateTo} />
-      {currentPage === 'skill' ? (
-        <SkillsPage />
-      ) : (
-        <main>
-          <Hero />
-          <Features />
-          <Architecture />
-          <TutorialPreview />
-          <CodeDemo />
-          <Stats />
-        </main>
-      )}
+      {renderPage()}
       <Footer />
     </div>
   );

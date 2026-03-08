@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X, Github } from 'lucide-react';
 
 type NavigationProps = {
-  onNavigate?: (page: 'home' | 'skill') => void;
+  onNavigate?: (page: 'home' | 'skill' | 'tutorial') => void;
 };
 
 const Navigation = ({ onNavigate }: NavigationProps) => {
@@ -17,17 +17,15 @@ const Navigation = ({ onNavigate }: NavigationProps) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks: { label: string; href: string; isRoute?: boolean; isAnchor?: boolean }[] = [
-    { label: '首页', href: '/#hero', isAnchor: true },
-    { label: '特性', href: '/#features', isAnchor: true },
-    { label: '架构', href: '/#architecture', isAnchor: true },
-    { label: '教程', href: '/#tutorials', isAnchor: true },
-    { label: '技能', href: '/skill', isRoute: true },
+  const navLinks: { label: string; href: string; isRoute?: boolean; isAnchor?: boolean; routeName?: 'home' | 'skill' | 'tutorial' }[] = [
+    { label: '首页', href: '/', routeName: 'home' },
+    { label: '教程', href: '/tutorial', isRoute: true, routeName: 'tutorial' },
+    { label: '技能', href: '/skill', isRoute: true, routeName: 'skill' },
   ];
 
   const handleLinkClick = (link: typeof navLinks[0]) => {
-    if (link.isRoute && onNavigate) {
-      onNavigate('skill');
+    if (link.routeName && onNavigate) {
+      onNavigate(link.routeName);
     }
     setIsMobileMenuOpen(false);
   };
