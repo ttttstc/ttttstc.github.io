@@ -31,7 +31,7 @@ const features: Feature[] = [
   {
     icon: Code,
     title: '开源生态',
-    description: '基于开源社区驱动，18万+ GitHub Stars，持续迭代更新。',
+    description: '基于开源社区驱动，27.8万+ GitHub Stars，持续迭代更新。',
   },
   {
     icon: Shield,

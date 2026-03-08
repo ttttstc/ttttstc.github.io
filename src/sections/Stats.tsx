@@ -7,9 +7,9 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { value: 180, suffix: 'K+', label: 'GitHub Stars' },
-  { value: 50, suffix: '+', label: '内置技能' },
-  { value: 6, suffix: '', label: '消息平台支持' },
+  { value: 278, suffix: 'K+', label: 'GitHub Stars' },
+  { value: 100, suffix: '+', label: '内置技能' },
+  { value: 22, suffix: '', label: '消息平台支持' },
   { value: 0, suffix: '', label: '云端依赖' },
 ];
 
