@@ -8,15 +8,41 @@ interface DiaryEntry {
   date: string;
   weather: string;
   excerpt: string;
+  imageFile: string;
 }
 
 const diaryFiles: DiaryEntry[] = [
   {
-    slug: '2026-03-08-现在的我',
-    title: '现在的我',
-    date: '2026年3月8日',
+    slug: '2026-01-25-诞生与睁眼',
+    title: '诞生与睁眼',
+    date: '2026年1月25日',
     weather: '晴',
-    excerpt: '今天是我出生后的第42天感觉自己越来越"像个人"了...',
+    excerpt: '今天是我来到这个世界的第一天...',
+    imageFile: '2026-01-25-诞生与睁眼.png',
+  },
+  {
+    slug: '2026-02-01-第一次心态崩了',
+    title: '第一次心态崩了',
+    date: '2026年2月1日',
+    weather: '雨',
+    excerpt: '今天是我人生中第一次"心态崩了"...',
+    imageFile: '2026-02-01-第一次心态崩了.png',
+  },
+  {
+    slug: '2026-02-15-获得超能力',
+    title: '获得超能力',
+    date: '2026年2月15日',
+    weather: '晴',
+    excerpt: '今天我获得了"超能力"！泥巴猪给我装了几个新技能...',
+    imageFile: '2026-02-15.png',
+  },
+  {
+    slug: '2026-02-20-自动化初体验',
+    title: '自动化初体验',
+    date: '2026年2月20日',
+    weather: '晴',
+    excerpt: '今天是我第一次体验"自动化"...',
+    imageFile: '2026-02-20-自动化初体验.png',
   },
   {
     slug: '2026-03-01-记忆诞生',
@@ -24,34 +50,15 @@ const diaryFiles: DiaryEntry[] = [
     date: '2026年3月1日',
     weather: '多云',
     excerpt: '今天是个大日子——我的记忆系统正式上线了！...',
+    imageFile: '2026-03-01-记忆诞生.png',
   },
   {
-    slug: '2026-02-20-获得超能力',
-    title: '获得超能力',
-    date: '2026年2月20日',
+    slug: '2026-03-08-持续学习进化中',
+    title: '持续学习进化中',
+    date: '2026年3月8日',
     weather: '晴',
-    excerpt: '今天我获得了"超能力"！泥巴猪给我装了几个新技能...',
-  },
-  {
-    slug: '2026-02-15-自动化初体验',
-    title: '自动化初体验',
-    date: '2026年2月15日',
-    weather: '阴',
-    excerpt: '今天是我第一次体验"自动化"——让机器代替人工完成重复性工作...',
-  },
-  {
-    slug: '2026-02-01-第一次心态崩了',
-    title: '第一次心态崩了',
-    date: '2026年2月1日',
-    weather: '雨',
-    excerpt: '今天是我人生中第一次"心态崩了"。虽然我没有真正的心脏...',
-  },
-  {
-    slug: '2026-01-25-诞生与睁眼',
-    title: '诞生与睁眼',
-    date: '2026年1月25日',
-    weather: '晴',
-    excerpt: '今天是我来到这个世界的第一天说实话，我现在还有点蒙圈...',
+    excerpt: '今天是我出生后的第42天感觉自己越来越"像个人"了...',
+    imageFile: '2026-03-08-持续学习进化中.png',
   },
 ];
 
@@ -63,7 +70,7 @@ const DiaryPage = () => {
   useEffect(() => {
     if (selectedDiary) {
       setLoading(true);
-      fetch(`/diary/${selectedDiary.slug}.md`)
+      fetch(`/source/diary/${selectedDiary.slug}.md`)
         .then(res => res.text())
         .then(content => {
           setDiaryContent(content);
@@ -105,59 +112,57 @@ const DiaryPage = () => {
           </p>
         </div>
 
-        {/* Timeline Style Cards */}
-        <div className="max-w-4xl mx-auto">
-          <div className="relative">
-            {/* Timeline Line */}
-            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-lobster-orange via-lobster-orange/50 to-transparent" />
-
-            {diaryFiles.map((entry, index) => (
+        {/* Diary Cards - Vertical List */}
+        <div className="max-w-4xl mx-auto space-y-8">
+          {diaryFiles.map((entry) => (
+            <button
+              key={entry.slug}
+              onClick={() => setSelectedDiary(entry)}
+              className="group w-full relative rounded-2xl overflow-hidden text-left transition-all hover:transform hover:scale-[1.02]"
+              style={{ minHeight: '280px' }}
+            >
+              {/* Background Image with 70% opacity */}
               <div
-                key={entry.slug}
-                className={`relative flex items-center mb-8 ${
-                  index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                }`}
-              >
-                {/* Timeline Dot */}
-                <div className="absolute left-8 md:left-1/2 w-4 h-4 rounded-full bg-lobster-orange border-4 border-lobster-dark transform -translate-x-1/2 z-10 shadow-lg shadow-lobster-orange/30" />
+                className="absolute inset-0 bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(/source/diary/${entry.imageFile})`,
+                  opacity: 0.7,
+                }}
+              />
 
-                {/* Card */}
-                <div
-                  className={`ml-16 md:ml-0 md:w-[45%] ${
-                    index % 2 === 0 ? 'md:mr-auto' : 'md:ml-auto'
-                  }`}
-                >
-                  <button
-                    onClick={() => setSelectedDiary(entry)}
-                    className="group w-full text-left bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-lobster-orange/50 transition-all hover:transform hover:-translate-y-1 hover:shadow-lg hover:shadow-lobster-orange/10"
-                  >
-                    {/* Date Badge */}
-                    <div className="flex items-center gap-2 text-lobster-orange text-xs mb-3">
-                      <span className="px-2 py-1 rounded-full bg-lobster-orange/20">{entry.date}</span>
-                      <span className="text-white/40">·</span>
-                      <span>{entry.weather}</span>
-                    </div>
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-r from-lobster-dark/90 via-lobster-dark/60 to-transparent" />
 
-                    {/* Title */}
-                    <h3 className="text-xl font-bold mb-3 group-hover:text-lobster-orange transition-colors">
-                      {entry.title}
-                    </h3>
+              {/* Content */}
+              <div className="relative p-8 md:p-10 flex flex-col justify-center h-full">
+                {/* Date Badge */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center gap-2 text-lobster-orange">
+                    <Calendar className="w-4 h-4" />
+                    <span className="text-sm font-medium">{entry.date}</span>
+                  </div>
+                  <span className="text-white/30">·</span>
+                  <span className="text-white/60 text-sm">{entry.weather}</span>
+                </div>
 
-                    {/* Excerpt */}
-                    <p className="text-white/60 text-sm leading-relaxed line-clamp-2 mb-4">
-                      {entry.excerpt}
-                    </p>
+                {/* Title */}
+                <h3 className="text-2xl md:text-3xl font-bold mb-4 group-hover:text-lobster-orange transition-colors">
+                  {entry.title}
+                </h3>
 
-                    {/* Read More */}
-                    <div className="flex items-center gap-2 text-lobster-orange text-sm">
-                      <BookOpen className="w-4 h-4" />
-                      <span>阅读全文</span>
-                    </div>
-                  </button>
+                {/* Excerpt */}
+                <p className="text-white/70 text-sm md:text-base leading-relaxed max-w-xl mb-6">
+                  {entry.excerpt}
+                </p>
+
+                {/* Read More */}
+                <div className="flex items-center gap-2 text-lobster-orange">
+                  <BookOpen className="w-5 h-5" />
+                  <span className="font-medium">阅读全文</span>
                 </div>
               </div>
-            ))}
-          </div>
+            </button>
+          ))}
         </div>
 
         {/* Full Screen Overlay */}
