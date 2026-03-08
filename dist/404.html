@@ -12,7 +12,18 @@
 
         // 如果访问的是 SPA 路由（非根路径），重定向到 index.html
         // 让 JavaScript 处理路由
-        if (path !== '/' && !path.endsWith('.html') && !path.endsWith('.js') && !path.endsWith('.css')) {
+        // 但排除静态资源路径（/source/, /assets/, /diary/）
+        if (path !== '/' &&
+            !path.startsWith('/source/') &&
+            !path.startsWith('/assets/') &&
+            !path.startsWith('/diary/') &&
+            !path.endsWith('.html') &&
+            !path.endsWith('.js') &&
+            !path.endsWith('.css') &&
+            !path.endsWith('.png') &&
+            !path.endsWith('.jpg') &&
+            !path.endsWith('.gif') &&
+            !path.endsWith('.svg')) {
           sessionStorage.redirect = path + search;
           location.href = '/' + search;
         }
