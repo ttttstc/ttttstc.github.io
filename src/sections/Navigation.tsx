@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, Github } from 'lucide-react';
 
-const Navigation = () => {
+type NavigationProps = {
+  onNavigate?: (page: 'home' | 'skills') => void;
+};
+
+const Navigation = ({ onNavigate }: NavigationProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -13,12 +17,20 @@ const Navigation = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
+  const navLinks: { label: string; href: string; isRoute?: boolean }[] = [
     { label: '首页', href: '#hero' },
     { label: '特性', href: '#features' },
     { label: '架构', href: '#architecture' },
     { label: '教程', href: '#tutorials' },
+    { label: '技能', href: '/skills', isRoute: true },
   ];
+
+  const handleLinkClick = (link: typeof navLinks[0]) => {
+    if (link.isRoute && onNavigate) {
+      onNavigate('skills');
+    }
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <nav
@@ -31,7 +43,7 @@ const Navigation = () => {
       <div className="container-custom">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="#hero" className="flex items-center gap-2 group">
+          <a href="/" onClick={() => onNavigate?.('home')} className="flex items-center gap-2 group">
             <span className="text-2xl">🦞</span>
             <span className="font-semibold text-white group-hover:text-lobster-orange transition-colors">
               龙虾历险记
@@ -44,6 +56,7 @@ const Navigation = () => {
               <a
                 key={link.href}
                 href={link.href}
+                onClick={() => handleLinkClick(link)}
                 className="text-sm text-white/70 hover:text-white transition-colors"
               >
                 {link.label}
@@ -88,7 +101,7 @@ const Navigation = () => {
                   key={link.href}
                   href={link.href}
                   className="text-white/70 hover:text-white transition-colors py-2"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={() => handleLinkClick(link)}
                 >
                   {link.label}
                 </a>
