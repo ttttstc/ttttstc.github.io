@@ -1,13 +1,38 @@
 import { skills, categories } from '../data/skills';
-import { ChevronRight, Sparkles } from 'lucide-react';
-import { useState } from 'react';
+import { Sparkles, Download, ExternalLink, Search, Copy, Check } from 'lucide-react';
+import { useState, useMemo } from 'react';
 
 const SkillsPage = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [copiedSkill, setCopiedSkill] = useState<string | null>(null);
 
-  const filteredSkills = activeCategory
-    ? skills.filter((s) => s.category === activeCategory)
-    : skills;
+  const filteredSkills = useMemo(() => {
+    let result = skills;
+
+    if (activeCategory) {
+      result = result.filter((s) => s.category === activeCategory);
+    }
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (s) =>
+          s.name.toLowerCase().includes(query) ||
+          s.description.toLowerCase().includes(query) ||
+          s.category.toLowerCase().includes(query)
+      );
+    }
+
+    return result;
+  }, [activeCategory, searchQuery]);
+
+  const handleCopyCommand = (skillName: string) => {
+    const command = `/install ${skillName}`;
+    navigator.clipboard.writeText(command);
+    setCopiedSkill(skillName);
+    setTimeout(() => setCopiedSkill(null), 2000);
+  };
 
   return (
     <div className="min-h-screen bg-lobster-dark text-white pt-24 pb-16">
@@ -16,14 +41,28 @@ const SkillsPage = () => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-lobster-orange/20 text-lobster-orange text-sm mb-6">
             <Sparkles className="w-4 h-4" />
-            <span>Claude Code 技能集</span>
+            <span>ClawHub Top 100 技能集</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            我的 <span className="text-lobster-orange">AI 技能库</span>
+            全球最热门 <span className="text-lobster-orange">AI 技能库</span>
           </h1>
           <p className="text-white/60 text-lg max-w-2xl mx-auto">
-            集成了 50+ 个 Claude Code 技能，涵盖开发、设计、内容创作、效率工具等多个领域
+            汇集 ClawHub 下载量最高的 100+ 个技能，涵盖搜索、自动化、API集成、媒体处理等
           </p>
+        </div>
+
+        {/* Search Box */}
+        <div className="max-w-xl mx-auto mb-8">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+            <input
+              type="text"
+              placeholder="搜索技能名称、描述或分类..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 rounded-full text-white placeholder-white/40 focus:outline-none focus:border-lobster-orange transition-colors"
+            />
+          </div>
         </div>
 
         {/* Category Filter */}
@@ -53,6 +92,13 @@ const SkillsPage = () => {
           ))}
         </div>
 
+        {/* Search Results Info */}
+        {searchQuery && (
+          <div className="text-center mb-6 text-white/60">
+            找到 {filteredSkills.length} 个匹配 "{searchQuery}" 的技能
+          </div>
+        )}
+
         {/* Skills Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredSkills.map((skill) => (
@@ -64,9 +110,17 @@ const SkillsPage = () => {
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-lobster-orange/30 to-purple-500/30 flex items-center justify-center">
                   <Sparkles className="w-6 h-6 text-lobster-orange" />
                 </div>
-                <span className="text-xs px-3 py-1 rounded-full bg-white/10 text-white/60">
-                  {skill.category}
-                </span>
+                <div className="flex flex-col items-end gap-1">
+                  <span className="text-xs px-3 py-1 rounded-full bg-white/10 text-white/60">
+                    {skill.category}
+                  </span>
+                  {skill.downloads && (
+                    <span className="text-xs flex items-center gap-1 text-lobster-orange">
+                      <Download className="w-3 h-3" />
+                      {skill.downloads}
+                    </span>
+                  )}
+                </div>
               </div>
 
               <h3 className="text-lg font-semibold mb-2 group-hover:text-lobster-orange transition-colors">
@@ -75,13 +129,46 @@ const SkillsPage = () => {
                 ).join(' ')}
               </h3>
 
-              <p className="text-white/60 text-sm leading-relaxed">
+              <p className="text-white/60 text-sm leading-relaxed mb-3">
                 {skill.description}
               </p>
 
-              <div className="mt-4 flex items-center text-lobster-orange text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                <span>了解更多</span>
-                <ChevronRight className="w-4 h-4 ml-1" />
+              {skill.author && (
+                <p className="text-white/40 text-xs mb-3">
+                  by {skill.author}
+                </p>
+              )}
+
+              <div className="mt-auto flex items-center justify-between gap-3">
+                <a
+                  href={skill.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center text-lobster-orange text-sm hover:underline"
+                >
+                  <span>查看详情</span>
+                  <ExternalLink className="w-3 h-3 ml-1" />
+                </a>
+                <button
+                  onClick={() => handleCopyCommand(skill.name)}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs transition-all ${
+                    copiedSkill === skill.name
+                      ? 'bg-green-500/20 text-green-400'
+                      : 'bg-white/10 text-white/70 hover:bg-white/20'
+                  }`}
+                >
+                  {copiedSkill === skill.name ? (
+                    <>
+                      <Check className="w-3 h-3" />
+                      <span>已复制</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3" />
+                      <span>安装命令</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           ))}
@@ -103,16 +190,23 @@ const SkillsPage = () => {
           </div>
           <div className="bg-white/5 rounded-2xl p-6 text-center">
             <div className="text-3xl font-bold text-lobster-orange mb-2">
-              {skills.filter((s) => s.category === '前端开发').length}
+              {skills.filter((s) => s.category === '搜索与研究').length}
             </div>
-            <div className="text-white/60 text-sm">前端技能</div>
+            <div className="text-white/60 text-sm">搜索技能</div>
           </div>
           <div className="bg-white/5 rounded-2xl p-6 text-center">
             <div className="text-3xl font-bold text-lobster-orange mb-2">
-              {skills.filter((s) => s.category === '效率工具').length}
+              {skills.filter((s) => s.category === '浏览器自动化').length}
             </div>
-            <div className="text-white/60 text-sm">效率工具</div>
+            <div className="text-white/60 text-sm">自动化技能</div>
           </div>
+        </div>
+
+        {/* Source Attribution */}
+        <div className="mt-12 text-center">
+          <p className="text-white/40 text-sm">
+            数据来源: <a href="https://clawhub.ai/skills?sort=downloads" target="_blank" rel="noopener noreferrer" className="text-lobster-orange hover:underline">ClawHub</a> - 按下载量排序的 Top 100 技能
+          </p>
         </div>
       </div>
     </div>

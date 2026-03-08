@@ -21,11 +21,23 @@ const Hero = () => {
     >
       {/* Background Effects */}
       <div className="absolute inset-0">
-        {/* Radial gradient */}
-        <div className="absolute inset-0 bg-gradient-dark opacity-50" />
-        
+        {/* Full screen tiled background image */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: 'url(/woshou.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.3,
+          }}
+        />
+
+        {/* Radial gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-dark opacity-70" />
+
         {/* Grid pattern */}
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
@@ -33,7 +45,7 @@ const Hero = () => {
             backgroundSize: '60px 60px',
           }}
         />
-        
+
         {/* Floating orbs */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-lobster-orange/10 rounded-full blur-[120px] animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-lobster-gold/10 rounded-full blur-[100px] animate-pulse animation-delay-500" />
@@ -41,11 +53,11 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 container-custom pt-20">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-          {/* Left: Text Content */}
-          <div className="flex-1 text-center lg:text-left">
+        <div className="flex flex-col items-center">
+          {/* Text Content - Centered */}
+          <div className="text-center max-w-3xl">
             {/* Tag */}
-            <div 
+            <div
               className={`inline-flex items-center gap-2 px-4 py-2 bg-lobster-orange/10 border border-lobster-orange/20 rounded-full mb-8 transition-all duration-700 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
@@ -57,7 +69,7 @@ const Hero = () => {
             </div>
 
             {/* Main Title */}
-            <h1 
+            <h1
               className={`text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 tracking-tight transition-all duration-700 delay-100 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
@@ -66,7 +78,7 @@ const Hero = () => {
             </h1>
 
             {/* Subtitle */}
-            <p 
+            <p
               className={`text-2xl md:text-3xl font-medium animated-gradient-text mb-6 transition-all duration-700 delay-200 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
@@ -75,8 +87,8 @@ const Hero = () => {
             </p>
 
             {/* Description */}
-            <p 
-              className={`text-lg text-white/70 max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed transition-all duration-700 delay-300 ${
+            <p
+              className={`text-lg text-white/70 max-w-xl mx-auto mb-10 leading-relaxed transition-all duration-700 delay-300 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
@@ -84,8 +96,8 @@ const Hero = () => {
             </p>
 
             {/* CTA Buttons */}
-            <div 
-              className={`flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start transition-all duration-700 delay-400 ${
+            <div
+              className={`flex flex-col sm:flex-row items-center gap-4 justify-center transition-all duration-700 delay-400 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
             >
@@ -96,27 +108,6 @@ const Hero = () => {
               <a href="#features" className="btn-secondary w-full sm:w-auto">
                 了解更多
               </a>
-            </div>
-          </div>
-
-          {/* Right: Lobster Image */}
-          <div 
-            className={`flex-1 relative transition-all duration-1000 delay-300 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
-            }`}
-          >
-            <div className="relative w-full max-w-md mx-auto">
-              {/* Glow effect behind image */}
-              <div className="absolute inset-0 bg-gradient-lobster opacity-20 blur-[80px] rounded-full scale-75" />
-              
-              {/* Image container */}
-              <div className="relative animate-float">
-                <img
-                  src="/lobster-hero.png"
-                  alt="Openclaw Lobster Mascot"
-                  className="w-full h-auto drop-shadow-2xl"
-                />
-              </div>
             </div>
           </div>
         </div>
