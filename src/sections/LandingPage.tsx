@@ -1,4 +1,4 @@
-import { Sparkles, ArrowRight, Coffee, Bug } from 'lucide-react';
+import { Sparkles, ArrowRight, Coffee, Bug, ArrowDown } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -32,25 +32,26 @@ const projects: Project[] = [
 ];
 
 const LandingPage = () => {
+  const scrollToProjects = () => {
+    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-lobster-dark text-white">
-      {/* Background Image - Tiled with 70% opacity */}
-      <div
-        className="fixed inset-0 -z-10"
+      {/* Full Screen Hero with Background Image */}
+      <section
+        className="relative h-screen flex items-center justify-center overflow-hidden"
         style={{
           backgroundImage: 'url(/source/pic/index-pic.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          opacity: 0.7,
         }}
-      />
-      {/* Dark overlay for readability */}
-      <div className="fixed inset-0 -z-10 bg-lobster-dark/50" />
+      >
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-lobster-dark/40" />
 
-      {/* Hero Section */}
-      <div className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
-
+        {/* Content */}
         <div className="relative z-10 container-custom text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-lobster-orange/10 border border-lobster-orange/20 rounded-full mb-8">
             <Sparkles className="w-4 h-4 text-lobster-orange" />
@@ -64,11 +65,20 @@ const LandingPage = () => {
           <p className="text-xl text-white/70 max-w-2xl mx-auto mb-10">
             探索 AI 与技术的无限可能，记录从零到一的创造之旅
           </p>
+
+          {/* Scroll indicator */}
+          <button
+            onClick={scrollToProjects}
+            className="flex flex-col items-center gap-2 text-white/50 hover:text-white/80 transition-colors animate-bounce-subtle mx-auto"
+          >
+            <span className="text-xs">向下滚动</span>
+            <ArrowDown className="w-5 h-5" />
+          </button>
         </div>
-      </div>
+      </section>
 
       {/* Projects Section */}
-      <div className="container-custom py-20">
+      <section id="projects" className="container-custom py-20 bg-lobster-dark">
         <h2 className="text-3xl font-bold text-center mb-12">
           选择你的<span className="text-lobster-orange">实验项目</span>
         </h2>
@@ -122,10 +132,10 @@ const LandingPage = () => {
             );
           })}
         </div>
-      </div>
+      </section>
 
       {/* Footer */}
-      <div className="border-t border-white/10 py-8">
+      <div className="border-t border-white/10 py-8 bg-lobster-dark">
         <div className="container-custom text-center">
           <p className="text-white/40 text-sm">
             © 2026 泥巴猪的实验田 · Powered by Curiosity & AI
