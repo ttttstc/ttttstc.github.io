@@ -34,23 +34,22 @@ const projects: Project[] = [
 const LandingPage = () => {
   return (
     <div className="min-h-screen bg-lobster-dark text-white">
+      {/* Background Image - Tiled with 70% opacity */}
+      <div
+        className="fixed inset-0 -z-10"
+        style={{
+          backgroundImage: 'url(/source/pic/index-pic.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          opacity: 0.7,
+        }}
+      />
+      {/* Dark overlay for readability */}
+      <div className="fixed inset-0 -z-10 bg-lobster-dark/50" />
+
       {/* Hero Section */}
       <div className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute inset-0">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: 'url(/assets/images/woshou.png)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              opacity: 0.15,
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-dark opacity-70" />
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-lobster-orange/10 rounded-full blur-[120px]" />
-          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-lobster-gold/10 rounded-full blur-[100px]" />
-        </div>
 
         <div className="relative z-10 container-custom text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-lobster-orange/10 border border-lobster-orange/20 rounded-full mb-8">
