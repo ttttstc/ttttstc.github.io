@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Github } from 'lucide-react';
+import { Menu, X, Github, Home } from 'lucide-react';
 
 type NavigationProps = {
   onNavigate?: (page: 'home' | 'skill' | 'tutorial' | 'diary' | 'workspace' | 'tech') => void;
@@ -18,13 +18,13 @@ const Navigation = ({ onNavigate }: NavigationProps) => {
   }, []);
 
   const navLinks: { label: string; href: string; isRoute?: boolean; isAnchor?: boolean; routeName?: 'home' | 'skill' | 'tutorial' | 'diary' | 'workspace' | 'tech' }[] = [
-    { label: '首页', href: '/', routeName: 'home' },
-    { label: '特性', href: '/#features', isAnchor: true },
-    { label: '教程', href: '/tutorial', isRoute: true, routeName: 'tutorial' },
-    { label: '工作室', href: '/workspace', isRoute: true, routeName: 'workspace' },
-    { label: '日记', href: '/diary', isRoute: true, routeName: 'diary' },
-    { label: '技能', href: '/skill', isRoute: true, routeName: 'skill' },
-    { label: '技术分析', href: '/tech-eden', isRoute: true, routeName: 'tech' },
+    { label: '首页', href: '/lobster', routeName: 'home' },
+    { label: '特性', href: '/lobster/#features', isAnchor: true },
+    { label: '教程', href: '/lobster/tutorial', isRoute: true, routeName: 'tutorial' },
+    { label: '工作室', href: '/lobster/workspace', isRoute: true, routeName: 'workspace' },
+    { label: '日记', href: '/lobster/diary', isRoute: true, routeName: 'diary' },
+    { label: '技能', href: '/lobster/skill', isRoute: true, routeName: 'skill' },
+    { label: '技术分析', href: '/lobster/tech-eden', isRoute: true, routeName: 'tech' },
   ];
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, link: typeof navLinks[0]) => {
@@ -45,13 +45,27 @@ const Navigation = ({ onNavigate }: NavigationProps) => {
     >
       <div className="container-custom">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
-          <a href="/" onClick={(e) => { e.preventDefault(); onNavigate?.('home'); }} className="flex items-center gap-2 group">
-            <span className="text-2xl">🦞</span>
-            <span className="font-semibold text-white group-hover:text-lobster-orange transition-colors">
-              小泥巴的进化历程
-            </span>
-          </a>
+          {/* Logo with Back to Landing */}
+          <div className="flex items-center gap-4">
+            <a
+              href="/"
+              onClick={(e) => { e.preventDefault(); window.location.href = '/'; }}
+              className="flex items-center gap-1 text-white/50 hover:text-lobster-orange transition-colors"
+              title="返回实验田"
+            >
+              <Home className="w-4 h-4" />
+            </a>
+            <a
+              href="/lobster"
+              onClick={(e) => { e.preventDefault(); onNavigate?.('home'); }}
+              className="flex items-center gap-2 group"
+            >
+              <span className="text-2xl">🦞</span>
+              <span className="font-semibold text-white group-hover:text-lobster-orange transition-colors">
+                小泥巴的进化历程
+              </span>
+            </a>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
@@ -79,7 +93,7 @@ const Navigation = ({ onNavigate }: NavigationProps) => {
               <span>GitHub</span>
             </a>
             <a
-              href="/tutorial"
+              href="/lobster/tutorial"
               className="btn-primary text-sm py-2.5 px-5"
             >
               开始搭建
@@ -99,6 +113,14 @@ const Navigation = ({ onNavigate }: NavigationProps) => {
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-white/10 animate-fade-in">
             <div className="flex flex-col gap-4">
+              <a
+                href="/"
+                onClick={(e) => { e.preventDefault(); window.location.href = '/'; }}
+                className="flex items-center gap-2 text-white/50 hover:text-lobster-orange transition-colors py-2"
+              >
+                <Home className="w-4 h-4" />
+                <span>返回实验田</span>
+              </a>
               {navLinks.map((link) => (
                 <a
                   key={link.href}
