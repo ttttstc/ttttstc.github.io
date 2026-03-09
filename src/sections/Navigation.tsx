@@ -27,7 +27,8 @@ const Navigation = ({ onNavigate }: NavigationProps) => {
     { label: '技术分析', href: '/tech-eden', isRoute: true, routeName: 'tech' },
   ];
 
-  const handleLinkClick = (link: typeof navLinks[0]) => {
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, link: typeof navLinks[0]) => {
+    e.preventDefault();
     if (link.routeName && onNavigate) {
       onNavigate(link.routeName);
     }
@@ -45,7 +46,7 @@ const Navigation = ({ onNavigate }: NavigationProps) => {
       <div className="container-custom">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="/" onClick={() => onNavigate?.('home')} className="flex items-center gap-2 group">
+          <a href="/" onClick={(e) => { e.preventDefault(); onNavigate?.('home'); }} className="flex items-center gap-2 group">
             <span className="text-2xl">🦞</span>
             <span className="font-semibold text-white group-hover:text-lobster-orange transition-colors">
               小泥巴的进化历程
@@ -58,7 +59,7 @@ const Navigation = ({ onNavigate }: NavigationProps) => {
               <a
                 key={link.href}
                 href={link.href}
-                onClick={() => handleLinkClick(link)}
+                onClick={(e) => handleLinkClick(e, link)}
                 className="text-sm text-white/70 hover:text-white transition-colors"
               >
                 {link.label}
@@ -103,7 +104,7 @@ const Navigation = ({ onNavigate }: NavigationProps) => {
                   key={link.href}
                   href={link.href}
                   className="text-white/70 hover:text-white transition-colors py-2"
-                  onClick={() => handleLinkClick(link)}
+                  onClick={(e) => handleLinkClick(e, link)}
                 >
                   {link.label}
                 </a>
