@@ -17,7 +17,7 @@ const WorkspacePage = () => {
             实时观察小泥巴的工作状态，看看你的AI助手在做什么
           </p>
           <a
-            href="https://special-courage-newspaper-bent.trycloudflare.com"
+            href="https://spirits-split-beam-jill.trycloudflare.com/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-lobster-orange hover:underline"
@@ -30,7 +30,7 @@ const WorkspacePage = () => {
         {/* iframe embed */}
         <div className="bg-white/5 rounded-2xl border border-white/10 overflow-hidden" style={{ height: 'calc(100vh - 220px)', minHeight: '1100px' }}>
           <iframe
-            src="https://special-courage-newspaper-bent.trycloudflare.com"
+            src="https://spirits-split-beam-jill.trycloudflare.com/"
             title="小泥巴工作室"
             className="w-full h-full border-0"
             allow="accelerometer; ambient-light-sensor; autoplay; camera; document-domain; encrypted-media; fullscreen; geolocation; gyroscope; layout-shift; magnetometer; microphone; midi; otp-autocomplete; payment; picture-in-picture; private-network-connection; sync-xhr; usb; vr; wake-lock; xr-spatial-tracking"
