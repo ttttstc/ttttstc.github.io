@@ -49,7 +49,7 @@ const LandingPage = () => {
         }}
       >
         {/* Dark overlay */}
-        <div className="absolute inset-0 bg-lobster-dark/40" />
+        <div className="absolute inset-0 bg-lobster-dark/20" />
 
         {/* Content */}
         <div className="relative z-10 container-custom text-center">
