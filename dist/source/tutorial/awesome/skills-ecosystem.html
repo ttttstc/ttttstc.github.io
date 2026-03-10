@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>附录4：Skills生态系统 - OpenClaw 教程</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .markdown-body {
+            background: transparent !important;
+            color: #c9d1d9 !important;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #58a6ff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .article-content h1 {
+            color: #fff !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 15px !important;
+        }
+        .article-content h2 {
+            color: #f97316 !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 10px !important;
+        }
+        .article-content a {
+            color: #58a6ff !important;
+        }
+        .article-content code {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+        }
+        .article-content pre {
+            background: #1f2428 !important;
+            border: 1px solid #30363d !important;
+        }
+        .article-content blockquote {
+            border-left: 4px solid #f97316 !important;
+            background: rgba(249, 115, 22, 0.1) !important;
+        }
+        .article-content table th {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+        }
+        .article-content table td {
+            border: 1px solid #30363d !important;
+        }
+        .article-content img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .article-content strong {
+            color: #f97316 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← 返回教程目录</a>
+        <div class="article-content markdown-body">
+            <h1 id="openclaw-skills">OpenClaw Skills 生态说明</h1>
+<h2 id="skills-20262">📊 Skills 分类统计（2026年2月）</h2>
+<h3 id="skills">📦 内置 Skills（预装）</h3>
+<p><strong>数量</strong>: 49个<br />
+<strong>位置</strong>: OpenClaw 安装包自带<br />
+<strong>特点</strong>: 开箱即用，无需安装<br />
+<strong>类型</strong>: 文件管理、知识管理、日程管理、自动化等</p>
+<p><strong>说明</strong>: 这些 Skills 在安装 OpenClaw 时就已经包含，可以直接使用，无需额外安装。</p>
+<p><strong>查看命令</strong>:</p>
+<div class="codehilite"><pre><span></span><code>openclaw<span class="w"> </span>skills<span class="w"> </span>list<span class="w"> </span>--builtin
+<span class="sb">```</span>text
+---
+
+<span class="c1">### 🏪 ClawHub 官方 Skills</span>
+
+**数量**:<span class="w"> </span>93个（包含49个内置）<span class="w">  </span>
+**位置**:<span class="w"> </span>ClawHub<span class="w"> </span>官方仓库<span class="w">  </span>
+**特点**:<span class="w"> </span>官方维护，质量保证<span class="w">  </span>
+**安装**:<span class="w"> </span><span class="sb">`</span>clawhub<span class="w"> </span>install<span class="w"> </span>&lt;skill-name&gt;<span class="sb">`</span>
+
+**说明**:<span class="w"> </span>ClawHub<span class="w"> </span>是<span class="w"> </span>OpenClaw<span class="w"> </span>官方的<span class="w"> </span>Skills<span class="w"> </span>市场，提供经过官方审核和维护的高质量<span class="w"> </span>Skills。
+
+**访问方式**:
+<span class="sb">```</span>bash
+<span class="c1"># 搜索 Skills</span>
+clawhub<span class="w"> </span>search<span class="w"> </span>&lt;关键词&gt;
+
+<span class="c1"># 安装 Skills</span>
+clawhub<span class="w"> </span>install<span class="w"> </span>&lt;skill-name&gt;
+
+<span class="c1"># 查看已安装</span>
+openclaw<span class="w"> </span>skills<span class="w"> </span>list
+<span class="sb">```</span>text
+---
+
+<span class="c1">### 🌐 社区 Skills（扩展）</span>
+
+**数量**:<span class="w"> </span><span class="m">1715</span>+个<span class="w">  </span>
+**位置**:<span class="w"> </span>GitHub<span class="w"> </span>社区贡献<span class="w">  </span>
+**特点**:<span class="w"> </span>功能丰富，需要筛选<span class="w">  </span>
+**安装**:<span class="w"> </span>手动安装或通过<span class="w"> </span>GitHub
+
+**说明**:<span class="w"> </span>社区开发者贡献的<span class="w"> </span>Skills，涵盖各种场景和需求。质量参差不齐，使用前建议查看评价和文档。
+
+**安装方式**:
+<span class="sb">```</span>bash
+<span class="c1"># 从 GitHub 克隆</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/user/skill-name<span class="w"> </span>~/.openclaw/skills/skill-name
+
+<span class="c1"># 或使用 clawhub（如果已发布）</span>
+clawhub<span class="w"> </span>install<span class="w"> </span>community/skill-name
+</code></pre></div>
+
+<hr />
+<h3 id="skills_1">🏢 企业级 Skills（百度千帆）</h3>
+<p><strong>数量</strong>: 1715个<br />
+<strong>位置</strong>: 百度千帆平台<br />
+<strong>特点</strong>: 企业级质量，覆盖20+行业<br />
+<strong>适用</strong>: 企业用户、行业应用</p>
+<p><strong>说明</strong>: 百度千帆提供的企业级 Skills 生态，专为企业场景设计，包含行业解决方案。</p>
+<p><strong>行业覆盖</strong>:<br />
+- 金融、医疗、教育、零售<br />
+- 制造、物流、客服、营销<br />
+- 等 20+ 行业</p>
+<hr />
+<h2 id="_1">📈 总计</h2>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>数量</th>
+<th>质量</th>
+<th>推荐度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>内置 Skills</td>
+<td>49个</td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>必用</td>
+</tr>
+<tr>
+<td>ClawHub 官方</td>
+<td>93个</td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>强烈推荐</td>
+</tr>
+<tr>
+<td>社区 Skills</td>
+<td>1715+个</td>
+<td>⭐⭐⭐</td>
+<td>按需选择</td>
+</tr>
+<tr>
+<td>企业级 Skills</td>
+<td>1715个</td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>企业推荐</td>
+</tr>
+<tr>
+<td><strong>总计</strong></td>
+<td><strong>1800+个</strong></td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_2">🎯 推荐安装</h2>
+<h3 id="top-20-skills">Top 20 必装 Skills</h3>
+<p>详见 <a href="03-advanced/08-skills-extension.md">第8章：Skills扩展</a></p>
+<h3 id="_3">新手推荐</h3>
+<ol>
+<li><strong>从内置 Skills 开始</strong> - 熟悉基本功能</li>
+<li><strong>安装 Top 5 核心 Skills</strong> - 扩展核心能力</li>
+<li><strong>根据需求选择社区 Skills</strong> - 满足特定场景</li>
+</ol>
+<hr />
+<h2 id="_4">💡 使用建议</h2>
+<h3 id="skills_2">选择 Skills 的原则</h3>
+<ol>
+<li><strong>优先使用内置 Skills</strong> - 稳定可靠</li>
+<li><strong>官方 Skills 次之</strong> - 质量保证</li>
+<li><strong>社区 Skills 谨慎选择</strong> - 查看评价和文档</li>
+<li><strong>企业用户考虑企业级 Skills</strong> - 专业支持</li>
+</ol>
+<h3 id="_5">避免过度安装</h3>
+<ul>
+<li>❌ 不要一次性安装太多 Skills</li>
+<li>✅ 按需安装，逐步扩展</li>
+<li>✅ 定期清理不用的 Skills</li>
+<li>✅ 关注 Skills 更新</li>
+</ul>
+<hr />
+<h2 id="_6">🔗 相关链接</h2>
+<ul>
+<li><a href="03-advanced/08-skills-extension.md">第8章：Skills扩展</a> - 详细的 Skills 使用指南</li>
+<li><a href="https://clawhub.ai">ClawHub 市场</a> - 官方 Skills 市场</li>
+<li><a href="https://docs.openclaw.ai/skills">Skills 开发文档</a> - 开发自己的 Skills</li>
+</ul>
+<hr />
+<p><strong>最后更新</strong>: 2026-02-14<br />
+<strong>数据来源</strong>: OpenClaw 官方统计</p>
+        </div>
+    </div>
+</body>
+</html>

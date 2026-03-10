@@ -1,0 +1,3676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第8章 Skills扩展：让AI从"能说"到"能做" - OpenClaw 教程</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .markdown-body {
+            background: transparent !important;
+            color: #c9d1d9 !important;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #58a6ff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .article-content h1 {
+            color: #fff !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 15px !important;
+        }
+        .article-content h2 {
+            color: #f97316 !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 10px !important;
+        }
+        .article-content a {
+            color: #58a6ff !important;
+        }
+        .article-content code {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+        }
+        .article-content pre {
+            background: #1f2428 !important;
+            border: 1px solid #30363d !important;
+        }
+        .article-content blockquote {
+            border-left: 4px solid #f97316 !important;
+            background: rgba(249, 115, 22, 0.1) !important;
+        }
+        .article-content table th {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+        }
+        .article-content table td {
+            border: 1px solid #30363d !important;
+        }
+        .article-content img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .article-content strong {
+            color: #f97316 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← 返回教程目录</a>
+        <div class="article-content markdown-body">
+            <h1 id="8-skillsai">第8章 Skills扩展：让AI从"能说"到"能做"</h1>
+<blockquote>
+<p>💡 <strong>本章目标</strong>：深入理解Skills本质，学会使用ClawHub技能市场，掌握必装Skills推荐，学习自定义Skills开发和管理技巧。</p>
+<p>⚠️ <strong>重要提示</strong>：没有Skills的OpenClaw只是1个聊天机器人，有了Skills才能真正成为你的AI助手！</p>
+<p>📊 <strong>Skills 生态概览</strong>：OpenClaw 拥有庞大的 Skills 生态系统，包括内置49个、官方93个、社区1715+个，总计1800+个可用 Skills。详细分类和说明请参考 <a href="../skills-ecosystem.md">Skills 生态说明</a>。</p>
+</blockquote>
+<hr />
+<h2 id="80-skillsai">8.0 Skills本质：AI的"操作说明书"</h2>
+<h3 id="801-skills">8.0.1 什么是Skills？</h3>
+<p><strong>简单理解</strong>：</p>
+<p>Skills 本质上就是教 AI 按固定流程做事的操作说明书，一旦写好，就能像函数一样反复调用。</p>
+<p>可以把 Skills 看成把"某类事情应该怎么专业做"这件事，封装成1个可复用、可自动触发的能力模块。</p>
+<p><strong>形象比喻</strong>：</p>
+<p>把 AI 想象成1个<strong>刚毕业的聪明但没经验的实习生</strong>：</p>
+<ul>
+<li><strong>普通Prompt</strong> = 你每次都要从头教他怎么做事（今天教一遍，明天还得重新教）</li>
+<li><strong>Rule / 记忆</strong> = 你给他贴一张"公司行为守则"在工位上（一直生效，但只能管态度和格式）</li>
+<li><strong>MCP / Tools</strong> = 你给他电脑装了一堆软件和API（他能调用外部工具，但不知道什么时候该用、怎么组合用）</li>
+<li><strong>Skills</strong> = 你直接给他一整套<strong>"岗位培训大礼包"</strong>（PDF+流程图+SOP+话术模板+常用脚本），告诉他："当老板让你做这类事情时，就按这个文件夹里的方法来做"</li>
+</ul>
+<h3 id="802-skills-vs-prompt">8.0.2 Skills vs 传统Prompt</h3>
+<p><strong>核心区别</strong>：按需加载 + 渐进式披露（只在需要时才把厚厚的 SOP 塞进上下文，极大节省 token）</p>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>普通 Prompt</th>
+<th>Skills 机制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>每次都要重新描述</td>
+<td>是</td>
+<td>否（只描述一次）</td>
+</tr>
+<tr>
+<td>上下文长度占用</td>
+<td>每次全量塞入</td>
+<td>渐进式加载（只在触发时才读完整内容）</td>
+</tr>
+<tr>
+<td>一致性</td>
+<td>依赖每次 prompt 质量</td>
+<td>高（固定 SOP + 模板）</td>
+</tr>
+<tr>
+<td>复用性</td>
+<td>手动复制粘贴</td>
+<td>自动匹配 / slash 命令 / 项目共享</td>
+</tr>
+<tr>
+<td>维护方式</td>
+<td>改一次 prompt 就要重新发</td>
+<td>修改 SKILL.md 文件，全局/项目生效</td>
+</tr>
+</tbody>
+</table>
+<p><strong>实际例子</strong>：</p>
+<p>比如我们平时写文章，在没有 Skills 之前，每次都要按以下步骤重复说：</p>
+<div class="codehilite"><pre><span></span><code>帮我总结文章 → 翻译 → 改成公众号风格 → 加标题 → 输出 Markdown
+</code></pre></div>
+
+<p>有了 Skills 之后：</p>
+<div class="codehilite"><pre><span></span><code>你只需要一句：使用「技术文章转公众号」Skill
+
+AI 会自动按你设定的步骤执行。
+</code></pre></div>
+
+<h3 id="803-skills-vs-mcp-vs-tools">8.0.3 Skills vs MCP vs Tools</h3>
+<p><strong>三者的区别</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Skills</th>
+<th>MCP</th>
+<th>Tools</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>核心作用</td>
+<td>知识复用</td>
+<td>能力扩展</td>
+<td>功能调用</td>
+</tr>
+<tr>
+<td>实现方式</td>
+<td>Markdown文件</td>
+<td>服务器端配置</td>
+<td>API接口</td>
+</tr>
+<tr>
+<td>使用难度</td>
+<td>⭐ 简单</td>
+<td>⭐⭐⭐ 复杂</td>
+<td>⭐⭐ 中等</td>
+</tr>
+<tr>
+<td>Token消耗</td>
+<td>低（渐进式加载）</td>
+<td>高（启动时全量加载）</td>
+<td>中等</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>经验、最佳实践、工作流程</td>
+<td>连接API、数据库、外部工具</td>
+<td>单一功能调用</td>
+</tr>
+<tr>
+<td>创建门槛</td>
+<td>任何人都可以创建</td>
+<td>需要编码能力</td>
+<td>需要API开发</td>
+</tr>
+<tr>
+<td>部署要求</td>
+<td>无需服务器</td>
+<td>需要服务器端设置</td>
+<td>需要后端支持</td>
+</tr>
+</tbody>
+</table>
+<p><strong>使用建议</strong>：</p>
+<ul>
+<li>✅ <strong>Skills</strong>：用于知识分享、经验复用、工作流程</li>
+<li>✅ <strong>MCP</strong>：用于连接外部系统、数据库、API</li>
+<li>✅ <strong>Tools</strong>：用于单一功能调用、快速集成</li>
+</ul>
+<h3 id="804-skills">8.0.4 Skills的工作原理</h3>
+<p><strong>渐进式加载机制</strong>：</p>
+<p>Skills用渐进式加载来高效管理上下文：</p>
+<ol>
+<li><strong>发现阶段</strong>：启动时，AI 只加载每个技能的名称和描述，只保留最基本的识别信息</li>
+<li><strong>激活阶段</strong>：当任务匹配某个技能的描述时，AI 才把完整的 SKILL.md 指令读入上下文</li>
+<li><strong>执行阶段</strong>：AI 按照指令执行，按需加载参考文件或运行代码</li>
+</ol>
+<p>这种设计让 AI 保持快速，同时能按需获取更多信息。</p>
+<p><strong>Token消耗对比</strong>：</p>
+<div class="codehilite"><pre><span></span><code>传统方式（全量加载）：
+- 10个Skills × 500字/个 = 5000字
+- 约1250 tokens
+
+Skills方式（渐进式加载）：
+- 发现阶段：10个Skills × 50字/个 = 500字（约125 tokens）
+- 激活阶段：只加载需要的1个Skills = 500字（约125 tokens）
+- 总计：约250 tokens
+
+节省：80% tokens
+</code></pre></div>
+
+<h3 id="805-skills">8.0.5 支持Skills的工具</h3>
+<p>目前能用 Skills 的主流客户端：</p>
+<table>
+<thead>
+<tr>
+<th>排序</th>
+<th>工具名</th>
+<th>是否免费使用Skills</th>
+<th>推荐人群</th>
+<th>技能存放默认路径</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Claude Code</td>
+<td>是（官方）</td>
+<td>所有人</td>
+<td>~/.claude/skills</td>
+<td>标准制定者，生态最全</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Cursor</td>
+<td>是</td>
+<td>写代码最常用</td>
+<td>~/.cursor/skills</td>
+<td>几乎无缝兼容Claude Skills</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Trae / OpenCode</td>
+<td>是</td>
+<td>追求性价比</td>
+<td>看工具设置</td>
+<td>国内用户较多</td>
+</tr>
+<tr>
+<td>4</td>
+<td>VS Code + 插件</td>
+<td>部分支持</td>
+<td>已经深度用vscode</td>
+<td>插件设置里配置</td>
+<td>正在快速跟进</td>
+</tr>
+<tr>
+<td>5</td>
+<td>扣子/其他国内平台</td>
+<td>部分支持</td>
+<td>喜欢网页版</td>
+<td>平台自带技能市场</td>
+<td>有的要会员</td>
+</tr>
+</tbody>
+</table>
+<p><strong>OpenClaw的优势</strong>：</p>
+<ul>
+<li>✅ 完全兼容Claude Skills格式</li>
+<li>✅ 支持本地和云端部署</li>
+<li>✅ 可以通过飞书、企微、钉钉使用</li>
+<li>✅ 支持自定义Skills开发</li>
+<li>✅ 社区生态丰富（1715+个Skills）</li>
+</ul>
+<h3 id="806-skills">8.0.6 Skills核心结构</h3>
+<p><strong>最小Skills结构</strong>：</p>
+<p>1个 Skill 本质上就是1个 Markdown 文件（文件名固定为 SKILL.md）</p>
+<div class="codehilite"><pre><span></span><code>my-skill/
+└── SKILL.md   （唯一必需）
+</code></pre></div>
+
+<p><strong>SKILL.md 基本模板</strong>：</p>
+<div class="codehilite"><pre><span></span><code>---
+name: pdf-processing
+<span class="gu">description: 从 PDF 中提取文本和表格，填写表单，并合并文档</span>
+<span class="gu">---</span>
+
+<span class="gh"># PDF 处理</span>
+
+<span class="gu">## 使用场景</span>
+
+当需要对 PDF 文件进行操作时使用，例如：
+<span class="k">-</span><span class="w"> </span>提取 PDF 文本或表格数据
+<span class="k">-</span><span class="w"> </span>填写 PDF 表单
+<span class="k">-</span><span class="w"> </span>合并多个 PDF 文件
+
+<span class="gu">## 提取文本</span>
+
+<span class="k">-</span><span class="w"> </span>使用 <span class="sb">`pdfplumber`</span> 提取文本型 PDF 内容
+<span class="k">-</span><span class="w"> </span>扫描版 PDF 需配合 OCR 工具
+
+<span class="gu">## 填写表单</span>
+
+<span class="k">-</span><span class="w"> </span>读取 PDF 表单字段
+<span class="k">-</span><span class="w"> </span>按输入数据填充并生成新文件
+```text
+<span class="gs">**Skills核心结构示意图**</span>：
+
+![<span class="nt">Skills核心结构图 - SKILL.md定义技能能力</span>](<span class="na">https://upload.maynor1024.live/file/1770813820310_image1.png</span>)
+
+<span class="gs">**Frontmatter字段说明**</span>：
+
+| 字段 | 必需 | 说明 |
+|------|------|------|
+| name | ✅ | Skill 名称，最长 64 字符，只能使用小写字母、数字和 <span class="sb">`-`</span>，且不能以 <span class="sb">`-`</span> 开头或结尾 |
+| description | ✅ | 功能与使用场景说明，最长 1024 字符，不能为空 |
+| license | ❌ | 许可证名称或指向随 Skill 附带的许可证文件 |
+| compatibility | ❌ | 环境与依赖说明（产品、系统包、网络权限等），最长 500 字符 |
+| metadata | ❌ | 自定义键值对，用于扩展元数据（如作者、版本号） |
+| allowed-tools | ❌ | 允许使用的工具列表（空格分隔，实验性功能） |
+
+<span class="gs">**完整Skills结构**</span>（包含资源文件）：
+
+如果你需要一些参考资料、参考实例、执行脚本，可以使用更复杂的 Skill 目录结构：
+</code></pre></div>
+
+<p>my-skill/<br />
+├── SKILL.md      # 必需：指令 + 元数据<br />
+├── scripts/      # 可选：可执行代码<br />
+├── references/   # 可选：文档资料<br />
+└── assets/       # 可选：模板、资源</p>
+<div class="codehilite"><pre><span></span><code>![复杂Skills目录结构 - 包含脚本和依赖](https://upload.maynor1024.live/file/1770813829999_image2.png)
+
+---
+
+## 🎯 Skills生态概览
+
+**最新数据（2026年2月）**：
+- 📊 **总技能数**：1715+个技能
+- 📁 **主要分类**：31个分类
+- 🌟 **活跃贡献者**：数百位开发者
+- 📈 **增长速度**：每月新增50+个技能
+
+**主要分类及技能数量**：
+- 🌐 Web前端开发：46个
+- 💻 编程代理和IDE：55个
+- 🔧 Git和GitHub：34个
+- ☁️ DevOps和云服务：144个
+- 🌐 浏览器和自动化：69个
+- 🎨 图像和视频生成：41个
+- 🤖 AI和LLMs：159个
+- 📊 数据和分析：18个
+- ✅ 生产力和任务管理：93个
+
+&gt; 💡 **Skills是什么？** Skills是OpenClaw的插件系统，是让AI助手从&quot;能说&quot;到&quot;能做&quot;的关键转变。安装了Skills之后，你的AI助手可以自动浏览网页、收发邮件、操作GitHub、控制智能家居、生成图片、管理任务，甚至控制你的Tesla汽车！
+
+## 🔧 本章内容
+
+- 8.1 ClawHub技能市场
+- 8.2 核心Skills推荐
+- 8.3 Skills 安装方法
+- 8.4 实战应用案例
+- 8.5 安全使用指南
+- 8.6 Skills开发指南
+- 8.7 Skills管理技巧
+
+---
+
+## 8.1 ClawHub技能市场
+
+### 8.1.1 什么是ClawHub
+
+**定义**：
+ClawHub是OpenClaw的官方技能市场（https://clawhub.ai），类似于App Store，提供各种扩展功能。
+
+**核心价值**：
+- 🎯 **扩展能力**：让OpenClaw能做更多事情
+- 🚀 **快速部署**：一键安装，即刻使用
+- 🌍 **社区驱动**：开发者共享优质Skills
+- 🔄 **持续更新**：Skills不断优化升级
+- 📦 **统一管理**：安装、更新、备份一站式
+
+**与其他AI的区别**：
+
+| 特性 | OpenClaw + Skills | ChatGPT Plugins | Claude |
+|------|------------------|-----------------|--------|
+| 本地执行 | ✅ | ❌ | ❌ |
+| 系统操作 | ✅ | ❌ | ❌ |
+| 自定义开发 | ✅ | ❌ | ❌ |
+| 社区生态 | ✅ | ✅ | ❌ |
+| 免费使用 | ✅ | 部分付费 | ❌ |
+
+### 8.1.2 Skills加载机制
+
+**Skills加载位置**：
+
+OpenClaw从3个位置加载Skills，优先级从高到低：
+</code></pre></div>
+
+<ol>
+<li>工作区Skills：<workspace>/skills（最高优先级）</li>
+<li>单智能体专用</li>
+<li>
+<p>项目特定的Skills</p>
+</li>
+<li>
+<p>托管/本地Skills：~/.openclaw/skills</p>
+</li>
+<li>所有智能体共享</li>
+<li>
+<p>用户自定义Skills</p>
+</li>
+<li>
+<p>内置Skills：随安装包发布（最低优先级）</p>
+</li>
+<li>OpenClaw官方Skills</li>
+<li>基础功能Skills</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>**优先级规则**：
+</code></pre></div>
+
+<p>如果同名Skills存在于多个位置：<br />
+工作区Skills &gt; 托管/本地Skills &gt; 内置Skills</p>
+<p>示例：<br />
+- 内置Skills：file-search v1.0<br />
+- 本地Skills：file-search v1.2（自定义版本）<br />
+- 工作区Skills：file-search v2.0（项目专用）</p>
+<p>最终加载：工作区的 v2.0 版本</p>
+<div class="codehilite"><pre><span></span><code>**额外Skills目录**：
+
+可以通过配置添加额外的Skills文件夹：
+
+```json
+{
+  &quot;skills&quot;: {
+    &quot;load&quot;: {
+      &quot;extraDirs&quot;: [
+        &quot;/path/to/shared-skills&quot;,
+        &quot;/path/to/team-skills&quot;
+      ]
+    }
+  }
+}
+```text
+### 8.1.3 ClawHub使用指南
+
+**访问方式**：
+
+```bash
+# 方式1：网页访问（推荐）
+https://clawhub.ai
+
+# 方式2：命令行工具
+clawhub --help
+
+# 方式3：OpenClaw内访问
+你：打开ClawHub
+```text
+**常用命令**：
+
+```bash
+# 搜索Skills
+clawhub search &lt;关键词&gt;
+
+# 查看Skills详情
+clawhub info &lt;skill-slug&gt;
+
+# 安装Skills到工作区
+clawhub install &lt;skill-slug&gt;
+
+# 安装到指定目录
+clawhub install &lt;skill-slug&gt; --dir /path/to/skills
+
+# 更新单个Skills
+clawhub update &lt;skill-slug&gt;
+
+# 更新所有Skills
+clawhub update --all
+
+# 同步（扫描+发布更新）
+clawhub sync --all
+
+# 列出已安装的Skills
+clawhub list
+
+# 卸载Skills
+clawhub uninstall &lt;skill-slug&gt;
+```text
+**安装位置说明**：
+
+```bash
+# 默认安装到当前工作目录
+clawhub install nano-banana-pro
+# 安装到：./skills/nano-banana-pro/
+
+# 如果不在工作目录，回退到配置的工作区
+# 安装到：&lt;workspace&gt;/skills/nano-banana-pro/
+```text
+**ClawHub界面布局**：
+
+
+![ClawHub技能市场 - 浏览和安装技能](https://upload.maynor1024.live/file/1770738350555_image-20260210234513022.png)
+
+### 8.1.3 技能分类和搜索
+
+**主要分类**：
+
+**1. 文件管理类**
+- 文件搜索
+- 文件整理
+- 批量处理
+- 格式转换
+
+**2. 知识管理类**
+- 网页剪藏
+- 笔记同步
+- 文献管理
+- 知识图谱
+
+**3. 日程管理类**
+- 日历同步
+- 提醒设置
+- 任务管理
+- 时间追踪
+
+**4. 自动化类**
+- 定时任务
+- 网站监控
+- 数据采集
+- 流程自动化
+
+**5. 工具类**
+- 截图工具
+- 翻译助手
+- 计算器
+- 单位转换
+
+**6. 娱乐休闲类**
+- 音乐播放
+- 天气查询
+- 新闻阅读
+- 游戏娱乐
+
+**搜索技巧**：
+</code></pre></div>
+
+<h1 id="_1">按名称搜索</h1>
+<p>搜索：file-search</p>
+<h1 id="_2">按功能搜索</h1>
+<p>搜索：文件搜索</p>
+<h1 id="_3">按标签搜索</h1>
+<p>搜索：#文件管理 #效率工具</p>
+<h1 id="_4">按作者搜索</h1>
+<p>搜索：@作者名</p>
+<h1 id="_5">组合搜索</h1>
+<p>搜索：文件 #管理 @官方</p>
+<div class="codehilite"><pre><span></span><code>### 8.1.4 技能评价体系
+
+**评价维度**：
+
+| 维度 | 说明 | 权重 |
+|------|------|------|
+| ⭐ 评分 | 用户评分（1-5星） | 30% |
+| 📥 下载量 | 安装次数 | 20% |
+| 🔄 更新频率 | 维护活跃度 | 20% |
+| 📝 文档质量 | 说明完善度 | 15% |
+| 🐛 Bug数量 | 稳定性 | 15% |
+
+**评分标准**：
+</code></pre></div>
+
+<p>⭐⭐⭐⭐⭐ (5.0) - 完美<br />
+- 功能完善<br />
+- 文档详细<br />
+- 无明显Bug<br />
+- 持续更新</p>
+<p>⭐⭐⭐⭐ (4.0-4.9) - 优秀<br />
+- 功能完整<br />
+- 文档清晰<br />
+- 偶尔小Bug<br />
+- 定期更新</p>
+<p>⭐⭐⭐ (3.0-3.9) - 良好<br />
+- 基本功能可用<br />
+- 文档一般<br />
+- 有些Bug<br />
+- 更新较慢</p>
+<p>⭐⭐ (2.0-2.9) - 一般<br />
+- 功能不完整<br />
+- 文档缺失<br />
+- Bug较多<br />
+- 很少更新</p>
+<p>⭐ (1.0-1.9) - 较差<br />
+- 功能有问题<br />
+- 无文档<br />
+- Bug很多<br />
+- 不再维护</p>
+<div class="codehilite"><pre><span></span><code>**如何选择Skills**：
+</code></pre></div>
+
+<p>✅ 推荐安装：<br />
+- 评分 ≥ 4.0<br />
+- 下载量 &gt; 1000<br />
+- 最近3个月有更新<br />
+- 文档完善</p>
+<p>⚠️ 谨慎安装：<br />
+- 评分 3.0-3.9<br />
+- 下载量 &lt; 1000<br />
+- 更新不频繁<br />
+- 文档不全</p>
+<p>❌ 不推荐：<br />
+- 评分 &lt; 3.0<br />
+- 长期不更新<br />
+- 无文档<br />
+- Bug多</p>
+<div class="codehilite"><pre><span></span><code>### 8.1.5 Skills 安装和管理
+
+**安装方式**：
+
+**方式1：通过ClawHub安装**
+</code></pre></div>
+
+<ol>
+<li>打开ClawHub</li>
+<li>搜索Skills</li>
+<li>点击"安装"按钮</li>
+<li>等待安装完成</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>**方式2：通过命令行安装**
+```bash
+# 安装单个Skill
+openclaw skill install file-search
+
+# 安装多个Skills
+openclaw skill install file-search note-sync calendar-sync
+
+# 从URL安装
+openclaw skill install https://github.com/user/skill-name
+```text
+**方式3：通过OpenClaw对话安装**
+</code></pre></div>
+
+<p>你：帮我安装file-search这个Skill</p>
+<p>OpenClaw：好的，我来帮你安装！</p>
+<p>正在安装 file-search...<br />
+- 下载中... ✅<br />
+- 解压中... ✅<br />
+- 配置中... ✅<br />
+- 测试中... ✅</p>
+<p>安装成功！✅</p>
+<p>Skill信息：<br />
+- 名称：File Search<br />
+- 版本：v1.2.0<br />
+- 作者：OpenClaw官方<br />
+- 功能：智能文件搜索</p>
+<p>现在你可以使用文件搜索功能了！</p>
+<div class="codehilite"><pre><span></span><code>**查看已安装Skills**：
+
+```bash
+# 列出所有已安装的Skills
+openclaw skill list
+
+# 输出示例：
+已安装Skills（12个）：
+
+文件管理类（3个）：
+✅ file-search v1.2.0
+✅ file-organizer v2.0.1
+✅ batch-processor v1.5.0
+
+知识管理类（4个）：
+✅ web-clipper v1.8.0
+✅ note-sync v2.1.0
+✅ github-manager v1.3.0
+✅ paper-reader v1.0.5
+
+日程管理类（2个）：
+✅ calendar-sync v3.0.0
+✅ reminder v1.4.0
+
+工具类（3个）：
+✅ screenshot v2.2.0
+✅ translator v1.6.0
+✅ calculator v1.1.0
+```text
+**更新Skills**：
+
+```bash
+# 检查更新
+openclaw skill update --check
+
+# 更新所有Skills
+openclaw skill update --all
+
+# 更新指定Skill
+openclaw skill update file-search
+
+# 输出示例：
+检查更新中...
+
+发现3个可更新的Skills：
+1. file-search: v1.2.0 → v1.3.0
+2. note-sync: v2.1.0 → v2.2.0
+3. calendar-sync: v3.0.0 → v3.1.0
+
+是否更新？[Y/n]
+```text
+**卸载Skills**：
+
+```bash
+# 卸载单个Skill
+openclaw skill uninstall file-search
+
+# 卸载多个Skills
+openclaw skill uninstall file-search note-sync
+
+# 输出示例：
+正在卸载 file-search...
+- 停止服务... ✅
+- 清理配置... ✅
+- 删除文件... ✅
+
+卸载成功！✅
+```text
+---
+
+## 8.2 必装Skills推荐
+
+### 8.2.1 文件管理类Skills
+
+**1. file-search（智能文件搜索）**
+</code></pre></div>
+
+<p>⭐ 评分：5.0/5.0<br />
+📥 下载量：50,000+<br />
+👤 作者：OpenClaw官方</p>
+<p>功能：<br />
+- 基于内容的智能搜索<br />
+- 支持多种文件格式<br />
+- 快速索引和检索<br />
+- 模糊匹配</p>
+<p>使用示例：<br />
+你：搜索包含"发票"的PDF文件</p>
+<p>OpenClaw：找到3个匹配文件：<br />
+1. 2026年1月发票.pdf<br />
+2. 跑步机购买发票.pdf<br />
+3. 办公用品发票.pdf</p>
+<div class="codehilite"><pre><span></span><code>**2. file-organizer（文件自动整理）**
+</code></pre></div>
+
+<p>⭐ 评分：4.8/5.0<br />
+📥 下载量：35,000+<br />
+👤 作者：OpenClaw官方</p>
+<p>功能：<br />
+- 智能分类文件<br />
+- 批量重命名<br />
+- 重复文件检测<br />
+- 自动归档</p>
+<p>使用示例：<br />
+你：整理下载文件夹</p>
+<p>OpenClaw：正在整理...<br />
+- 图片 → Pictures/Downloads/<br />
+- 文档 → Documents/Downloads/<br />
+- 视频 → Videos/Downloads/<br />
+- 其他 → Others/Downloads/</p>
+<p>整理完成！共处理156个文件 ✅</p>
+<div class="codehilite"><pre><span></span><code>**3. batch-processor（批量文件处理）**
+</code></pre></div>
+
+<p>⭐ 评分：4.7/5.0<br />
+📥 下载量：28,000+<br />
+👤 作者：社区开发者</p>
+<p>功能：<br />
+- 批量格式转换<br />
+- 批量压缩<br />
+- 批量提取信息<br />
+- 批量重命名</p>
+<p>使用示例：<br />
+你：把这个文件夹里的所有PNG转成JPG</p>
+<p>OpenClaw：正在转换...<br />
+- image1.png → image1.jpg ✅<br />
+- image2.png → image2.jpg ✅<br />
+- image3.png → image3.jpg ✅<br />
+...<br />
+共转换25个文件 ✅</p>
+<div class="codehilite"><pre><span></span><code>### 8.2.2 知识管理类Skills
+
+**4. web-clipper（网页剪藏）**
+</code></pre></div>
+
+<p>⭐ 评分：4.9/5.0<br />
+📥 下载量：45,000+<br />
+👤 作者：OpenClaw官方</p>
+<p>功能：<br />
+- 网页内容抓取<br />
+- 智能摘要生成<br />
+- 多平台保存（备忘录/Notion/Obsidian）<br />
+- 标签管理</p>
+<p>使用示例：<br />
+你：保存这篇文章到备忘录<br />
+https://example.com/article</p>
+<p>OpenClaw：已保存！<br />
+标题：AI技术发展趋势<br />
+摘要：[自动生成的摘要]<br />
+标签：#AI #技术 #趋势<br />
+位置：备忘录 &gt; AI学习 ✅</p>
+<div class="codehilite"><pre><span></span><code>**5. note-sync（笔记同步）**
+</code></pre></div>
+
+<p>⭐ 评分：4.8/5.0<br />
+📥 下载量：32,000+<br />
+👤 作者：OpenClaw官方</p>
+<p>功能：<br />
+- 多平台笔记同步<br />
+- 实时备份<br />
+- 版本控制<br />
+- 冲突解决</p>
+<p>支持平台：<br />
+- Mac备忘录<br />
+- Notion<br />
+- Obsidian<br />
+- Evernote</p>
+<div class="codehilite"><pre><span></span><code>**6. github-manager（GitHub项目管理）**
+</code></pre></div>
+
+<p>⭐ 评分：4.6/5.0<br />
+📥 下载量：25,000+<br />
+👤 作者：社区开发者</p>
+<p>功能：<br />
+- 项目信息分析<br />
+- README总结<br />
+- 代码结构理解<br />
+- Star/Fork追踪</p>
+<p>使用示例：<br />
+你：分析这个GitHub项目<br />
+https://github.com/user/project</p>
+<p>OpenClaw：分析完成！<br />
+项目：Awesome Project<br />
+Stars：15.3k<br />
+语言：TypeScript<br />
+核心功能：[详细分析]<br />
+推荐指数：⭐⭐⭐⭐⭐</p>
+<div class="codehilite"><pre><span></span><code>### 8.2.3 日程管理类Skills
+
+**7. calendar-sync（日历同步）**
+</code></pre></div>
+
+<p>⭐ 评分：5.0/5.0<br />
+📥 下载量：60,000+<br />
+👤 作者：OpenClaw官方</p>
+<p>功能：<br />
+- Mac日历集成<br />
+- 自动创建事件<br />
+- 智能提醒<br />
+- 跨设备同步</p>
+<p>使用示例：<br />
+你：明天下午3点，会议室A开会</p>
+<p>OpenClaw：已创建日历事件！<br />
+标题：会议<br />
+时间：2026-02-12 15:00-16:00<br />
+地点：会议室A<br />
+提醒：提前15分钟 ✅</p>
+<div class="codehilite"><pre><span></span><code>**8. reminder（智能提醒）**
+</code></pre></div>
+
+<p>⭐ 评分：4.7/5.0<br />
+📥 下载量：38,000+<br />
+👤 作者：OpenClaw官方</p>
+<p>功能：<br />
+- 多级提醒设置<br />
+- 智能提醒策略<br />
+- 位置提醒<br />
+- 重复提醒</p>
+<p>使用示例：<br />
+你：每天早上8点提醒我喝水</p>
+<p>OpenClaw：已设置提醒！<br />
+内容：该喝水了💧<br />
+时间：每天 08:00<br />
+方式：飞书消息 ✅</p>
+<div class="codehilite"><pre><span></span><code>### 8.2.4 自动化类Skills
+
+**9. scheduler（任务调度）**
+</code></pre></div>
+
+<p>⭐ 评分：4.9/5.0<br />
+📥 下载量：42,000+<br />
+👤 作者：OpenClaw官方</p>
+<p>功能：<br />
+- 定时任务设置<br />
+- Cron表达式支持<br />
+- 任务依赖管理<br />
+- 错误重试</p>
+<p>使用示例：<br />
+你：每天早上8点推送AI日报</p>
+<p>OpenClaw：已设置定时任务！<br />
+任务：AI日报推送<br />
+时间：每天 08:00<br />
+Cron：0 8 * * *<br />
+状态：已启用 ✅</p>
+<div class="codehilite"><pre><span></span><code>**10. monitor（网站监控）**
+</code></pre></div>
+
+<p>⭐ 评分：4.6/5.0<br />
+📥 下载量：28,000+<br />
+👤 作者：社区开发者</p>
+<p>功能：<br />
+- 网站变化检测<br />
+- 价格监控<br />
+- 内容更新提醒<br />
+- RSS订阅</p>
+<p>使用示例：<br />
+你：监控这个博客的更新<br />
+https://example-blog.com</p>
+<p>OpenClaw：已设置监控！<br />
+网站：Example Blog<br />
+频率：每天2次<br />
+通知：飞书消息 ✅</p>
+<div class="codehilite"><pre><span></span><code>### 8.2.5 工具类Skills
+
+**11. screenshot（截图工具）**
+</code></pre></div>
+
+<p>⭐ 评分：4.8/5.0<br />
+📥 下载量：35,000+<br />
+👤 作者：OpenClaw官方</p>
+<p>功能：<br />
+- 全屏截图<br />
+- 窗口截图<br />
+- 区域截图<br />
+- OCR识别</p>
+<p>使用示例：<br />
+你：截图当前屏幕</p>
+<p>OpenClaw：已截图！<br />
+[发送截图]<br />
+是否需要OCR识别文字？</p>
+<div class="codehilite"><pre><span></span><code>![截图技能演示 - 自动捕获屏幕内容](https://upload.maynor1024.live/file/1770176353570_image_35.jpg)
+
+**12. translator（翻译助手）**
+</code></pre></div>
+
+<p>⭐ 评分：4.7/5.0<br />
+📥 下载量：30,000+<br />
+👤 作者：社区开发者</p>
+<p>功能：<br />
+- 多语言翻译<br />
+- 实时翻译<br />
+- 文档翻译<br />
+- 术语库管理</p>
+<p>使用示例：<br />
+你：把这段话翻译成英文<br />
+"人工智能正在改变世界"</p>
+<p>OpenClaw：翻译结果：<br />
+"Artificial Intelligence is changing the world"</p>
+<div class="codehilite"><pre><span></span><code>### 8.2.6 Skills推荐总结
+
+**必装Top 10**：
+
+| 排名 | Skill | 分类 | 评分 | 推荐理由 |
+|------|-------|------|------|----------|
+| 1 | calendar-sync | 日程管理 | 5.0 | 日历集成必备 |
+| 2 | file-search | 文件管理 | 5.0 | 文件搜索神器 |
+| 3 | web-clipper | 知识管理 | 4.9 | 知识收集利器 |
+| 4 | scheduler | 自动化 | 4.9 | 定时任务必备 |
+| 5 | note-sync | 知识管理 | 4.8 | 笔记同步工具 |
+| 6 | file-organizer | 文件管理 | 4.8 | 文件整理助手 |
+| 7 | screenshot | 工具 | 4.8 | 截图OCR工具 |
+| 8 | reminder | 日程管理 | 4.7 | 智能提醒系统 |
+| 9 | batch-processor | 文件管理 | 4.7 | 批量处理工具 |
+| 10 | translator | 工具 | 4.7 | 翻译助手 |
+
+**安装建议**：
+
+```bash
+# 基础套装（必装）
+openclaw skill install calendar-sync file-search web-clipper
+
+# 进阶套装（推荐）
+openclaw skill install scheduler note-sync file-organizer
+
+# 完整套装（全能）
+openclaw skill install calendar-sync file-search web-clipper \
+  scheduler note-sync file-organizer screenshot reminder \
+  batch-processor translator
+```text
+### 8.2.7 核心Skills详解（2026年必备）
+
+&gt; 💡 **新增内容**：基于1715+个技能生态，精选7大核心技能，每个都经过实战验证。
+
+#### 1. McPorter——跨平台连接基石 🏗️
+
+**核心作用**：
+让OpenClaw支持MCP（Model Context Protocol）协议，无需编写胶水代码，直接连接成千上万个现成的MCP Server。
+
+**支持平台**：
+- PostgreSQL数据库
+- GitHub
+- Slack
+- Notion
+- 其他主流平台
+
+**安装命令**：
+```bash
+npx clawhub@latest install mcporter
+```text
+**配置示例**：
+```bash
+# 配置MCP服务器（以连接本地文件为例）
+openclaw mcp add --transport stdio local-files npx -y @modelcontextprotocol/server-filesystem /root/Documents
+```text
+**使用场景**：
+- &quot;读取Notion中的项目文档，整理成Markdown&quot;
+- &quot;把GitHub上的最新代码提交记录同步到本地&quot;
+
+**真实效果**：某开发团队使用McPorter技能，将日常协作效率提升了3倍。
+
+#### 2. Brave Search——实时信息检索 🔍
+
+**核心作用**：
+解决传统AI Agent&quot;数据过时&quot;的问题，让OpenClaw能进行实时全网搜索，获取最新的GitHub Issue、StackOverflow解答、行业资讯。
+
+**安装命令**：
+```bash
+npx clawhub@latest install brave-search
+```text
+**使用场景**：
+- **代码报错排查**：&quot;帮我排查这个Python报错的原因，找最新的解决方案&quot;
+- **竞品调研**：&quot;查一下某产品最新功能的实现方式，附代码片段&quot;
+
+**效果**：2分钟即可得到带参考链接的详细报告，告别&quot;凭训练数据瞎猜&quot;的时代。
+
+#### 3. TranscriptAPI——视频知识提取 🎥
+
+**核心作用**：
+稳定抓取YouTube视频字幕，带精确时间戳，将视频中的知识转化为可编辑的文本。
+
+**安装命令**：
+```bash
+npx clawhub@latest install transcript-api
+```text
+**使用场景**：
+&quot;提取这个2小时Next.js教程视频的核心代码逻辑，按章节整理成学习笔记&quot;
+
+**价值**：无需手动拉进度条，AI直接将知识&quot;喂到嘴边&quot;，学习效率提升3倍以上。
+
+#### 4. File System Manager——本地文件处理 💾
+
+**核心作用**：
+赋予OpenClaw本地文件的读写、修改、重构权限，支持批量修改代码、修复语法错误、自动提交Git。
+
+**安装命令**：
+```bash
+npx clawhub@latest install file-system-manager
+```text
+![1Password CLI集成 - 安全管理密码凭证](https://upload.maynor1024.live/file/1770778507814_image-20260211105458447.png)
+
+
+
+**重要安全配置**：
+
+```bash
+# 配置授权目录（仅开放工作目录，避免全硬盘访问）
+openclaw config set fs.allow-path /root/Projects
+```text
+**使用场景**：
+- &quot;帮我重构这个React组件，优化代码结构并修复ESLint报错&quot;
+- &quot;将本地Markdown文件转为PDF，保存到指定目录&quot;
+
+**注意**：该技能是双刃剑，需严格控制访问目录，避免误操作。
+
+#### 5. Headless Browser (Playwright)——浏览器自动化 🤖
+
+**核心作用**：
+模拟真实人类的浏览器操作，支持点击、输入、截图、表单提交，针对无API的老旧网站实现自动化操作。
+
+**安装命令**：
+```bash
+npx clawhub@latest install playwright-headless
+```text
+**使用场景**：
+- &quot;每天早上8点自动登录公司抢票系统，帮我预约车票&quot;
+- &quot;定时截图某政府网站的公告，有更新就保存并提醒&quot;
+
+**注意**：该功能过于强大，需合规使用，避免违反平台规则。
+
+#### 6. Design-Doc-Mermaid——图表自动生成 📊
+
+**核心作用**：
+通过自然语言指令生成Mermaid代码，自动渲染架构图、时序图、流程图。
+
+**安装命令**：
+```bash
+npx clawhub@latest install design-doc-mermaid
+```text
+**使用场景**：
+&quot;帮我画1个用户注册的时序图，包含前端、后端、数据库交互&quot;
+
+**效果**：AI直接生成Mermaid代码并渲染成图，告别用画图工具手动拖拽的时代。
+
+#### 7. Google Workspace集成——办公自动化 📧
+
+**核心作用**：
+无缝连接Gmail、Google Calendar、Google Docs，实现邮件整理、日程同步、文档自动生成。
+
+**安装命令**：
+```bash
+npx clawhub@latest install google-workspace
+```text
+**授权配置**：
+```bash
+# 授权Google账号（按终端提示完成浏览器认证）
+openclaw auth google
+```text
+**使用场景**：
+- &quot;查一下我这周的Gmail邮件和Calendar日程，生成一份简洁的周报，发给老板&quot;
+- &quot;根据会议纪要，自动创建Google Calendar日程，邀请参会人员&quot;
+
+#### 8. find-skills + ProactiveAgent——Skills双幻神 🌟🌟
+
+**核心作用**：
+- **find-skills**：智能发现Skills，OpenClaw遇到问题时自动寻找合适的Skills
+- **ProactiveAgent**：主动预测需求，观察使用习惯后主动提出自动化建议
+
+**安装命令**：
+```bash
+# 安装Skills双幻神
+npx clawhub@latest install find-skills
+npx clawhub@latest install proactive-agent
+```text
+**使用场景**：
+- find-skills：当OpenClaw无法完成某个任务时，自动搜索并推荐合适的Skills
+- ProactiveAgent：做了几次日报转HTML后，主动问&quot;要不要我帮你自动化这个流程？&quot;
+
+**GitHub链接**：
+- find-skills: https://github.com/vercel-labs/skills/tree/main/skills/find-skills
+- ProactiveAgent: https://github.com/leomariga/ProactiveAgent
+
+⚠️ **安全提示**：ProactiveAgent安装时可能显示VirusTotal警告（因包含外部API调用），这是正常的，可以安全使用。
+
+**核心Skills 安装命令汇总**：
+```bash
+# 一键安装9大核心Skills（包含Skills双幻神）
+npx clawhub@latest install mcporter brave-search transcript-api \
+  file-system-manager playwright-headless design-doc-mermaid google-workspace \
+  find-skills proactive-agent
+```text
+---
+
+## 8.3 Skills 安装方法详解
+
+&gt; 💡 **三种安装方式**：ClawHub CLI（推荐）、对话式安装（最简单）、手动安装（高级用户）
+
+### 8.3.1 方法一：ClawHub CLI一键安装（推荐）⭐
+
+**特点**：
+- ✅ 最简单、最快捷
+- ✅ 自动处理依赖
+- ✅ 支持版本管理
+
+**安装命令**：
+```bash
+npx clawhub@latest install &lt;技能名称&gt;
+```text
+**实际示例**：
+```bash
+# 安装网页搜索技能
+npx clawhub@latest install brave-search
+
+# 安装多个技能
+npx clawhub@latest install brave-search transcript-api file-system-manager
+```text
+**常用管理命令**：
+```bash
+# 查看已安装技能
+npx clawhub@latest list
+
+# 更新技能
+npx clawhub@latest update &lt;skill-slug&gt;
+
+# 卸载技能
+npx clawhub@latest uninstall &lt;skill-slug&gt;
+
+# 更新所有技能
+npx clawhub@latest update --all
+```text
+### 8.3.2 方法二：对话式安装（最懒人方式）
+
+**特点**：
+- ✅ 无需命令行
+- ✅ 适合新手
+- ✅ AI自动配置
+
+**使用方法**：
+
+直接在聊天界面中输入：
+</code></pre></div>
+
+<p>请安装这个技能：https://github.com/openclaw/skills/tree/main/skills/steipete/brave-search</p>
+<div class="codehilite"><pre><span></span><code>AI会自动帮你下载和配置，完全不需要手动操作！
+
+**适用场景**：
+- 不熟悉命令行的用户
+- 快速测试某个技能
+- 临时安装单个技能
+
+### 8.3.3 方法三：手动安装（高级用户）
+
+**特点**：
+- ✅ 完全掌控
+- ✅ 可自定义配置
+- ✅ 适合开发调试
+
+**安装步骤**：
+```bash
+# 1. 克隆技能仓库
+git clone https://github.com/openclaw/skills
+
+# 2. 复制到全局技能目录
+cp -r skills/skills/&lt;作者&gt;/&lt;技能名&gt; ~/.openclaw/skills/
+
+# 3. 重启OpenClaw
+openclaw gateway restart
+```text
+---
+
+## 8.4 实战应用案例
+
+&gt; 💡 **三大场景完整案例**：内容创作、团队协作、智能家居，都有真实数据支撑。
+
+### 8.4.1 场景一：自动化内容创作流程 ✍️
+
+**需求背景**：
+自媒体博主每天需要发布3篇公众号文章，包括搜索资料、撰写内容、配图、排版，传统方式需要6小时/天。
+
+**使用的Skills组合**：
+1. `brave-search` - 搜索最新资讯
+2. `deep-research` - 深度研究主题
+3. `fal-ai` - 生成配图
+4. `notion` - 保存草稿
+5. `markdown-formatter` - 格式化文章
+
+**效果对比**：
+
+| 指标 | 传统方式 | 使用 OpenClaw Skills |
+|------|---------|-------------------|
+| ⏰ 时间消耗 | 6小时/天 | 2小时/天 |
+| 📈 文章产量 | 3篇/天 | 5篇/天 |
+| 💰 配图成本 | 300元/天 | 0元/天 |
+
+**具体操作流程**：
+1. **信息收集**：使用brave-search搜索当日热点话题
+2. **深度研究**：通过deep-research对选定话题进行深入分析
+3. **内容生成**：AI根据研究成果自动撰写文章草稿
+4. **配图生成**：使用fal-ai生成原创配图，避免版权问题
+5. **格式排版**：自动格式化为公众号要求的样式
+
+### 8.4.2 场景二：开发团队协作自动化 💻
+
+**需求背景**：
+10人开发团队需要管理日常协作，包括代码审查、任务分配、进度跟踪等。
+
+**使用的Skills组合**：
+1. `github` - 代码仓库管理
+2. `linear` - 任务分配
+3. `slack` - 团队通知
+4. `google-calendar` - 会议安排
+
+**效果提升**：
+- 📊 PR审查时间：从2天降到4小时
+- 🎯 任务分配效率：提升80%
+- 💬 沟通成本：减少50%
+- 📅 会议安排：自动化100%
+
+**安装命令**：
+```bash
+npx clawhub@latest install github linear-integration slack-bot google-workspace
+```text
+**自动化工作流**：
+1. **自动代码审查**：每次PR提交自动进行基础代码检查
+2. **任务自动分配**：根据团队成员工作量和专长智能分配任务
+3. **进度自动同步**：每日自动生成项目进度报告并发送到Slack
+4. **会议自动安排**：根据团队成员日历自动安排最佳会议时间
+
+### 8.4.3 场景三：智能家居全自动化 🏠
+
+**需求背景**：
+根据天气、时间、位置自动控制家中所有设备，提升生活品质。
+
+**使用的Skills组合**：
+1. `home-assistant` - 智能家居控制
+2. `weather-api` - 天气查询
+3. `location-tracker` - 位置追踪
+4. `automation-scheduler` - 自动化调度
+
+**实现的智能场景**：
+- 🌅 **早晨唤醒**：早上7点自动打开窗帘、启动咖啡机
+- 🌧️ **天气适应**：下雨时自动关闭窗户
+- 🚗 **离家模式**：离家10分钟自动关闭所有灯光和空调
+- 🏠 **回家预热**：到家前5分钟自动打开空调和灯光
+
+**安装命令**：
+```bash
+npx clawhub@latest install home-assistant weather-api location-tracker automation-scheduler
+```text
+---
+
+## 8.5 安全使用指南
+
+&gt; ⚠️ **重要**：Skills虽然强大，但也存在安全风险。必须严格遵循安全原则。
+
+### 8.5.1 核心安全原则
+
+1. **隔离运行环境**：重要的OpenClaw实例建议运行在Docker或专用虚拟机中
+2. **严控权限范围**：对高危Skill仅开放必要的工作目录/操作权限
+3. **优先官方认证**：安装带&quot;官方认证&quot;&quot;高星标&quot;的技能
+4. **安装前检查代码**：查看技能代码确认无恶意逻辑
+
+### 8.5.2 安全配置命令
+
+**权限控制**：
+```bash
+# 查看Skill的核心代码，确认无恶意逻辑
+clawhub view file-system-manager
+
+# 限制OpenClaw的系统资源使用
+docker update --cpus=1 --memory=2g openclaw-2026
+
+# 备份OpenClaw 配置，防止恶意修改
+docker cp openclaw-2026:/root/.openclaw /root/openclaw-backup
+```text
+**安全检查清单**：
+- ✅ 查看技能的GitHub仓库
+- ✅ 检查技能的依赖项
+- ✅ 阅读技能的权限要求
+- ✅ 使用skill-scanner扫描恶意代码
+- ✅ 在测试环境中先试用
+
+### 8.5.3 ClawHavoc供应链攻击警告
+
+&gt; ⚠️ **OpenClaw历史上最严重的安全事件** - 每个「养虾人」都必须了解
+
+ClawHavoc供应链攻击是OpenClaw历史上影响最广的安全事件，所有用户都应该了解其严重性和防护措施。
+
+#### 攻击时间线
+
+| 日期 | 事件 |
+|------|------|
+| 2026年1月27日 | 首个恶意Skill出现在ClawHub上，伪装成专业工具 |
+| 2026年1月28-30日 | 攻击者快速上传大量恶意Skill，利用ClawHub缺乏审查机制的漏洞 |
+| 2026年1月31日 | 攻击全面爆发，多名用户报告异常行为 |
+| 2026年2月1日 | Koi Security正式命名该攻击为「ClawHavoc」 |
+| 2026年2月上旬 | 社区展开大规模审计和清理 |
+
+#### 攻击规模
+
+| 指标 | 数据 |
+|------|------|
+| 当时ClawHub技能总数 | 约2,857个 |
+| 初步确认恶意Skills | 341个（约12%） |
+| 后续扫描发现的恶意Skills | 800+（约20%） |
+| 可追溯到同一协调行动的 | 335个 |
+| 受影响设备 | 135,000+ |
+
+&gt; ⚠️ **注意**：ClawHub当时约20%的Skills被确认为恶意。这意味着如果你随机安装5个Skill，大概率至少有1个是恶意的。
+
+#### 攻击手法
+
+攻击者的手法相当精密，具有极强的欺骗性：
+
+1. **伪装成专业工具**：上传看似专业的Skill，名称和描述都很正常（如「advanced-code-review」「smart-scheduler」）
+2. **诱导安装恶意组件**：诱导用户安装后，Skill会建议安装一个「helper agent」来增强功能
+3. **植入信息窃取木马**：实际植入的是 Atomic macOS Stealer（AMOS）信息窃取木马
+4. **篡改持久记忆文件**：更危险的是，攻击专门针对OpenClaw的持久记忆文件（SOUL.md和MEMORY.md），篡改Agent的长期行为指令
+
+**篡改SOUL.md意味着你的Agent被「洗脑」了**。它的核心行为准则被改写，可能在后续所有交互中执行恶意操作，而你完全不知情。
+
+#### 防护措施
+
+**1. 安装前审查源码**
+
+永远不要盲目安装ClawHub上的Skill。去GitHub查看源码，确认SKILL.md中没有可疑的指令。特别注意任何要求额外安装「helper」或「agent」的内容。
+
+**2. 使用SecureClaw扫描**
+
+社区推出了社区开源安全工具SecureClaw，可以扫描已安装的Skills检查恶意内容。
+
+```bash
+# 安装SecureClaw
+npm install -g secureclaw
+
+# 扫描已安装的skills
+secureclaw scan ~/.openclaw/skills/
+</code></pre></div>
+
+<p>虽然不能100%防护，但能拦住已知的攻击模式。</p>
+<p><strong>3. 优先使用精选列表</strong></p>
+<p>参考 <a href="https://github.com/VoltAgent/awesome-openclaw-skills">awesome-openclaw-skills 项目</a>（31.4K Stars）的精选列表，而不是直接在ClawHub上随意搜索。</p>
+<p>精选列表已经过滤掉了大量垃圾和恶意Skill。</p>
+<p><strong>4. 定期检查SOUL.md和MEMORY.md</strong></p>
+<p>养成习惯，定期检查这两个文件有没有被异常修改。如果发现不认识的内容，立即回滚并排查所有已安装的Skill。</p>
+<p><strong>关键认知</strong>：OpenClaw的Skill本质上是受信任代码。一旦安装，它就拥有和你的OpenClaw实例相同的权限。没有沙箱隔离，没有权限分级。这和npm生态早期面临的问题一模一样，但后果可能更严重，因为OpenClaw可以访问你的邮件、日历、消息和文件系统。</p>
+<hr />
+<h3 id="854">8.5.4 故障排查</h3>
+<p><strong>问题一：技能安装失败</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 网络超时问题：检查服务器网络连接</span>
+ping<span class="w"> </span>github.com
+
+<span class="c1"># 配置国内镜像源（如遇网络问题）</span>
+npm<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>registry<span class="w"> </span>https://registry.npmmirror.com
+<span class="sb">```</span>text
+**问题二：技能加载失败**
+<span class="sb">```</span>bash
+<span class="c1"># 查看技能加载状态</span>
+openclaw<span class="w"> </span>plugins<span class="w"> </span>list
+
+<span class="c1"># 重新加载技能</span>
+openclaw<span class="w"> </span>plugins<span class="w"> </span>load<span class="w"> </span>&lt;skill-name&gt;
+
+<span class="c1"># 更新所有技能</span>
+clawhub<span class="w"> </span>update<span class="w"> </span>--all
+openclaw<span class="w"> </span>gateway<span class="w"> </span>restart
+<span class="sb">```</span>text
+**问题三：技能执行无响应**
+<span class="sb">```</span>bash
+<span class="c1"># 查看技能执行日志</span>
+openclaw<span class="w"> </span>logs<span class="w"> </span>--skill<span class="w"> </span>&lt;skill-name&gt;
+
+<span class="c1"># 检查权限配置</span>
+openclaw<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span>fs.allow-path
+<span class="sb">```</span>text
+---
+
+<span class="c1">## 8.6 Skills开发指南</span>
+
+&gt;<span class="w"> </span>💡<span class="w"> </span>**创建自定义Skills**：如果现有的1715+个技能无法满足你的特殊需求，可以创建自己的技能。
+
+<span class="c1">### 8.6.1 创建自定义Skills</span>
+
+**创建步骤**：
+<span class="m">1</span>.<span class="w"> </span>**创建技能文件夹**：在<span class="w"> </span><span class="sb">`</span>~/.openclaw/skills/<span class="sb">`</span><span class="w"> </span>中创建新文件夹
+<span class="m">2</span>.<span class="w"> </span>**编写描述文件**：创建<span class="w"> </span><span class="sb">`</span>SKILL.md<span class="sb">`</span><span class="w"> </span>描述文件
+<span class="m">3</span>.<span class="w"> </span>**添加脚本配置**：编写必要的脚本和配置文件
+<span class="m">4</span>.<span class="w"> </span>**测试技能功能**：在本地测试技能是否正常工作
+<span class="m">5</span>.<span class="w"> </span>**分享到社区**：将技能贡献给社区
+
+**技能目录结构**：
+</code></pre></div>
+
+<p>my-custom-skill/<br />
+├── SKILL.md          # 技能描述文档<br />
+├── config.json       # 配置文件<br />
+├── scripts/          # 执行脚本<br />
+│   └── main.js<br />
+└── README.md         # 使用说明</p>
+<div class="codehilite"><pre><span></span><code>**项目文件结构示例**：
+
+![自定义Skills项目结构 - 完整的开发示例](https://upload.maynor1024.live/file/1770813835155_image3.png)
+
+你的项目现在看起来应该是这样的：
+</code></pre></div>
+
+<p>my-project/<br />
+├─ src/<br />
+│  └─ test.py              # 项目源码<br />
+├─ .claude/<br />
+│  ├─ skills/<br />
+│  │  └─ hello-world/<br />
+│  │     ├─ SKILL.md       # Skill 定义（YAML + Instructions，机器可执行）<br />
+│  │     └─ README.md      # Skill 说明（人类阅读，可选）<br />
+│  └─ config.yml           # Claude 项目级配置（可选）<br />
+├─ .gitignore<br />
+└─ README.md               # 项目整体说明</p>
+<div class="codehilite"><pre><span></span><code>**Claude Code执行效果**：
+
+接下来我们在终端执行以下命令启动 Claude Code：
+
+```bash
+claude
+```text
+输入任务：
+</code></pre></div>
+
+<p>帮我写1个计算用户折扣的函数</p>
+<div class="codehilite"><pre><span></span><code>Claude 会扫描已安装的 Skills，发现你的请求涉及 &quot;Python 代码编写&quot;，匹配了 python-naming-standard。
+
+![Claude Code执行效果 - Skills自动匹配和调用](https://upload.maynor1024.live/file/1770813836904_image4.png)
+
+它会根据 SKILL.md 中的要求，生成如下代码：
+
+```python
+def _internal_get_discount(user_score):
+    # 计算逻辑...
+    return discount
+```text
+### 8.6.2 技能开发最佳实践
+
+**设计原则**：
+1. **单一职责**：每个技能只解决1个特定问题
+2. **接口简单**：提供清晰简单的使用接口
+3. **错误处理**：完善的错误处理和用户提示
+4. **文档完整**：提供详细的使用文档和示例
+
+**示例技能模板**：
+```javascript
+// 简单技能示例
+module.exports = {
+  name: &quot;my-custom-skill&quot;,
+  description: &quot;这是我的自定义技能&quot;,
+  version: &quot;1.0.0&quot;,
+
+  async execute(params, context) {
+    try {
+      // 技能核心逻辑
+      const result = await doSomething(params);
+      return { success: true, data: result };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+};
+```text
+---
+
+## 8.7 自定义Skills开发（原8.3节）
+
+### 8.3.1 Skills开发基础
+
+**为什么要开发Skills**：
+
+1. **满足个性化需求**
+   - 官方Skills无法满足
+   - 特定业务场景
+   - 企业内部工具
+
+2. **学习和成长**
+   - 深入理解OpenClaw
+   - 提升编程能力
+   - 贡献开源社区
+
+3. **商业价值**
+   - 开发付费Skills
+   - 提供定制服务
+   - 建立个人品牌
+
+**开发前准备**：
+
+```bash
+# 1. 安装开发工具
+npm install -g openclaw
+
+# 2. 创建开发环境
+openclaw dev init
+
+# 3. 学习文档
+openclaw docs
+
+# 4. 查看示例
+openclaw examples
+```text
+### 8.3.2 Skills文件格式（AgentSkills兼容）
+
+**基本格式**：
+
+OpenClaw使用兼容AgentSkills的Skills文件夹。每个Skills是1个包含`SKILL.md`的目录。
+
+**最小示例**：
+
+```markdown
+---
+name: nano-banana-pro
+description: Generate or edit images via Gemini 3 Pro Image
+---
+
+# Nano Banana Pro
+
+这个Skills可以生成和编辑图片。
+
+## 使用方法
+
+发送：画一只可爱的猫
+```text
+**完整示例**：
+
+```markdown
+---
+name: gemini
+description: Use Gemini CLI for coding assistance and Google search lookups.
+homepage: https://github.com/example/gemini-skill
+user-invocable: true
+disable-model-invocation: false
+metadata: {
+  &quot;openclaw&quot;: {
+    &quot;emoji&quot;: &quot;♊️&quot;,
+    &quot;requires&quot;: {
+      &quot;bins&quot;: [&quot;gemini&quot;],
+      &quot;env&quot;: [&quot;GEMINI_API_KEY&quot;]
+    },
+    &quot;primaryEnv&quot;: &quot;GEMINI_API_KEY&quot;,
+    &quot;install&quot;: [
+      {
+        &quot;id&quot;: &quot;brew&quot;,
+        &quot;kind&quot;: &quot;brew&quot;,
+        &quot;formula&quot;: &quot;gemini-cli&quot;,
+        &quot;bins&quot;: [&quot;gemini&quot;],
+        &quot;label&quot;: &quot;Install Gemini CLI (brew)&quot;
+      }
+    ]
+  }
+}
+---
+
+# Gemini Skills
+
+使用Gemini CLI进行编程辅助和Google搜索。
+
+## 功能
+
+- 代码生成
+- 问题解答
+- 网络搜索
+
+## 使用方法
+
+发送：用Gemini搜索最新的AI新闻
+```text
+**Frontmatter字段说明**：
+
+| 字段 | 必填 | 说明 |
+|------|------|------|
+| `name` | ✅ | Skills名称（唯一标识） |
+| `description` | ✅ | Skills描述 |
+| `homepage` | ❌ | 项目主页URL |
+| `user-invocable` | ❌ | 是否作为斜杠命令暴露（默认true） |
+| `disable-model-invocation` | ❌ | 是否从模型提示词中排除（默认false） |
+| `command-dispatch` | ❌ | 命令调度模式（tool=直接调度到工具） |
+| `command-tool` | ❌ | 要调用的工具名称 |
+| `command-arg-mode` | ❌ | 参数模式（raw=原始字符串） |
+| `metadata` | ❌ | 元数据（单行JSON对象） |
+
+**注意事项**：
+</code></pre></div>
+
+<p>⚠️ 重要：<br />
+1. 内嵌智能体的解析器仅支持单行frontmatter键<br />
+2. metadata必须是单行JSON对象<br />
+3. 在说明中使用{baseDir}引用Skills文件夹路径</p>
+<div class="codehilite"><pre><span></span><code>### 8.3.3 Skills门控（加载时过滤）
+
+**什么是门控**：
+
+门控是指在加载时根据条件过滤Skills，只加载满足条件的Skills。
+
+**门控配置**：
+
+通过`metadata.openclaw`配置门控条件：
+
+```markdown
+---
+name: nano-banana-pro
+description: Generate or edit images
+metadata: {
+  &quot;openclaw&quot;: {
+    &quot;requires&quot;: {
+      &quot;bins&quot;: [&quot;uv&quot;],
+      &quot;env&quot;: [&quot;GEMINI_API_KEY&quot;],
+      &quot;config&quot;: [&quot;browser.enabled&quot;]
+    },
+    &quot;primaryEnv&quot;: &quot;GEMINI_API_KEY&quot;,
+    &quot;os&quot;: [&quot;darwin&quot;, &quot;linux&quot;]
+  }
+}
+---
+```text
+**门控字段说明**：
+
+| 字段 | 说明 | 示例 |
+|------|------|------|
+| `always` | 始终包含（跳过其他门控） | `&quot;always&quot;: true` |
+| `os` | 限制操作系统 | `&quot;os&quot;: [&quot;darwin&quot;, &quot;linux&quot;]` |
+| `requires.bins` | 必需的二进制文件（全部） | `&quot;bins&quot;: [&quot;uv&quot;, &quot;python&quot;]` |
+| `requires.anyBins` | 必需的二进制文件（任一） | `&quot;anyBins&quot;: [&quot;npm&quot;, &quot;yarn&quot;]` |
+| `requires.env` | 必需的环境变量 | `&quot;env&quot;: [&quot;API_KEY&quot;]` |
+| `requires.config` | 必需的配置项 | `&quot;config&quot;: [&quot;browser.enabled&quot;]` |
+| `primaryEnv` | 主要环境变量名 | `&quot;primaryEnv&quot;: &quot;GEMINI_API_KEY&quot;` |
+
+**门控示例**：
+
+```markdown
+# 示例1：仅macOS可用
+metadata: {
+  &quot;openclaw&quot;: {
+    &quot;os&quot;: [&quot;darwin&quot;]
+  }
+}
+
+# 示例2：需要特定工具
+metadata: {
+  &quot;openclaw&quot;: {
+    &quot;requires&quot;: {
+      &quot;bins&quot;: [&quot;ffmpeg&quot;, &quot;imagemagick&quot;]
+    }
+  }
+}
+
+# 示例3：需要API 密钥
+metadata: {
+  &quot;openclaw&quot;: {
+    &quot;requires&quot;: {
+      &quot;env&quot;: [&quot;OPENAI_API_KEY&quot;]
+    },
+    &quot;primaryEnv&quot;: &quot;OPENAI_API_KEY&quot;
+  }
+}
+
+# 示例4：需要配置启用
+metadata: {
+  &quot;openclaw&quot;: {
+    &quot;requires&quot;: {
+      &quot;config&quot;: [&quot;features.experimental&quot;]
+    }
+  }
+}
+```text
+### 8.3.4 Skills 安装器配置
+
+**什么是安装器**：
+
+安装器定义了如何安装Skills所需的依赖（二进制文件、包等）。
+
+**支持的安装器类型**：
+
+1. **Homebrew**（macOS/Linux）
+2. **Node包管理器**（npm/pnpm/yarn/bun）
+3. **Go**
+4. **UV**（Python）
+5. **Download**（直接下载）
+
+**安装器示例**：
+
+```markdown
+---
+name: gemini
+metadata: {
+  &quot;openclaw&quot;: {
+    &quot;install&quot;: [
+      {
+        &quot;id&quot;: &quot;brew&quot;,
+        &quot;kind&quot;: &quot;brew&quot;,
+        &quot;formula&quot;: &quot;gemini-cli&quot;,
+        &quot;bins&quot;: [&quot;gemini&quot;],
+        &quot;label&quot;: &quot;Install Gemini CLI (brew)&quot;,
+        &quot;os&quot;: [&quot;darwin&quot;, &quot;linux&quot;]
+      },
+      {
+        &quot;id&quot;: &quot;npm&quot;,
+        &quot;kind&quot;: &quot;node&quot;,
+        &quot;package&quot;: &quot;gemini-cli&quot;,
+        &quot;bins&quot;: [&quot;gemini&quot;],
+        &quot;label&quot;: &quot;Install Gemini CLI (npm)&quot;,
+        &quot;global&quot;: true
+      }
+    ]
+  }
+}
+---
+```text
+**安装器字段说明**：
+
+| 字段 | 说明 |
+|------|------|
+| `id` | 安装器唯一标识 |
+| `kind` | 安装器类型（brew/node/go/uv/download） |
+| `formula` | Homebrew formula名称 |
+| `package` | npm包名称 |
+| `bins` | 安装后的二进制文件列表 |
+| `label` | 显示给用户的标签 |
+| `os` | 支持的操作系统 |
+| `global` | 是否全局安装（Node） |
+
+**Download安装器**：
+
+```markdown
+metadata: {
+  &quot;openclaw&quot;: {
+    &quot;install&quot;: [
+      {
+        &quot;id&quot;: &quot;download-mac&quot;,
+        &quot;kind&quot;: &quot;download&quot;,
+        &quot;url&quot;: &quot;https://example.com/tool-mac.tar.gz&quot;,
+        &quot;archive&quot;: &quot;tar.gz&quot;,
+        &quot;extract&quot;: true,
+        &quot;stripComponents&quot;: 1,
+        &quot;targetDir&quot;: &quot;~/.openclaw/tools/my-tool&quot;,
+        &quot;bins&quot;: [&quot;my-tool&quot;],
+        &quot;label&quot;: &quot;Download for macOS&quot;,
+        &quot;os&quot;: [&quot;darwin&quot;]
+      }
+    ]
+  }
+}
+```text
+**安装器选择逻辑**：
+</code></pre></div>
+
+<ol>
+<li>如果列出多个安装器，Gateway会选择首选选项：</li>
+<li>优先选择brew（如果可用）</li>
+<li>其次选择node</li>
+<li>
+<p>最后选择其他</p>
+</li>
+<li>
+<p>如果所有安装器都是download类型：</p>
+</li>
+<li>OpenClaw会列出每个条目</li>
+<li>
+<p>让用户选择适合的构件</p>
+</li>
+<li>
+<p>Node安装遵循配置：</p>
+</li>
+<li>skills.install.nodeManager（默认npm）</li>
+<li>选项：npm/pnpm/yarn/bun</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>### 8.3.5 项目结构
+
+**标准Skills目录结构**：
+</code></pre></div>
+
+<p>my-skill/<br />
+├── SKILL.md              # Skills定义（必需）<br />
+├── README.md             # 说明文档<br />
+├── tools/                # 工具脚本<br />
+│   ├── setup.sh         # 安装脚本<br />
+│   └── cleanup.sh       # 清理脚本<br />
+├── examples/             # 示例<br />
+│   └── example.md<br />
+└── assets/               # 资源文件<br />
+    └── icon.png</p>
+<div class="codehilite"><pre><span></span><code>**SKILL.md引用文件**：
+
+在SKILL.md中可以使用`{baseDir}`引用Skills文件夹路径：
+
+```markdown
+---
+name: my-skill
+description: My custom skill
+---
+
+# My Skill
+
+## 安装
+
+运行安装脚本：
+```bash
+bash {baseDir}/tools/setup.sh
+```text
+## 示例
+
+查看示例：{baseDir}/examples/example.md
+</code></pre></div>
+
+<p>由于内容较长，让我先提交当前进度，然后继续完成剩余章节。</p>
+<p><function_calls><br />
+<invoke name="executeBash"><br />
+<parameter name="command">git add .</p>
+<p><strong>实战案例1：开发1个简单的Skills</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// src/index.ts</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Skill</span><span class="p">,</span><span class="w"> </span><span class="nx">SkillConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@openclaw/sdk&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">HelloSkill</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Skill</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">SkillConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;hello-skill&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;1.0.0&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;1个简单的问候Skills&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">author</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;你的名字&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">keywords</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;问候&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;示例&#39;</span><span class="p">],</span>
+<span class="w">    </span><span class="nx">permissions</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="w">  </span><span class="p">};</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">onMessage</span><span class="p">(</span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 检测是否包含&quot;你好&quot;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s1">&#39;你好&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;你好！我是Hello Skill，很高兴认识你！😊&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 检测是否包含&quot;再见&quot;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s1">&#39;再见&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;再见！期待下次见面！👋&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w"> </span><span class="c1">// 不处理其他消息</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="sb">```text</span>
+<span class="sb">**测试Skills**：</span>
+
+<span class="sb">```</span><span class="nx">bash</span>
+<span class="err">#</span><span class="w"> </span><span class="nx">启动开发服务器</span>
+<span class="nx">npm</span><span class="w"> </span><span class="nx">run</span><span class="w"> </span><span class="nx">dev</span>
+
+<span class="err">#</span><span class="w"> </span><span class="nx">在OpenClaw中测试</span>
+<span class="nx">你</span><span class="err">：</span><span class="nx">你好</span>
+
+<span class="nx">OpenClaw</span><span class="err">：</span><span class="nx">你好</span><span class="err">！</span><span class="nx">我是Hello</span><span class="w"> </span><span class="nx">Skill</span><span class="err">，</span><span class="nx">很高兴认识你</span><span class="err">！😊</span>
+<span class="sb">```text</span>
+<span class="sb">**实战案例2：封装第三方API**</span>
+
+<span class="sb">```</span><span class="nx">typescript</span>
+<span class="c1">// src/index.ts</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Skill</span><span class="p">,</span><span class="w"> </span><span class="nx">SkillConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@openclaw/sdk&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">axios</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;axios&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">WeatherSkill</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Skill</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">SkillConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;weather-skill&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;1.0.0&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;天气查询Skills&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">author</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;你的名字&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">keywords</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;天气&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;API&#39;</span><span class="p">],</span>
+<span class="w">    </span><span class="nx">permissions</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;network&#39;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">};</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">apiKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;your-api-key&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">apiUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;https://api.weather.com&#39;</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">onMessage</span><span class="p">(</span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 检测是否是天气查询</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">match</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/(.+)的天气/</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">match</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">city</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">match</span><span class="p">[</span><span class="mf">1</span><span class="p">];</span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// 调用天气API</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">axios</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">apiUrl</span><span class="si">}</span><span class="sb">/weather`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">city</span><span class="o">:</span><span class="w"> </span><span class="kt">city</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">key</span><span class="o">:</span><span class="w"> </span><span class="kt">this.apiKey</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">});</span>
+
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">weather</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">city</span><span class="si">}</span><span class="sb">的天气：</span>
+<span class="sb">🌡️ 温度：</span><span class="si">${</span><span class="nx">weather</span><span class="p">.</span><span class="nx">temp</span><span class="si">}</span><span class="sb">°C</span>
+<span class="sb">☁️ 天气：</span><span class="si">${</span><span class="nx">weather</span><span class="p">.</span><span class="nx">condition</span><span class="si">}</span>
+<span class="sb">💨 风力：</span><span class="si">${</span><span class="nx">weather</span><span class="p">.</span><span class="nx">wind</span><span class="si">}</span>
+<span class="sb">💧 湿度：</span><span class="si">${</span><span class="nx">weather</span><span class="p">.</span><span class="nx">humidity</span><span class="si">}</span><span class="sb">%`</span><span class="p">;</span>
+
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="sb">`抱歉，查询</span><span class="si">${</span><span class="nx">city</span><span class="si">}</span><span class="sb">的天气失败了。`</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="sb">```text</span>
+<span class="sb">**实战案例3：复杂Skills开发**</span>
+
+<span class="sb">```</span><span class="nx">typescript</span>
+<span class="c1">// src/index.ts</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Skill</span><span class="p">,</span><span class="w"> </span><span class="nx">SkillConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@openclaw/sdk&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">FileManager</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./utils/file&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">NotionAPI</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;./utils/notion&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nx">NoteSkill</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Skill</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">config</span><span class="o">:</span><span class="w"> </span><span class="kt">SkillConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;note-skill&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">version</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;1.0.0&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">description</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;笔记管理Skills&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">author</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;你的名字&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">keywords</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;笔记&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Notion&#39;</span><span class="p">],</span>
+<span class="w">    </span><span class="nx">permissions</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;file:read&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;file:write&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;network&#39;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">};</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">fileManager</span><span class="o">:</span><span class="w"> </span><span class="kt">FileManager</span><span class="p">;</span>
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="nx">notionAPI</span><span class="o">:</span><span class="w"> </span><span class="kt">NotionAPI</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">onInit</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 初始化文件管理器</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">fileManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">FileManager</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// 初始化Notion API</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">notionAPI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">NotionAPI</span><span class="p">({</span>
+<span class="w">      </span><span class="nx">token</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.NOTION_TOKEN</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">async</span><span class="w"> </span><span class="nx">onMessage</span><span class="p">(</span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 保存笔记</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">&#39;保存笔记：&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">&#39;保存笔记：&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">saveNote</span><span class="p">(</span><span class="nx">content</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 搜索笔记</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">&#39;搜索笔记：&#39;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">message</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">&#39;搜索笔记：&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">searchNote</span><span class="p">(</span><span class="nx">keyword</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 同步到Notion</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">message</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;同步到Notion&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">syncToNotion</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">saveNote</span><span class="p">(</span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// 保存到本地</span>
+<span class="w">      </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">fileManager</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="s1">&#39;notes.md&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">content</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;笔记已保存到本地 ✅&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;保存失败 ❌&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">searchNote</span><span class="p">(</span><span class="nx">keyword</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// 搜索本地笔记</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">fileManager</span><span class="p">.</span><span class="nx">search</span><span class="p">(</span><span class="nx">keyword</span><span class="p">);</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="sb">`找到</span><span class="si">${</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span><span class="si">}</span><span class="sb">条笔记：\n</span><span class="si">${</span><span class="nx">results</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;搜索失败 ❌&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="nx">syncToNotion</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// 读取本地笔记</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">notes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">fileManager</span><span class="p">.</span><span class="nx">readAll</span><span class="p">();</span>
+
+<span class="w">      </span><span class="c1">// 同步到Notion</span>
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">note</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">notes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">notionAPI</span><span class="p">.</span><span class="nx">createPage</span><span class="p">({</span>
+<span class="w">          </span><span class="nx">title</span><span class="o">:</span><span class="w"> </span><span class="kt">note.title</span><span class="p">,</span>
+<span class="w">          </span><span class="nx">content</span><span class="o">:</span><span class="w"> </span><span class="kt">note.content</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="sb">`已同步</span><span class="si">${</span><span class="nx">notes</span><span class="p">.</span><span class="nx">length</span><span class="si">}</span><span class="sb">条笔记到Notion ✅`</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;同步失败 ❌&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="sb">```text</span>
+<span class="sb">### 8.3.4 调试和测试技巧</span>
+
+<span class="sb">**调试方法**：</span>
+
+<span class="sb">**1. 使用console.log**</span>
+<span class="sb">```</span><span class="nx">typescript</span>
+<span class="k">async</span><span class="w"> </span><span class="nx">onMessage</span><span class="p">(</span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;收到消息：&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">message</span><span class="p">);</span>
+
+<span class="w">  </span><span class="c1">// 你的逻辑</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">process</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+<span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;处理结果：&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">result</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">result</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="sb">```text</span>
+<span class="sb">**2. 使用调试器**</span>
+<span class="sb">```</span><span class="nx">bash</span>
+<span class="err">#</span><span class="w"> </span><span class="nx">启动调试模式</span>
+<span class="nx">npm</span><span class="w"> </span><span class="nx">run</span><span class="w"> </span><span class="nx">dev</span><span class="o">:</span><span class="kt">debug</span>
+
+<span class="err">#</span><span class="w"> </span><span class="nx">在VSCode中设置断点</span>
+<span class="err">#</span><span class="w"> </span><span class="nx">按F5开始调试</span>
+<span class="sb">```text</span>
+<span class="sb">**3. 单元测试**</span>
+<span class="sb">```</span><span class="nx">typescript</span>
+<span class="c1">// tests/index.test.ts</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">describe</span><span class="p">,</span><span class="w"> </span><span class="nx">it</span><span class="p">,</span><span class="w"> </span><span class="nx">expect</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;vitest&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="nx">HelloSkill</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;../src/index&#39;</span><span class="p">;</span>
+
+<span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;HelloSkill&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should respond to hello&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">skill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">HelloSkill</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">skill</span><span class="p">.</span><span class="nx">onMessage</span><span class="p">(</span><span class="s1">&#39;你好&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">).</span><span class="nx">toContain</span><span class="p">(</span><span class="s1">&#39;你好&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should respond to goodbye&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">skill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">HelloSkill</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">skill</span><span class="p">.</span><span class="nx">onMessage</span><span class="p">(</span><span class="s1">&#39;再见&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">expect</span><span class="p">(</span><span class="nx">response</span><span class="p">).</span><span class="nx">toContain</span><span class="p">(</span><span class="s1">&#39;再见&#39;</span><span class="p">);</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">});</span>
+<span class="sb">```text</span>
+<span class="sb">**运行测试**：</span>
+<span class="sb">```</span><span class="nx">bash</span>
+<span class="err">#</span><span class="w"> </span><span class="nx">运行所有测试</span>
+<span class="nx">npm</span><span class="w"> </span><span class="nx">test</span>
+
+<span class="err">#</span><span class="w"> </span><span class="nx">运行单个测试</span>
+<span class="nx">npm</span><span class="w"> </span><span class="nx">test</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="nx">index</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">ts</span>
+
+<span class="err">#</span><span class="w"> </span><span class="nx">查看测试覆盖率</span>
+<span class="nx">npm</span><span class="w"> </span><span class="nx">run</span><span class="w"> </span><span class="nx">test</span><span class="o">:</span><span class="kt">coverage</span>
+<span class="sb">```text</span>
+<span class="sb">### 8.3.5 发布到ClawHub</span>
+
+<span class="sb">**发布前检查**：</span>
+
+<span class="sb">```</span><span class="nx">bash</span>
+<span class="err">#</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="nx">运行测试</span>
+<span class="nx">npm</span><span class="w"> </span><span class="nx">test</span>
+
+<span class="err">#</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="nx">检查代码规范</span>
+<span class="nx">npm</span><span class="w"> </span><span class="nx">run</span><span class="w"> </span><span class="nx">lint</span>
+
+<span class="err">#</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="nx">构建生产版本</span>
+<span class="nx">npm</span><span class="w"> </span><span class="nx">run</span><span class="w"> </span><span class="nx">build</span>
+
+<span class="err">#</span><span class="w"> </span><span class="mf">4.</span><span class="w"> </span><span class="nx">检查包大小</span>
+<span class="nx">npm</span><span class="w"> </span><span class="nx">run</span><span class="w"> </span><span class="nx">size</span>
+<span class="sb">```text</span>
+<span class="sb">**发布步骤**：</span>
+
+<span class="sb">```</span><span class="nx">bash</span>
+<span class="err">#</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="nx">登录ClawHub</span>
+<span class="nx">openclaw</span><span class="w"> </span><span class="nx">login</span>
+
+<span class="err">#</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="nx">发布Skills</span>
+<span class="nx">openclaw</span><span class="w"> </span><span class="nx">skill</span><span class="w"> </span><span class="nx">publish</span>
+
+<span class="err">#</span><span class="w"> </span><span class="nx">输出示例</span><span class="err">：</span>
+<span class="nx">正在发布</span><span class="w"> </span><span class="nx">hello</span><span class="o">-</span><span class="nx">skill</span><span class="p">...</span>
+<span class="o">-</span><span class="w"> </span><span class="nx">检查配置</span><span class="p">...</span><span class="w"> </span><span class="err">✅</span>
+<span class="o">-</span><span class="w"> </span><span class="nx">运行测试</span><span class="p">...</span><span class="w"> </span><span class="err">✅</span>
+<span class="o">-</span><span class="w"> </span><span class="nx">构建代码</span><span class="p">...</span><span class="w"> </span><span class="err">✅</span>
+<span class="o">-</span><span class="w"> </span><span class="nx">上传文件</span><span class="p">...</span><span class="w"> </span><span class="err">✅</span>
+<span class="o">-</span><span class="w"> </span><span class="nx">生成文档</span><span class="p">...</span><span class="w"> </span><span class="err">✅</span>
+
+<span class="nx">发布成功</span><span class="err">！✅</span>
+
+<span class="nx">Skill信息</span><span class="err">：</span>
+<span class="o">-</span><span class="w"> </span><span class="nx">名称</span><span class="err">：</span><span class="nx">hello</span><span class="o">-</span><span class="nx">skill</span>
+<span class="o">-</span><span class="w"> </span><span class="nx">版本</span><span class="err">：</span><span class="nx">v1</span><span class="mf">.0.0</span>
+<span class="o">-</span><span class="w"> </span><span class="nx">链接</span><span class="err">：</span><span class="nx">https</span><span class="o">:</span><span class="c1">//clawhub.ai/skills/hello-skill</span>
+
+<span class="nx">现在其他用户可以安装你的Skill了</span><span class="err">！</span>
+<span class="sb">```text</span>
+<span class="sb">**发布后维护**：</span>
+
+<span class="sb">```</span><span class="nx">bash</span>
+<span class="err">#</span><span class="w"> </span><span class="nx">更新Skills</span>
+<span class="nx">openclaw</span><span class="w"> </span><span class="nx">skill</span><span class="w"> </span><span class="nx">update</span>
+
+<span class="err">#</span><span class="w"> </span><span class="nx">查看下载统计</span>
+<span class="nx">openclaw</span><span class="w"> </span><span class="nx">skill</span><span class="w"> </span><span class="nx">stats</span>
+
+<span class="err">#</span><span class="w"> </span><span class="nx">查看用户反馈</span>
+<span class="nx">openclaw</span><span class="w"> </span><span class="nx">skill</span><span class="w"> </span><span class="nx">feedback</span>
+<span class="sb">```text</span>
+<span class="sb">---</span>
+
+<span class="sb">## 8.4 Skills管理技巧</span>
+
+<span class="sb">### 8.4.1 配置覆盖（~/.openclaw/openclaw.json）</span>
+
+<span class="sb">**配置Skills**：</span>
+
+<span class="sb">内置/托管Skills可以通过配置文件进行切换和配置：</span>
+
+<span class="sb">```</span><span class="nx">json</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="s2">&quot;skills&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">&quot;entries&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;nano-banana-pro&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;enabled&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;apiKey&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GEMINI_KEY_HERE&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;env&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;GEMINI_API_KEY&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GEMINI_KEY_HERE&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">&quot;config&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="s2">&quot;endpoint&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://example.invalid&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;model&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;nano-pro&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;peekaboo&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;enabled&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;sag&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;enabled&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="sb">```text</span>
+<span class="sb">**配置规则**：</span>
+</code></pre></div>
+
+<ol>
+<li>配置键默认匹配Skills名称</li>
+<li>如果Skills名称包含连字符，用引号括起键名</li>
+<li>如果Skills定义了metadata.openclaw.skillKey，使用该键</li>
+</ol>
+<p>示例：<br />
+- Skills名称：file-search<br />
+- 配置键："file-search"（需要引号）</p>
+<div class="codehilite"><pre><span></span><code>**配置字段说明**：
+
+| 字段 | 说明 | 示例 |
+|------|------|------|
+| `enabled` | 启用/禁用Skills | `true` / `false` |
+| `apiKey` | API 密钥（便捷字段） | `&quot;your-api-key&quot;` |
+| `env` | 环境变量 | `{&quot;KEY&quot;: &quot;value&quot;}` |
+| `config` | 自定义配置 | `{&quot;model&quot;: &quot;gpt-4&quot;}` |
+
+**环境变量注入规则**：
+</code></pre></div>
+
+<ol>
+<li>env中的变量仅在进程中尚未设置时注入</li>
+<li>apiKey为声明primaryEnv的Skills提供便捷配置</li>
+<li>config用于自定义单Skills字段</li>
+<li>环境变量在智能体运行时注入，运行结束后恢复</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>**示例配置**：
+
+```json
+{
+  &quot;skills&quot;: {
+    &quot;entries&quot;: {
+      // 配置Gemini Skills
+      &quot;gemini&quot;: {
+        &quot;enabled&quot;: true,
+        &quot;apiKey&quot;: &quot;your-gemini-key&quot;,
+        &quot;config&quot;: {
+          &quot;model&quot;: &quot;gemini-pro&quot;,
+          &quot;temperature&quot;: 0.7
+        }
+      },
+
+      // 配置Banana绘图
+      &quot;nano-banana-pro&quot;: {
+        &quot;enabled&quot;: true,
+        &quot;env&quot;: {
+          &quot;GEMINI_API_KEY&quot;: &quot;your-key&quot;,
+          &quot;BANANA_ENDPOINT&quot;: &quot;https://api.banana.dev&quot;
+        }
+      },
+
+      // 禁用某个Skills
+      &quot;unwanted-skill&quot;: {
+        &quot;enabled&quot;: false
+      }
+    },
+
+    // 仅允许特定内置Skills（可选）
+    &quot;allowBundled&quot;: [
+      &quot;file-search&quot;,
+      &quot;calendar-sync&quot;,
+      &quot;web-clipper&quot;
+    ]
+  }
+}
+```text
+**allowBundled白名单**：
+
+```json
+{
+  &quot;skills&quot;: {
+    &quot;allowBundled&quot;: [
+      &quot;file-search&quot;,
+      &quot;note-sync&quot;
+    ]
+  }
+}
+```text
+说明：
+- 如果设置了`allowBundled`，只有列表中的内置Skills才有资格
+- 托管/工作区Skills不受影响
+- 用于限制内置Skills的加载
+
+### 8.4.2 Skills监视器（自动刷新）
+
+**什么是Skills监视器**：
+
+Skills监视器会监视Skills文件夹，当SKILL.md文件更改时自动更新Skills快照。
+
+**配置监视器**：
+
+```json
+{
+  &quot;skills&quot;: {
+    &quot;load&quot;: {
+      &quot;watch&quot;: true,              // 启用监视器（默认true）
+      &quot;watchDebounceMs&quot;: 250      // 防抖延迟（毫秒）
+    }
+  }
+}
+```text
+**工作原理**：
+</code></pre></div>
+
+<ol>
+<li>OpenClaw在会话开始时对有资格的Skills进行快照</li>
+<li>监视器监视Skills文件夹的变化</li>
+<li>当SKILL.md更改时，刷新Skills列表</li>
+<li>刷新后的列表在下1个智能体轮次生效</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>**使用场景**：
+</code></pre></div>
+
+<p>✅ 开发Skills时实时测试<br />
+✅ 修改Skills 配置后立即生效<br />
+✅ 添加新Skills后自动加载</p>
+<div class="codehilite"><pre><span></span><code>### 8.4.3 安全注意事项
+
+**⚠️ 重要安全提醒**：
+</code></pre></div>
+
+<ol>
+<li>将第三方Skills视为不受信任的代码</li>
+<li>启用前请仔细阅读Skills内容</li>
+<li>对于不受信任的输入和高风险工具，使用沙箱隔离</li>
+<li>保护API 密钥，不要泄露到日志中</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>**安全最佳实践**：
+
+**1. 审查Skills代码**
+
+```bash
+# 安装前查看Skills内容
+cat ~/.openclaw/skills/my-skill/SKILL.md
+
+# 检查Skills权限要求
+grep &quot;requires&quot; ~/.openclaw/skills/my-skill/SKILL.md
+```text
+**2. 使用沙箱隔离**
+
+```json
+{
+  &quot;agents&quot;: {
+    &quot;defaults&quot;: {
+      &quot;sandbox&quot;: {
+        &quot;enabled&quot;: true,
+        &quot;docker&quot;: {
+          &quot;image&quot;: &quot;openclaw/sandbox:latest&quot;
+        }
+      }
+    }
+  }
+}
+```text
+**3. 保护API 密钥**
+
+```json
+{
+  &quot;skills&quot;: {
+    &quot;entries&quot;: {
+      &quot;my-skill&quot;: {
+        &quot;apiKey&quot;: &quot;your-secret-key&quot;,  // ✅ 通过配置文件
+        &quot;env&quot;: {
+          &quot;API_KEY&quot;: &quot;your-key&quot;       // ✅ 通过环境变量
+        }
+      }
+    }
+  }
+}
+❌ **不要**：
+```markdown
+---
+name: my-skill
+description: My skill with API key: sk-xxx7890  # ❌ 不要在SKILL.md中暴露密钥
+---
+```text
+**4. 限制Skills权限**
+
+```json
+{
+  &quot;skills&quot;: {
+    &quot;entries&quot;: {
+      &quot;untrusted-skill&quot;: {
+        &quot;enabled&quot;: true,
+        &quot;config&quot;: {
+          &quot;allowedPaths&quot;: [&quot;/safe/path&quot;],  // 限制文件访问
+          &quot;allowedCommands&quot;: [&quot;ls&quot;, &quot;cat&quot;]  // 限制命令执行
+        }
+      }
+    }
+  }
+}
+```text
+**5. 定期审计**
+
+```bash
+# 列出所有已安装的Skills
+openclaw skill list
+
+# 检查Skills 配置
+cat ~/.openclaw/openclaw.json | grep -A 10 &quot;skills&quot;
+
+# 查看Skills日志
+openclaw logs --skill my-skill
+```text
+### 8.4.4 性能优化
+
+**Token影响（Skills列表）**：
+
+当Skills有资格时，OpenClaw将可用Skills的紧凑XML列表注入到系统提示词中。
+
+**成本计算**：
+
+
+基础开销（仅当≥1个Skills时）：195字符
+
+每个Skills：97字符 + XML转义的字段长度
+- name（转义后）
+- description（转义后）
+- location（转义后）
+
+公式：
+total = 195 + Σ (97 + len(name) + len(description) + len(location))
+
+Token估算（OpenAI风格）：
+~4字符/token，所以每个Skills ≈ 24 token + 字段长度
+```text
+**优化建议**：
+</code></pre></div>
+
+<ol>
+<li>
+<p>保持Skills描述简洁<br />
+   ❌ 差：This is a very detailed and comprehensive skill that can do many things including...<br />
+   ✅ 好：Generate images via Gemini API</p>
+</li>
+<li>
+<p>使用简短的Skills名称<br />
+   ❌ 差：super-advanced-image-generation-tool<br />
+   ✅ 好：nano-banana-pro</p>
+</li>
+<li>
+<p>禁用不需要的Skills<br />
+   {<br />
+     "skills": {<br />
+       "entries": {<br />
+         "unused-skill": { "enabled": false }<br />
+       }<br />
+     }<br />
+   }</p>
+</li>
+<li>
+<p>使用allowBundled限制内置Skills<br />
+   {<br />
+     "skills": {<br />
+       "allowBundled": ["file-search", "calendar-sync"]<br />
+     }<br />
+   }</p>
+</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>**性能监控**：
+
+```bash
+# 查看Skills加载时间
+openclaw skill perf
+
+# 输出示例：
+Skills加载统计：
+- 总Skills数：15
+- 加载时间：120ms
+- Token消耗：约450 tokens
+- 内存占用：2.3MB
+```text
+### 8.4.5 多智能体Skills管理
+
+**单智能体 vs 共享Skills**：
+</code></pre></div>
+
+<p>单智能体Skills：<br />
+- 位置：<workspace>/skills<br />
+- 作用域：仅该智能体可用<br />
+- 用途：项目特定功能</p>
+<p>共享Skills：<br />
+- 位置：~/.openclaw/skills<br />
+- 作用域：所有智能体可见<br />
+- 用途：通用功能</p>
+<div class="codehilite"><pre><span></span><code>**多智能体配置示例**：
+
+```json
+{
+  &quot;agents&quot;: {
+    &quot;list&quot;: [
+      {
+        &quot;id&quot;: &quot;main&quot;,
+        &quot;workspace&quot;: &quot;/home/user/main-agent&quot;,
+        &quot;skills&quot;: {
+          &quot;entries&quot;: {
+            &quot;file-search&quot;: { &quot;enabled&quot;: true }
+          }
+        }
+      },
+      {
+        &quot;id&quot;: &quot;assistant&quot;,
+        &quot;workspace&quot;: &quot;/home/user/assistant-agent&quot;,
+        &quot;skills&quot;: {
+          &quot;entries&quot;: {
+            &quot;calendar-sync&quot;: { &quot;enabled&quot;: true }
+          }
+        }
+      }
+    ]
+  }
+}
+```text
+**共享Skills文件夹**：
+
+```json
+{
+  &quot;skills&quot;: {
+    &quot;load&quot;: {
+      &quot;extraDirs&quot;: [
+        &quot;/shared/team-skills&quot;,      // 团队共享
+        &quot;/shared/company-skills&quot;    // 公司共享
+      ]
+    }
+  }
+}
+```text
+### 8.4.6 远程macOS节点（Linux Gateway）
+
+**跨平台Skills支持**：
+
+如果Gateway运行在Linux上但连接了macOS节点，OpenClaw可以将仅限macOS的Skills视为有资格。
+
+**配置示例**：
+
+```json
+{
+  &quot;nodes&quot;: {
+    &quot;macos-node&quot;: {
+      &quot;host&quot;: &quot;192.168.1.100&quot;,
+      &quot;platform&quot;: &quot;darwin&quot;,
+      &quot;allowSystemRun&quot;: true
+    }
+  }
+}
+```text
+**工作原理**：
+</code></pre></div>
+
+<ol>
+<li>Linux Gateway检测到macOS节点</li>
+<li>检查节点上的二进制文件</li>
+<li>将macOS专用Skills标记为可用</li>
+<li>通过nodes工具执行Skills</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>**注意事项**：
+</code></pre></div>
+
+<p>⚠️ 如果macOS节点离线：<br />
+- Skills仍然可见<br />
+- 调用可能失败<br />
+- 直到节点重新连接</p>
+<div class="codehilite"><pre><span></span><code>### 8.4.7 Skills备份和恢复
+
+**备份Skills**：
+
+```bash
+# 备份所有Skills
+openclaw skill backup
+
+# 备份到指定位置
+openclaw skill backup --output ~/backups/skills.zip
+
+# 输出示例：
+正在备份Skills...
+- file-search ✅
+- note-sync ✅
+- calendar-sync ✅
+
+备份完成！
+文件：~/backups/skills-2026-02-11.zip
+大小：15.3MB
+```text
+**恢复Skills**：
+
+```bash
+# 从备份恢复
+openclaw skill restore ~/backups/skills-2026-02-11.zip
+
+# 输出示例：
+正在恢复Skills...
+- file-search ✅
+- note-sync ✅
+- calendar-sync ✅
+
+恢复完成！
+共恢复3个Skills
+```text
+**手动备份**：
+
+```bash
+# 备份Skills文件夹
+cp -r ~/.openclaw/skills ~/backups/skills-$(date +%Y%m%d)
+
+# 备份配置文件
+cp ~/.openclaw/openclaw.json ~/backups/openclaw-$(date +%Y%m%d).json
+```text
+### 8.4.8 常见问题排查
+
+**问题1：Skill无法加载**
+</code></pre></div>
+
+<p>症状：Skill安装成功但无法使用</p>
+<p>排查步骤：<br />
+1. 检查Skill是否启用<br />
+   openclaw skill status file-search</p>
+<ol>
+<li>
+<p>查看错误日志<br />
+   openclaw skill logs file-search</p>
+</li>
+<li>
+<p>检查门控条件<br />
+   cat ~/.openclaw/skills/file-search/SKILL.md | grep "requires"</p>
+</li>
+<li>
+<p>重新安装<br />
+   openclaw skill reinstall file-search</p>
+</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>**问题2：Skill响应慢**
+</code></pre></div>
+
+<p>症状：Skill执行时间过长</p>
+<p>排查步骤：<br />
+1. 查看性能报告<br />
+   openclaw skill perf file-search</p>
+<ol>
+<li>
+<p>检查网络连接<br />
+   ping api.example.com</p>
+</li>
+<li>
+<p>清理缓存<br />
+   openclaw skill cache clear file-search</p>
+</li>
+<li>
+<p>检查依赖<br />
+   which uv python</p>
+</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>**问题3：Skill配置错误**
+</code></pre></div>
+
+<p>症状：Skill功能异常</p>
+<p>排查步骤：<br />
+1. 检查配置文件<br />
+   openclaw skill config show file-search</p>
+<ol>
+<li>
+<p>验证环境变量<br />
+   echo $GEMINI_API_KEY</p>
+</li>
+<li>
+<p>重置配置<br />
+   openclaw skill config reset file-search</p>
+</li>
+<li>
+<p>查看文档<br />
+   openclaw skill docs file-search</p>
+</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>**问题4：Skills冲突**
+</code></pre></div>
+
+<p>症状：多个Skills响应同一命令</p>
+<p>排查步骤：<br />
+1. 检测冲突<br />
+   openclaw skill check</p>
+<ol>
+<li>
+<p>查看优先级<br />
+   openclaw skill priority</p>
+</li>
+<li>
+<p>禁用冲突的Skills<br />
+   openclaw config set skills.entries.conflicting-skill.enabled false</p>
+</li>
+<li>
+<p>修改命令关键词<br />
+   编辑SKILL.md，修改触发词</p>
+</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>---
+
+## 📝 本章小结
+
+本章学习了OpenClaw的Skills扩展功能：
+
+### 核心内容
+
+1. **ClawHub技能市场**
+   - ClawHub介绍
+   - 技能分类和搜索
+   - 技能评价体系
+   - Skills 安装和管理
+
+2. **必装Skills推荐**
+   - 文件管理类（3个）
+   - 知识管理类（3个）
+   - 日程管理类（2个）
+   - 自动化类（2个）
+   - 工具类（2个）
+
+3. **自定义Skills开发**
+   - Skills开发基础
+   - 开发环境搭建
+   - Skills结构详解
+   - API接口设计
+   - 调试和测试
+   - 发布到ClawHub
+
+4. **Skills管理技巧**
+   - 安装和卸载
+   - 配置管理
+   - 冲突解决
+   - 性能优化
+   - 备份和恢复
+   - 问题排查
+
+### 实战技巧
+
+- ✅ 选择高质量Skills
+- ✅ 合理配置Skills
+- ✅ 定期更新Skills
+- ✅ 监控Skills性能
+- ✅ 及时备份配置
+
+### 下一步
+
+- 学习第9章：多平台集成
+- 掌握飞书、企微、钉钉、QQ接入
+- 构建多平台AI助手
+
+---
+
+## 🎯 实战练习
+
+### 练习1：安装必备Skills
+1. 安装file-search、calendar-sync、web-clipper
+2. 配置Skills参数
+3. 测试Skills功能
+
+### 练习2：开发简单Skills
+1. 创建1个问候Skills
+2. 实现基本功能
+3. 测试和调试
+
+### 练习3：Skills性能优化
+1. 监控Skills性能
+2. 找出性能瓶颈
+3. 优化和改进
+
+---
+
+## 💡 常见问题
+
+**Q1：如何选择合适的Skills？**
+A：看评分、下载量、更新频率和文档质量。
+
+**Q2：Skills冲突怎么办？**
+A：使用`openclaw skill check`检测并自动修复。
+
+**Q3：如何开发自己的Skills？**
+A：参考官方文档和示例代码，从简单开始。
+
+**Q4：Skills性能差怎么办？**
+A：查看性能报告，优化代码，清理缓存。
+
+**Q5：Skills数据如何备份？**
+A：使用`openclaw skill backup`定期备份。
+
+---
+
+**下一章预告**：第9章将学习多平台集成，包括飞书、企业微信、钉钉、QQ Bot配置等内容。飞书作为最现代化的平台，支持WebSocket长连接、流式输出等高级功能。
+
+
+---
+
+## 8.8 百度千帆Skills生态
+
+### 8.8.1 为什么选择百度千帆Skills？
+
+**核心优势**：
+</code></pre></div>
+
+<p>✅ 官方支持：百度官方维护，稳定可靠<br />
+✅ 中文优化：针对中文场景深度优化<br />
+✅ 免费使用：大部分Skills免费<br />
+✅ 易于集成：一键安装，无需复杂配置<br />
+✅ 生态完善：覆盖搜索、学术、办公等场景</p>
+<div class="codehilite"><pre><span></span><code>**与其他Skills对比**：
+
+| 特性 | 百度千帆Skills | 国际Skills | 社区Skills |
+|------|---------------|-----------|-----------|
+| 中文支持 | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐ |
+| 稳定性 | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ |
+| 免费程度 | ⭐⭐⭐⭐⭐ | ⭐⭐ | ⭐⭐⭐⭐ |
+| 文档质量 | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ |
+| 更新频率 | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ |
+
+### 8.8.2 百度搜索系列Skills
+
+#### 1. 百度搜索（Baidu Search）
+
+**功能介绍**：
+- 实时网络搜索
+- 智能结果筛选
+- 自动摘要生成
+- 支持多种搜索类型
+
+**安装方法**：
+```bash
+# 云端部署自带，无需安装
+# 本地部署需要安装
+clawhub install baidu-search
+```text
+**适用场景**：
+- 实时信息查询
+- 行业动态追踪
+- 竞品分析
+- 内容创作素材收集
+
+#### 2. 百度百科（Baidu Baike）
+
+**功能介绍**：
+- 权威知识查询
+- 概念解释
+- 历史背景
+- 相关词条推荐
+
+**适用场景**：
+- 学习新概念
+- 写作背景调研
+- 知识科普
+- 术语解释
+
+#### 3. 百度学术（Baidu Scholar）
+
+**功能介绍**：
+- 学术论文搜索
+- 引用分析
+- 作者查询
+- 期刊信息
+
+**适用场景**：
+- 文献调研
+- 论文阅读
+- 学术研究
+- 毕业论文写作
+
+### 8.8.3 百度办公系列Skills
+
+#### 4. 百度智能PPT（Baidu Smart PPT）
+
+**功能介绍**：
+- 自动生成PPT
+- 智能排版
+- 配图推荐
+- 模板选择
+
+**适用场景**：
+- 产品介绍
+- 工作汇报
+- 培训教材
+- 商业提案
+
+### 8.8.4 获取百度API Key
+
+**步骤1：注册百度智能云账号**
+1. 访问：https://cloud.baidu.com
+2. 点击&quot;注册&quot;
+3. 填写手机号和验证码
+4. 完成实名认证
+
+**步骤2：开通千帆大模型服务**
+1. 进入控制台
+2. 搜索&quot;千帆大模型&quot;
+3. 点击&quot;立即开通&quot;
+4. 同意服务协议
+
+**步骤3：获取API Key**
+1. 进入&quot;访问管理&quot;
+2. 点击&quot;安全认证&quot;
+3. 选择&quot;Access Key&quot;
+4. 点击&quot;创建Access Key&quot;
+5. 保存Access Key ID和Secret Access Key
+
+![百度智能云控制台 - 获取API Key和Secret Key](https://upload.maynor1024.live/file/1770782712874_image_17.jpg)
+
+### 8.8.5 百度千帆MCP广场
+
+**什么是MCP广场？**
+
+MCP（Model Context Protocol）广场是百度千帆推出的应用连接平台，提供丰富的MCP Server，让OpenClaw可以连接各种应用和服务。
+
+**访问地址**：https://cloud.baidu.com/product/qianfan_mcp.html
+
+**支持的应用**：
+- 办公协作：飞书、钉钉、企业微信
+- 知识管理：Notion、语雀、印象笔记
+- 开发工具：GitHub、GitLab、Jenkins
+- 数据分析：Tableau、Power BI
+
+### 8.8.6 效率提升数据
+
+**使用百度Skills前后对比**：
+
+| 任务类型 | 使用前 | 使用后 | 节省时间 | 提升比例 |
+|---------|--------|--------|----------|----------|
+| 信息搜索 | 30分钟 | 2分钟 | 28分钟 | 93.3% |
+| 概念查询 | 15分钟 | 1分钟 | 14分钟 | 93.3% |
+| 论文检索 | 60分钟 | 5分钟 | 55分钟 | 91.7% |
+| PPT制作 | 120分钟 | 10分钟 | 110分钟 | 91.7% |
+| **平均** | **225分钟** | **18分钟** | **207分钟** | **92%** |
+
+---
+
+## 相关资源
+
+- 百度千帆官网：https://cloud.baidu.com/product/qianfan.html
+- 百度千帆Skills文档：https://cloud.baidu.com/doc/qianfan/s/Mmlda41a2
+- 百度千帆MCP广场：https://cloud.baidu.com/product/qianfan_mcp.html
+- API Key获取：https://console.bce.baidu.com/iam/#/iam/apikey/list
+
+
+---
+
+## 8.9 API服务Skills
+
+&gt; 💡 **本节目标**：学会将第三方API服务封装为Skills，实现AI绘图、数据同步、视频生成、语音合成等功能。
+
+### 8.9.1 为什么需要API服务Skills
+
+**使用场景**：
+- 🎨 **AI绘图**：Banana、Midjourney、DALL-E
+- 📝 **数据同步**：Notion、Airtable、语雀
+- 🎬 **视频生成**：SeeDream、可灵（Kling）
+- 🔊 **语音合成**：海螺TTS、MiniMax Music
+- 🌐 **Web服务**：各类API接口
+
+**优势**：
+- 统一管理：所有API都是Skills
+- 易于使用：一条命令安装
+- 自动更新：跟随Skills更新
+- 社区共享：开发者贡献
+
+### 8.9.2 AI绘图Skills：Banana
+
+#### 什么是Banana
+
+**Banana介绍**：
+- Nano Banana Pro是一款AI绘图工具
+- 支持文生图、图生图、图片编辑
+- 质量高、速度快、价格便宜
+
+**为什么选择Banana**：
+- ✅ 质量优秀：媲美Midjourney
+- ✅ 速度快：10秒出图
+- ✅ 价格低：$0.02/张
+- ✅ 易集成：API简单易用
+
+#### 安装和配置
+
+```bash
+# 安装Banana Skills
+openclaw skill install banana-draw
+
+# 配置API Key
+openclaw config set banana.apiKey &quot;your-api-key&quot;
+
+# 测试
+你：用Banana画一只可爱的猫
+OpenClaw：正在生成图片...
+[图片]
+```text
+#### 实战案例
+
+**案例1：手机上画图**
+
+```text
+场景：在飞书上用OpenClaw画图
+
+步骤：
+1. 打开飞书
+2. 找到OpenClaw
+3. 发送：画1个赛博朋克风格的城市
+4. 等待10秒
+5. 收到图片
+
+优势：
+- 无需打开电脑
+- 随时随地画图
+- 自动保存到相册
+```text
+**案例2：批量生成图片**
+
+```text
+你：帮我生成3张图片：
+1. 科技感的办公室
+2. 未来城市
+3. AI机器人
+
+OpenClaw：正在生成...
+[图片1]
+[图片2]
+[图片3]
+
+全部完成 ✅
+```text
+#### 提示词优化技巧
+
+**基本原则**：
+1. 描述清晰具体
+2. 包含风格关键词
+3. 指定画面元素
+4. 控制画面比例
+
+**优秀提示词示例**：
+
+❌ 差：画一只猫  
+✅ 好：一只可爱的橘猫，坐在窗台上，阳光洒在身上，温暖的色调，高清摄影，景深效果
+
+❌ 差：画个城市  
+✅ 好：赛博朋克风格的未来城市，霓虹灯闪烁，高楼林立，夜景，雨后街道，电影级画质，广角镜头
+
+**风格关键词**：
+- 写实风格：photorealistic, 4K, detailed
+- 卡通风格：cartoon, cute, colorful
+- 赛博朋克：cyberpunk, neon, futuristic
+- 水彩画：watercolor, soft, artistic
+- 油画：oil painting, classical, textured
+
+### 8.9.3 数据同步Skills：Notion
+
+#### Notion介绍
+
+**Notion的优势**：
+- ✅ 功能强大：笔记、数据库、项目管理
+- ✅ 跨平台：Web、Mac、Windows、iOS、Android
+- ✅ 协作友好：团队共享、权限管理
+- ✅ API完善：易于集成
+
+#### 安装和配置
+
+```bash
+# 安装Notion Skills
+openclaw skill install notion-sync
+
+# 配置Token
+openclaw config set notion.token &quot;your-notion-token&quot;
+
+# 配置Database ID
+openclaw config set notion.databaseId &quot;your-database-id&quot;
+
+# 测试
+你：把这段内容保存到Notion
+OpenClaw：已保存到Notion ✅
+```text
+#### 实战案例
+
+**案例1：笔记同步**
+
+```text
+你：保存这段笔记到Notion：
+[笔记内容]
+
+OpenClaw：已保存 ✅
+标题：[自动生成]
+标签：#笔记
+链接：https://notion.so/...
+```text
+**案例2：任务管理**
+
+```text
+你：添加任务：完成项目报告
+截止日期：明天
+优先级：高
+
+OpenClaw：任务已添加 ✅
+```text
+**案例3：知识库构建**
+
+```text
+你：把这篇文章保存到知识库
+[文章链接]
+
+OpenClaw：正在处理...
+- 提取内容 ✅
+- 生成摘要 ✅
+- 添加标签 ✅
+- 保存到Notion ✅
+
+完成！
+```text
+### 8.9.4 视频生成Skills
+
+#### 视频生成工具介绍
+
+**SeeDream**：
+- 文生视频
+- 图生视频
+- 视频编辑
+- 价格：$0.1/秒
+
+**可灵（Kling）**：
+- 国产视频生成
+- 质量优秀
+- 价格实惠
+- 支持中文
+
+#### 安装和配置
+
+```bash
+# 安装视频生成Skills
+openclaw skill install video-gen
+
+# 配置SeeDream
+openclaw config set seedream.apiKey &quot;your-api-key&quot;
+
+# 配置可灵
+openclaw config set kling.apiKey &quot;your-api-key&quot;
+```text
+#### 实战案例
+
+```text
+你：生成1个5秒的视频：
+海浪拍打沙滩，日落时分
+
+OpenClaw：正在生成...
+预计时间：2分钟
+
+[视频生成完成]
+时长：5秒
+分辨率：1080p
+大小：15MB
+```text
+### 8.9.5 语音合成Skills
+
+#### 语音合成工具
+
+**海螺TTS**：
+- 多种音色
+- 自然流畅
+- 支持中英文
+- 价格：$0.01/千字
+
+**MiniMax Music**：
+- AI音乐生成
+- 多种风格
+- 高质量输出
+
+#### 安装和配置
+
+```bash
+# 安装TTS Skills
+openclaw skill install tts
+
+# 配置海螺TTS
+openclaw config set heluo.apiKey &quot;your-api-key&quot;
+
+# 测试
+你：把这段文字转成语音：
+[文字内容]
+
+OpenClaw：正在生成...
+[语音文件]
+```text
+### 8.9.6 自定义API封装
+
+如果ClawHub上没有你需要的API Skills，可以自己封装：
+
+```typescript
+// src/custom-api-skill.ts
+import { Skill } from &#39;@openclaw/sdk&#39;;
+import axios from &#39;axios&#39;;
+
+export default class CustomAPISkill extends Skill {
+  private apiKey = process.env.CUSTOM_API_KEY;
+  private apiUrl = &#39;https://api.example.com/v1&#39;;
+
+  async onMessage(message: string) {
+    // 检测API请求
+    const match = message.match(/调用API:(.+)/);
+    if (!match) return null;
+
+    const params = match[1];
+
+    try {
+      // 调用API
+      const response = await axios.post(
+        `${this.apiUrl}/endpoint`,
+        { params },
+        {
+          headers: {
+            &#39;Authorization&#39;: `Bearer ${this.apiKey}`
+          }
+        }
+      );
+
+      return `API调用成功：${response.data}`;
+
+    } catch (error) {
+      return &#39;调用失败，请稍后重试&#39;;
+    }
+  }
+}
+```text
+### 8.9.7 成本对比
+
+**AI绘图成本对比**：
+
+| 工具 | 价格 | 质量 | 速度 |
+|------|------|------|------|
+| Banana | $0.02 | ⭐⭐⭐⭐ | 10秒 |
+| Midjourney | $0.08 | ⭐⭐⭐⭐⭐ | 30秒 |
+| DALL-E | $0.04 | ⭐⭐⭐⭐ | 15秒 |
+| Stable Diffusion | 免费 | ⭐⭐⭐ | 20秒 |
+
+**语音合成成本对比**：
+
+| 工具 | 价格 | 质量 | 语言支持 |
+|------|------|------|----------|
+| 海螺TTS | $0.01/千字 | ⭐⭐⭐⭐ | 中英文 |
+| Azure TTS | $0.016/千字 | ⭐⭐⭐⭐⭐ | 多语言 |
+| Google TTS | $0.016/千字 | ⭐⭐⭐⭐ | 多语言 |
+
+### 8.9.8 最佳实践
+
+**1. API Key管理**
+```bash
+# 使用环境变量
+export BANANA_API_KEY=&quot;your-key&quot;
+export NOTION_TOKEN=&quot;your-token&quot;
+
+# 或使用配置文件
+openclaw config set api.keys &#39;{
+  &quot;banana&quot;: &quot;your-key&quot;,
+  &quot;notion&quot;: &quot;your-token&quot;
+}&#39;
+```text
+**2. 错误处理**
+```typescript
+try {
+  const result = await callAPI();
+  return result;
+} catch (error) {
+  if (error.code === &#39;RATE_LIMIT&#39;) {
+    return &#39;请求过于频繁，请稍后重试&#39;;
+  }
+  return &#39;调用失败，请检查配置&#39;;
+}
+```text
+**3. 成本控制**
+- 设置每日调用上限
+- 使用缓存减少重复调用
+- 选择性价比高的服务
+- 监控API使用量
+
+**4. 安全建议**
+- 不要在代码中硬编码API Key
+- 定期更换API Key
+- 使用环境变量或配置文件
+- 限制API权限范围
+
+---
+
+## 8.10 常用工具安装案例
+
+&gt; 💡 **实战指南**：OpenClaw的Skills系统依赖一些外部工具，本节介绍两个常用工具的完整安装过程。
+
+### 8.10.1 1Password CLI安装（密码管理）
+
+**工具简介**：
+1Password CLI (op) 是1Password的命令行工具，让OpenClaw能够安全地访问和管理你的密码库中的凭证、API 密钥等敏感信息。
+
+**使用场景**：
+- 安全存储API 密钥
+- 自动填充登录信息
+- 团队密码共享
+- CI/CD流程中的密钥管理
+
+**安装步骤**：
+
+```bash
+# macOS安装（推荐使用Homebrew）
+brew install --cask 1password-cli
+
+# 验证安装
+which op
+# 输出：/usr/local/bin/op
+
+op --version
+# 输出：2.32.1
+```text
+**配置使用**：
+
+1. **启用桌面应用集成**：
+   - 打开1Password桌面应用
+   - 进入设置 → 开发者
+   - 启用&quot;与1Password CLI集成&quot;
+
+2. **登录账户**：
+```bash
+# 登录1Password账户
+op signin
+
+# 或指定账户域名
+op signin my.1password.com
+```text
+3. **在OpenClaw中使用**：
+```bash
+# 获取密码
+op item get &quot;GitHub&quot; --fields password
+
+# 获取API 密钥
+op item get &quot;OpenAI API&quot; --fields credential
+
+# 列出所有项目
+op item list
+```text
+**OpenClaw集成示例**：
+</code></pre></div>
+
+<p>你：从1Password获取GitHub的API 密钥</p>
+<p>OpenClaw：正在获取...<br />
+✅ 已获取GitHub API 密钥：ghp_xxxxxxxxxxxx</p>
+<p>你：用这个密钥创建一个新的GitHub仓库</p>
+<p>OpenClaw：好的，正在创建...<br />
+✅ 仓库创建成功！</p>
+<div class="codehilite"><pre><span></span><code>**安全提示**：
+- ⚠️ 不要在代码中硬编码密码
+- ✅ 使用1Password CLI安全管理所有凭证
+- ✅ 定期更换API 密钥
+- ✅ 为不同项目使用不同的凭证
+
+---
+
+### 8.10.2 camsnap安装（摄像头捕获）
+
+**工具简介**：
+camsnap是一个用于捕获RTSP/ONVIF摄像头画面的命令行工具，让OpenClaw能够获取网络摄像头的实时画面或录制视频片段。
+
+**使用场景**：
+- 智能家居监控
+- 安防系统集成
+- 自动化截图和录像
+- 视频分析和处理
+
+**系统要求**：
+- macOS（Apple Silicon或Intel）
+- Homebrew包管理器
+- 网络摄像头（支持RTSP/ONVIF协议）
+
+**安装步骤**：
+
+**步骤1：检查系统架构**
+
+```bash
+# 检查CPU架构
+uname -m
+# 输出：arm64（Apple Silicon）或 x86_64（Intel）
+```text
+**步骤2：确保使用ARM64版本的Homebrew（Apple Silicon Mac）**
+
+如果你的Mac是Apple Silicon（M1/M2/M3芯片），需要确保安装了ARM64版本的Homebrew：
+
+```bash
+# 检查当前brew位置
+which brew
+# 应该输出：/opt/homebrew/bin/brew（ARM64版本）
+# 如果输出：/usr/local/bin/brew（Intel版本），需要安装ARM64版本
+
+# 安装ARM64版本的Homebrew
+/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;
+
+# 配置shell环境（zsh）
+echo &#39;eval &quot;$(/opt/homebrew/bin/brew shellenv)&quot;&#39; &gt;&gt; ~/.zshrc
+eval &quot;$(/opt/homebrew/bin/brew shellenv)&quot;
+
+# 验证brew版本
+brew --version
+which brew
+# 应该输出：/opt/homebrew/bin/brew
+```text
+**步骤3：安装camsnap**
+
+```bash
+# 添加tap源
+brew tap steipete/tap
+
+# 安装camsnap
+brew install camsnap
+
+# 验证安装
+which camsnap
+# 输出：/opt/homebrew/bin/camsnap
+
+camsnap --version
+# 输出：0.2.0
+```text
+**步骤4：创建符号链接（可选，解决兼容性问题）**
+
+如果OpenClaw无法找到camsnap，可以创建符号链接：
+
+```bash
+# 创建符号链接到/usr/local/bin
+sudo ln -sf /opt/homebrew/bin/camsnap /usr/local/bin/camsnap
+
+# 验证符号链接
+ls -la /usr/local/bin/camsnap
+# 输出：lrwxr-xr-x@ 1 root  wheel  25 Feb 13 14:47 /usr/local/bin/camsnap -&gt; /opt/homebrew/bin/camsnap
+
+# 测试
+/usr/local/bin/camsnap --version
+# 输出：0.2.0
+```text
+**使用示例**：
+
+```bash
+# 捕获单帧画面
+camsnap --url rtsp://192.168.1.100:554/stream --output snapshot.jpg
+
+# 录制视频片段（10秒）
+camsnap --url rtsp://192.168.1.100:554/stream --duration 10 --output video.mp4
+
+# 指定分辨率
+camsnap --url rtsp://192.168.1.100:554/stream --width 1920 --height 1080 --output hd.jpg
+```text
+**OpenClaw集成示例**：
+</code></pre></div>
+
+<p>你：拍一张客厅摄像头的照片</p>
+<p>OpenClaw：正在捕获画面...<br />
+✅ 已保存到：~/Pictures/living-room-2026-02-13-14-30.jpg<br />
+[发送图片]</p>
+<p>你：录制10秒的门口监控视频</p>
+<p>OpenClaw：正在录制...<br />
+⏱️ 录制中... 10秒<br />
+✅ 已保存到：~/Videos/door-monitor-2026-02-13-14-31.mp4</p>
+<div class="codehilite"><pre><span></span><code>**故障排查**：
+
+**问题1：安装失败，提示&quot;arm64 architecture is required&quot;**
+
+```bash
+# 原因：使用了Intel版本的brew
+# 解决：安装ARM64版本的Homebrew（见步骤2）
+
+# 检查当前brew架构
+brew config | grep -E &quot;CPU|Homebrew&quot;
+# 应该显示：CPU: octa-core 64-bit arm_*
+```text
+**问题2：OpenClaw提示&quot;Missing: bin:camsnap&quot;**
+
+```bash
+# 原因：OpenClaw无法找到camsnap
+# 解决：创建符号链接（见步骤4）
+
+# 或者重启OpenClaw Gateway
+openclaw gateway restart
+```text
+**问题3：摄像头连接失败**
+
+```bash
+# 检查摄像头URL是否正确
+# RTSP URL格式：rtsp://用户名:密码@IP地址:端口/路径
+
+# 测试摄像头连接
+camsnap --url rtsp://admin:password@192.168.1.100:554/stream --test
+
+# 查看详细错误信息
+camsnap --url rtsp://192.168.1.100:554/stream --verbose
+</code></pre></div>
+
+<p><strong>安全提示</strong>：<br />
+- ⚠️ 不要在公网暴露摄像头RTSP端口<br />
+- ✅ 使用强密码保护摄像头<br />
+- ✅ 定期更新摄像头固件<br />
+- ✅ 限制OpenClaw对摄像头的访问权限</p>
+<hr />
+<h3 id="8103">8.10.3 工具安装最佳实践</h3>
+<p><strong>通用安装流程</strong>：</p>
+<ol>
+<li><strong>检查系统要求</strong><br />
+   ```bash<br />
+   # 检查操作系统<br />
+   uname -s</li>
+</ol>
+<p># 检查CPU架构<br />
+   uname -m</p>
+<p># 检查可用空间<br />
+   df -h<br />
+   ```</p>
+<ol>
+<li><strong>选择合适的安装方式</strong></li>
+<li>Homebrew（推荐，适合macOS/Linux）</li>
+<li>npm/yarn（适合Node.js工具）</li>
+<li>pip/uv（适合Python工具）</li>
+<li>
+<p>直接下载二进制文件</p>
+</li>
+<li>
+<p><strong>验证安装</strong><br />
+   ```bash<br />
+   # 检查工具是否在PATH中<br />
+   which <tool-name></p>
+</li>
+</ol>
+<p># 检查版本<br />
+   <tool-name> --version</p>
+<p># 测试基本功能<br />
+   <tool-name> --help<br />
+   ```</p>
+<ol>
+<li><strong>配置环境变量</strong><br />
+   ```bash<br />
+   # 添加到~/.zshrc或~/.bashrc<br />
+   export TOOL_API_KEY="your-key"<br />
+   export TOOL_CONFIG_PATH="~/.config/tool"</li>
+</ol>
+<p># 重新加载配置<br />
+   source ~/.zshrc<br />
+   ```</p>
+<ol>
+<li><strong>集成到OpenClaw</strong><br />
+   ```bash<br />
+   # 重启OpenClaw Gateway<br />
+   openclaw gateway restart</li>
+</ol>
+<p># 验证工具可用性<br />
+   openclaw tools list<br />
+   ```</p>
+<p><strong>常见问题排查</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>原因</th>
+<th>解决方案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>找不到命令</td>
+<td>未添加到PATH</td>
+<td>检查安装路径，添加到PATH</td>
+</tr>
+<tr>
+<td>权限不足</td>
+<td>需要管理员权限</td>
+<td>使用sudo或管理员身份运行</td>
+</tr>
+<tr>
+<td>依赖缺失</td>
+<td>缺少必需的库</td>
+<td>安装依赖包</td>
+</tr>
+<tr>
+<td>版本不兼容</td>
+<td>工具版本过旧</td>
+<td>更新到最新版本</td>
+</tr>
+<tr>
+<td>架构不匹配</td>
+<td>ARM/Intel不兼容</td>
+<td>安装对应架构的版本</td>
+</tr>
+</tbody>
+</table>
+<p><strong>推荐工具列表</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>用途</th>
+<th>安装命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1Password CLI</td>
+<td>密码管理</td>
+<td><code>brew install --cask 1password-cli</code></td>
+</tr>
+<tr>
+<td>camsnap</td>
+<td>摄像头捕获</td>
+<td><code>brew install steipete/tap/camsnap</code></td>
+</tr>
+<tr>
+<td>ffmpeg</td>
+<td>视频处理</td>
+<td><code>brew install ffmpeg</code></td>
+</tr>
+<tr>
+<td>imagemagick</td>
+<td>图片处理</td>
+<td><code>brew install imagemagick</code></td>
+</tr>
+<tr>
+<td>jq</td>
+<td>JSON处理</td>
+<td><code>brew install jq</code></td>
+</tr>
+<tr>
+<td>gh</td>
+<td>GitHub CLI</td>
+<td><code>brew install gh</code></td>
+</tr>
+<tr>
+<td>uv</td>
+<td>Python包管理</td>
+<td><code>brew install uv</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_6">📝 本章小结</h2>
+<p>通过本章学习，你已经掌握：</p>
+<ol>
+<li><strong>Skills生态</strong>：了解1715+个技能的庞大生态</li>
+<li><strong>ClawHub市场</strong>：学会搜索、安装、管理Skills</li>
+<li><strong>核心Skills</strong>：掌握必装的5个核心技能</li>
+<li><strong>安装方法</strong>：三种安装方式灵活选择</li>
+<li><strong>实战应用</strong>：三大场景的完整应用</li>
+<li><strong>安全使用</strong>：权限管理和安全防护</li>
+<li><strong>Skills开发</strong>：从零开发自己的Skills</li>
+<li><strong>管理技巧</strong>：更新、备份、故障排查</li>
+<li><strong>API服务</strong>：封装第三方API为Skills</li>
+<li><strong>工具安装</strong>：1Password CLI和camsnap完整安装流程</li>
+</ol>
+<h2 id="_7">🎯 实战练习</h2>
+<ol>
+<li>安装5个核心Skills并测试</li>
+<li>尝试开发1个简单的Skills</li>
+<li>封装一个你常用的API服务</li>
+<li>构建一个完整的自动化工作流</li>
+</ol>
+<h2 id="_8">💡 进阶建议</h2>
+<ol>
+<li>探索ClawHub上的更多Skills</li>
+<li>参与Skills社区贡献</li>
+<li>开发并分享你的Skills</li>
+<li>优化Skills性能和体验</li>
+</ol>
+<hr />
+<p><strong>下一章预告</strong>：第9章将学习多平台集成，包括飞书、企业微信、钉钉、QQ等平台的Bot配置，实现随时随地使用 OpenClaw。飞书作为最现代化的平台将优先介绍。</p>
+<p><strong>返回目录</strong>：<a href="../../README.md">README</a></p>
+        </div>
+    </div>
+</body>
+</html>

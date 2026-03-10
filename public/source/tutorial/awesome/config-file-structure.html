@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>附录2：配置文件结构 - OpenClaw 教程</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .markdown-body {
+            background: transparent !important;
+            color: #c9d1d9 !important;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #58a6ff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .article-content h1 {
+            color: #fff !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 15px !important;
+        }
+        .article-content h2 {
+            color: #f97316 !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 10px !important;
+        }
+        .article-content a {
+            color: #58a6ff !important;
+        }
+        .article-content code {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+        }
+        .article-content pre {
+            background: #1f2428 !important;
+            border: 1px solid #30363d !important;
+        }
+        .article-content blockquote {
+            border-left: 4px solid #f97316 !important;
+            background: rgba(249, 115, 22, 0.1) !important;
+        }
+        .article-content table th {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+        }
+        .article-content table td {
+            border: 1px solid #30363d !important;
+        }
+        .article-content img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .article-content strong {
+            color: #f97316 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← 返回教程目录</a>
+        <div class="article-content markdown-body">
+            <h1 id="openclaw">OpenClaw 配置文件结构完整指南</h1>
+<h2 id="_1">📁 配置文件目录结构</h2>
+<h3 id="_2">全局配置目录</h3>
+<div class="codehilite"><pre><span></span><code>~/.openclaw/                          # 全局配置根目录
+├── openclaw.json                     # 全局配置（所有 Agent 共享）
+├── credentials/                      # 认证凭据目录
+│   └── oauth.json                   # OAuth 凭据
+├── agents/                           # Agent 配置目录
+│   ├── main-assistant/               # 主助理 Agent
+│   │   ├── openclaw.json            # Agent 专属配置
+│   │   ├── agent/
+│   │   │   └── auth-profiles.json   # 认证配置
+│   │   └── sessions/                # 会话记录
+│   │       └── *.jsonl
+│   └── tech-dev/                     # 技术开发 Agent
+│       ├── openclaw.json
+│       └── agent/
+│           └── auth-profiles.json
+├── skills/                           # 用户级 Skills
+│   └── custom-skill/
+│       └── SKILL.md
+└── logs/                             # 日志文件
+    └── openclaw.log
+</code></pre></div>
+
+<h3 id="_3">旧版配置目录（已废弃）</h3>
+<div class="codehilite"><pre><span></span><code>~/.openclaw-main-assistant/           # 旧版配置目录
+└── openclaw.json                     # 不再使用，已迁移到新结构
+</code></pre></div>
+
+<p>⚠️ <strong>注意</strong>: 如果你的系统中还有 <code>~/.openclaw-*</code> 目录，建议运行 <code>openclaw doctor</code> 进行迁移。</p>
+<hr />
+<h2 id="_4">📝 配置文件详解</h2>
+<h3 id="1">1. 全局配置文件</h3>
+<p><strong>路径</strong>: <code>~/.openclaw/openclaw.json</code></p>
+<p><strong>用途</strong>: 所有 Agent 共享的全局配置</p>
+<p><strong>优先级</strong>: 低于 Agent 专属配置</p>
+<p><strong>示例内容</strong>:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;models&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;anthropic/claude-sonnet-4-5&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;providers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;anthropic&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;apiKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sk-ant-xxx&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;gateway&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;local&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">18789</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
+<span class="err">**查看命令**</span><span class="p">:</span>
+<span class="err">```bash</span>
+<span class="err">#</span><span class="w"> </span><span class="err">查看全局配置</span>
+<span class="err">ope</span><span class="kc">n</span><span class="err">claw</span><span class="w"> </span><span class="err">co</span><span class="kc">nf</span><span class="err">ig</span><span class="w"> </span><span class="err">ge</span><span class="kc">t</span>
+
+<span class="err">#</span><span class="w"> </span><span class="err">查看特定配置项</span>
+<span class="err">ope</span><span class="kc">n</span><span class="err">claw</span><span class="w"> </span><span class="err">co</span><span class="kc">nf</span><span class="err">ig</span><span class="w"> </span><span class="err">ge</span><span class="kc">t</span><span class="w"> </span><span class="err">models.de</span><span class="kc">fault</span>
+
+<span class="err">#</span><span class="w"> </span><span class="err">编辑配置文件</span>
+<span class="kc">nan</span><span class="err">o</span><span class="w"> </span><span class="err">~/.ope</span><span class="kc">n</span><span class="err">claw/ope</span><span class="kc">n</span><span class="err">claw.jso</span><span class="kc">n</span>
+<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
+<span class="mi">---</span>
+
+<span class="err">###</span><span class="w"> </span><span class="mf">2.</span><span class="w"> </span><span class="err">Age</span><span class="kc">nt</span><span class="w"> </span><span class="err">专属配置</span>
+
+<span class="err">**路径**</span><span class="p">:</span><span class="w"> </span><span class="err">`~/.ope</span><span class="kc">n</span><span class="err">claw/age</span><span class="kc">nts</span><span class="err">/&lt;age</span><span class="kc">nt</span><span class="err">Id&gt;/ope</span><span class="kc">n</span><span class="err">claw.jso</span><span class="kc">n</span><span class="err">`</span>
+
+<span class="err">**用途**</span><span class="p">:</span><span class="w"> </span><span class="err">特定</span><span class="w"> </span><span class="err">Age</span><span class="kc">nt</span><span class="w"> </span><span class="err">的专属配置</span>
+
+<span class="err">**优先级**</span><span class="p">:</span><span class="w"> </span><span class="err">高于全局配置</span>
+
+<span class="err">**示例内容**</span><span class="p">:</span>
+<span class="err">```jso</span><span class="kc">n</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;models&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai/gpt-4&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;providers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;openai&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;apiKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sk-xxx&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;persona&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;技术开发助手&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;专注于代码开发和技术问题&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
+<span class="err">**查看命令**</span><span class="p">:</span>
+<span class="err">```bash</span>
+<span class="err">#</span><span class="w"> </span><span class="err">查看</span><span class="w"> </span><span class="err">Age</span><span class="kc">nt</span><span class="w"> </span><span class="err">配置</span>
+<span class="err">ope</span><span class="kc">n</span><span class="err">claw</span><span class="w"> </span><span class="err">co</span><span class="kc">nf</span><span class="err">ig</span><span class="w"> </span><span class="err">ge</span><span class="kc">t</span><span class="w"> </span><span class="mi">--</span><span class="err">age</span><span class="kc">nt</span><span class="w"> </span><span class="kc">te</span><span class="err">ch</span><span class="mi">-</span><span class="err">dev</span>
+
+<span class="err">#</span><span class="w"> </span><span class="err">设置</span><span class="w"> </span><span class="err">Age</span><span class="kc">nt</span><span class="w"> </span><span class="err">配置</span>
+<span class="err">ope</span><span class="kc">n</span><span class="err">claw</span><span class="w"> </span><span class="err">co</span><span class="kc">nf</span><span class="err">ig</span><span class="w"> </span><span class="err">se</span><span class="kc">t</span><span class="w"> </span><span class="err">models.de</span><span class="kc">fault</span><span class="w"> </span><span class="s2">&quot;openai/gpt-4&quot;</span><span class="w"> </span><span class="mi">--</span><span class="err">age</span><span class="kc">nt</span><span class="w"> </span><span class="kc">te</span><span class="err">ch</span><span class="mi">-</span><span class="err">dev</span>
+
+<span class="err">#</span><span class="w"> </span><span class="err">编辑配置文件</span>
+<span class="kc">nan</span><span class="err">o</span><span class="w"> </span><span class="err">~/.ope</span><span class="kc">n</span><span class="err">claw/age</span><span class="kc">nts</span><span class="err">/</span><span class="kc">te</span><span class="err">ch</span><span class="mi">-</span><span class="err">dev/ope</span><span class="kc">n</span><span class="err">claw.jso</span><span class="kc">n</span>
+<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
+<span class="mi">---</span>
+
+<span class="err">###</span><span class="w"> </span><span class="mf">3.</span><span class="w"> </span><span class="err">认证配置文件</span>
+
+<span class="err">**路径**</span><span class="p">:</span><span class="w"> </span><span class="err">`~/.ope</span><span class="kc">n</span><span class="err">claw/age</span><span class="kc">nts</span><span class="err">/&lt;age</span><span class="kc">nt</span><span class="err">Id&gt;/age</span><span class="kc">nt</span><span class="err">/au</span><span class="kc">t</span><span class="err">h</span><span class="mi">-</span><span class="err">pro</span><span class="kc">f</span><span class="err">iles.jso</span><span class="kc">n</span><span class="err">`</span>
+
+<span class="err">**用途**</span><span class="p">:</span><span class="w"> </span><span class="err">存储</span><span class="w"> </span><span class="err">API</span><span class="w"> </span><span class="err">Key</span><span class="w"> </span><span class="err">等认证信息</span>
+
+<span class="err">**优先级**</span><span class="p">:</span><span class="w"> </span><span class="err">最高（覆盖其他配置）</span>
+
+<span class="err">**示例内容**</span><span class="p">:</span>
+<span class="err">```jso</span><span class="kc">n</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;profiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;anthropic&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;apiKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sk-ant-xxx&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-14T10:00:00Z&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;apiKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sk-xxx&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-14T10:00:00Z&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
+<span class="err">**管理命令**</span><span class="p">:</span>
+<span class="err">```bash</span>
+<span class="err">#</span><span class="w"> </span><span class="err">添加认证（交互式）</span>
+<span class="err">ope</span><span class="kc">n</span><span class="err">claw</span><span class="w"> </span><span class="err">models</span><span class="w"> </span><span class="err">au</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">add</span>
+
+<span class="err">#</span><span class="w"> </span><span class="err">查看认证配置</span>
+<span class="err">ca</span><span class="kc">t</span><span class="w"> </span><span class="err">~/.ope</span><span class="kc">n</span><span class="err">claw/age</span><span class="kc">nts</span><span class="err">/mai</span><span class="kc">n</span><span class="mi">-</span><span class="err">assis</span><span class="kc">tant</span><span class="err">/age</span><span class="kc">nt</span><span class="err">/au</span><span class="kc">t</span><span class="err">h</span><span class="mi">-</span><span class="err">pro</span><span class="kc">f</span><span class="err">iles.jso</span><span class="kc">n</span>
+
+<span class="err">#</span><span class="w"> </span><span class="err">删除认证</span>
+<span class="err">rm</span><span class="w"> </span><span class="err">~/.ope</span><span class="kc">n</span><span class="err">claw/age</span><span class="kc">nts</span><span class="err">/mai</span><span class="kc">n</span><span class="mi">-</span><span class="err">assis</span><span class="kc">tant</span><span class="err">/age</span><span class="kc">nt</span><span class="err">/au</span><span class="kc">t</span><span class="err">h</span><span class="mi">-</span><span class="err">pro</span><span class="kc">f</span><span class="err">iles.jso</span><span class="kc">n</span>
+<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
+<span class="mi">---</span>
+
+<span class="err">###</span><span class="w"> </span><span class="mf">4.</span><span class="w"> </span><span class="err">OAu</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">凭据文件</span>
+
+<span class="err">**路径**</span><span class="p">:</span><span class="w"> </span><span class="err">`~/.ope</span><span class="kc">n</span><span class="err">claw/crede</span><span class="kc">nt</span><span class="err">ials/oau</span><span class="kc">t</span><span class="err">h.jso</span><span class="kc">n</span><span class="err">`</span>
+
+<span class="err">**用途**</span><span class="p">:</span><span class="w"> </span><span class="err">存储</span><span class="w"> </span><span class="err">OAu</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">登录凭据（旧版）</span>
+
+<span class="err">**优先级**</span><span class="p">:</span><span class="w"> </span><span class="err">低（建议使用</span><span class="w"> </span><span class="err">au</span><span class="kc">t</span><span class="err">h</span><span class="mi">-</span><span class="err">pro</span><span class="kc">f</span><span class="err">iles.jso</span><span class="kc">n</span><span class="err">）</span>
+
+<span class="err">**示例内容**</span><span class="p">:</span>
+<span class="err">```jso</span><span class="kc">n</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;google&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;accessToken&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ya29.xxx&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;refreshToken&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1//xxx&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;expiresAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-02-14T11:00:00Z&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="err">```</span><span class="kc">te</span><span class="err">x</span><span class="kc">t</span>
+<span class="err">**说明**</span><span class="p">:</span><span class="w"> </span><span class="err">这是旧版的认证方式，新版本建议使用</span><span class="w"> </span><span class="err">`au</span><span class="kc">t</span><span class="err">h</span><span class="mi">-</span><span class="err">pro</span><span class="kc">f</span><span class="err">iles.jso</span><span class="kc">n</span><span class="err">`。</span>
+
+<span class="mi">---</span>
+
+<span class="err">##</span><span class="w"> </span><span class="err">🔄</span><span class="w"> </span><span class="err">配置优先级</span>
+
+<span class="err">###</span><span class="w"> </span><span class="err">优先级顺序（从高到低）</span>
+</code></pre></div>
+
+<ol>
+<li>环境变量（最高优先级）<br />
+   ↓</li>
+<li>Agent 专属配置 (~/.openclaw/agents/<agentId>/openclaw.json)<br />
+   ↓</li>
+<li>全局配置 (~/.openclaw/openclaw.json)<br />
+   ↓</li>
+<li>默认值（最低优先级）</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>### 示例说明
+
+假设你有以下配置：
+
+**环境变量**:
+```bash
+export ANTHROPIC_API_KEY=&quot;sk-ant-env&quot;
+```text
+**Agent 配置** (`~/.openclaw/agents/tech-dev/openclaw.json`):
+```json
+{
+  &quot;models&quot;: {
+    &quot;providers&quot;: {
+      &quot;anthropic&quot;: {
+        &quot;apiKey&quot;: &quot;sk-ant-agent&quot;
+      }
+    }
+  }
+}
+```text
+**全局配置** (`~/.openclaw/openclaw.json`):
+```json
+{
+  &quot;models&quot;: {
+    &quot;providers&quot;: {
+      &quot;anthropic&quot;: {
+        &quot;apiKey&quot;: &quot;sk-ant-global&quot;
+      }
+    }
+  }
+}
+```text
+**实际使用的 API Key**: `sk-ant-env`（环境变量优先级最高）
+
+---
+
+## 🔍 配置查看命令
+
+### 查看配置文件位置
+
+```bash
+# 查看全局配置文件路径
+openclaw config path
+
+# 查看 Agent 配置文件路径
+openclaw config path --agent tech-dev
+```text
+### 查看配置内容
+
+```bash
+# 查看所有配置
+openclaw config get
+
+# 查看特定配置项
+openclaw config get models.providers.anthropic.apiKey
+
+# 查看 Agent 配置
+openclaw config get --agent tech-dev
+
+# 以 JSON 格式输出
+openclaw config get --json
+```text
+### 查看生效的配置
+
+```bash
+# 查看当前使用的 model
+openclaw models list
+
+# 查看 Gateway 状态
+openclaw gateway status
+
+# 查看所有 Agent
+openclaw agents list
+```text
+---
+
+## ⚙️ 配置修改命令
+
+### 设置配置
+
+```bash
+# 设置全局配置
+openclaw config set models.default &quot;anthropic/claude-sonnet-4-5&quot;
+
+# 设置 Agent 配置
+openclaw config set models.default &quot;openai/gpt-4&quot; --agent tech-dev
+
+# 设置 API Key
+openclaw config set models.providers.anthropic.apiKey &quot;sk-ant-xxx&quot;
+```text
+### 删除配置
+
+```bash
+# 删除配置项
+openclaw config unset models.providers.anthropic.apiKey
+
+# 删除 Agent 配置
+openclaw config unset models.default --agent tech-dev
+```text
+### 重置配置
+
+```bash
+# 重置全局配置
+openclaw config reset
+
+# 重置 Agent 配置
+openclaw config reset --agent tech-dev
+```text
+---
+
+## 🛠️ 常见配置场景
+
+### 场景1：单个 Agent，使用全局配置
+
+**配置方式**:
+```bash
+# 在全局配置中设置 API Key
+openclaw config set models.providers.anthropic.apiKey &quot;sk-ant-xxx&quot;
+```text
+**优点**:
+- ✅ 配置一次，全局生效
+- ✅ 管理简单
+
+**缺点**:
+- ❌ 所有 Agent 使用相同配置
+
+---
+
+### 场景2：多个 Agent，使用不同配置
+
+**配置方式**:
+```bash
+# 为每个 Agent 单独配置
+openclaw config set models.providers.anthropic.apiKey &quot;sk-ant-xxx&quot; --agent tech-dev
+openclaw config set models.providers.openai.apiKey &quot;sk-yyy&quot; --agent content-writer
+```text
+**优点**:
+- ✅ 每个 Agent 独立配置
+- ✅ 灵活性高
+
+**缺点**:
+- ❌ 管理成本较高
+
+---
+
+### 场景3：使用环境变量（临时测试）
+
+**配置方式**:
+```bash
+# 临时设置（当前会话）
+export ANTHROPIC_API_KEY=&quot;sk-ant-xxx&quot;
+
+# 永久设置（添加到 ~/.zshrc）
+echo &#39;export ANTHROPIC_API_KEY=&quot;sk-ant-xxx&quot;&#39; &gt;&gt; ~/.zshrc
+source ~/.zshrc
+```text
+**优点**:
+- ✅ 最高优先级
+- ✅ 适合 Docker 和 CI/CD
+- ✅ 不写入配置文件
+
+**缺点**:
+- ❌ 重启后失效（除非写入 shell 配置）
+
+---
+
+## 🔧 配置故障排查
+
+### 问题1：配置后不生效
+
+**排查步骤**:
+
+1. **检查配置优先级**
+   ```bash
+   # 检查环境变量
+   echo $ANTHROPIC_API_KEY
+
+   # 查看生效的配置
+   openclaw config get models.providers.anthropic.apiKey
+   ```
+
+2. **重启 Gateway**
+   ```bash
+   openclaw gateway restart
+   ```
+
+3. **查看日志**
+   ```bash
+   openclaw logs --tail 50
+   ```
+
+---
+
+### 问题2：找不到配置文件
+
+**排查步骤**:
+
+1. **检查配置文件是否存在**
+   ```bash
+   ls -la ~/.openclaw/openclaw.json
+   ls -la ~/.openclaw/agents/*/openclaw.json
+   ```
+
+2. **运行 doctor 命令**
+   ```bash
+   openclaw doctor
+   ```
+
+3. **手动创建配置文件**
+   ```bash
+   mkdir -p ~/.openclaw
+   echo &#39;{}&#39; &gt; ~/.openclaw/openclaw.json
+   ```
+
+---
+
+### 问题3：多个 Agent 配置混乱
+
+**解决方案**:
+
+1. **查看所有 Agent**
+   ```bash
+   openclaw agents list
+   ```
+
+2. **查看每个 Agent 的配置**
+   ```bash
+   openclaw config get --agent main-assistant
+   openclaw config get --agent tech-dev
+   ```
+
+3. **统一管理**
+   - 使用全局配置 + Agent 覆盖
+   - 或者每个 Agent 完全独立配置
+
+---
+
+## 📋 配置文件模板
+
+### 最小配置模板
+
+```json
+{
+  &quot;models&quot;: {
+    &quot;default&quot;: &quot;anthropic/claude-sonnet-4-5&quot;,
+    &quot;providers&quot;: {
+      &quot;anthropic&quot;: {
+        &quot;apiKey&quot;: &quot;sk-ant-xxx&quot;
+      }
+    }
+  }
+}
+```text
+### 完整配置模板
+
+```json
+{
+  &quot;models&quot;: {
+    &quot;default&quot;: &quot;anthropic/claude-sonnet-4-5&quot;,
+    &quot;providers&quot;: {
+      &quot;anthropic&quot;: {
+        &quot;apiKey&quot;: &quot;sk-ant-xxx&quot;,
+        &quot;baseUrl&quot;: &quot;https://api.anthropic.com&quot;
+      },
+      &quot;openai&quot;: {
+        &quot;apiKey&quot;: &quot;sk-xxx&quot;,
+        &quot;baseUrl&quot;: &quot;https://api.openai.com&quot;
+      }
+    }
+  },
+  &quot;gateway&quot;: {
+    &quot;mode&quot;: &quot;local&quot;,
+    &quot;port&quot;: 18789,
+    &quot;bind&quot;: &quot;loopback&quot;
+  },
+  &quot;channels&quot;: {
+    &quot;telegram&quot;: {
+      &quot;enabled&quot;: true,
+      &quot;token&quot;: &quot;xxx&quot;
+    },
+    &quot;discord&quot;: {
+      &quot;enabled&quot;: true,
+      &quot;token&quot;: &quot;xxx&quot;
+    }
+  },
+  &quot;skills&quot;: {
+    &quot;autoLoad&quot;: true,
+    &quot;paths&quot;: [
+      &quot;~/.openclaw/skills&quot;,
+      &quot;./skills&quot;
+    ]
+  }
+}
+</code></pre></div>
+
+<hr />
+<h2 id="_5">🔗 相关文档</h2>
+<ul>
+<li><a href="01-basics/02-installation.md">第2章：安装配置</a> - 基础配置教程</li>
+<li><a href="03-advanced/11-advanced-configuration.md">第11章：高级配置</a> - 高级配置技巧</li>
+<li><a href="../appendix/H-config-templates.md">配置文件模板</a> - 更多配置模板</li>
+</ul>
+<hr />
+<h2 id="_6">💡 最佳实践</h2>
+<h3 id="_7">推荐的配置方式</h3>
+<ol>
+<li><strong>新手用户</strong>:</li>
+<li>使用全局配置</li>
+<li>通过 <code>openclaw config set</code> 命令设置</li>
+<li>
+<p>避免直接编辑 JSON 文件</p>
+</li>
+<li>
+<p><strong>进阶用户</strong>:</p>
+</li>
+<li>使用 Agent 专属配置</li>
+<li>合理利用配置优先级</li>
+<li>
+<p>定期备份配置文件</p>
+</li>
+<li>
+<p><strong>企业用户</strong>:</p>
+</li>
+<li>使用环境变量管理敏感信息</li>
+<li>版本控制配置模板</li>
+<li>自动化配置部署</li>
+</ol>
+<h3 id="_8">配置管理建议</h3>
+<ol>
+<li>
+<p><strong>定期备份</strong>:<br />
+<code>bash
+   cp -r ~/.openclaw ~/.openclaw.backup-$(date +%Y%m%d)</code></p>
+</li>
+<li>
+<p><strong>版本控制</strong>:</p>
+</li>
+<li>将配置模板加入 Git</li>
+<li>
+<p>使用 <code>.gitignore</code> 排除敏感信息</p>
+</li>
+<li>
+<p><strong>文档记录</strong>:</p>
+</li>
+<li>记录每个配置项的用途</li>
+<li>记录修改历史和原因</li>
+</ol>
+<hr />
+<p><strong>最后更新</strong>: 2026-02-14<br />
+<strong>适用版本</strong>: OpenClaw 2026.3.2+</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第4章：本地文件管理 - OpenClaw 教程</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .markdown-body {
+            background: transparent !important;
+            color: #c9d1d9 !important;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #58a6ff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .article-content h1 {
+            color: #fff !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 15px !important;
+        }
+        .article-content h2 {
+            color: #f97316 !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 10px !important;
+        }
+        .article-content a {
+            color: #58a6ff !important;
+        }
+        .article-content code {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+        }
+        .article-content pre {
+            background: #1f2428 !important;
+            border: 1px solid #30363d !important;
+        }
+        .article-content blockquote {
+            border-left: 4px solid #f97316 !important;
+            background: rgba(249, 115, 22, 0.1) !important;
+        }
+        .article-content table th {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+        }
+        .article-content table td {
+            border: 1px solid #30363d !important;
+        }
+        .article-content img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .article-content strong {
+            color: #f97316 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← 返回教程目录</a>
+        <div class="article-content markdown-body">
+            <h1 id="4">第4章：本地文件管理</h1>
+<blockquote>
+<p>OpenClaw最强大的功能之一，就是可以访问和管理你电脑上的文件。这是在线AI无法做到的。</p>
+</blockquote>
+<h2 id="_1">快速导航</h2>
+<ul>
+<li>🔍 <a href="#智能文件搜索">智能文件搜索</a></li>
+<li>📦 <a href="#批量文件处理">批量文件处理</a></li>
+<li>📁 <a href="#文件自动整理">文件自动整理</a></li>
+<li>🧹 <a href="#硬盘清理优化">硬盘清理优化</a></li>
+</ul>
+<h2 id="41">4.1 智能文件搜索</h2>
+<h3 id="_2">为什么需要智能搜索？</h3>
+<p>传统的文件搜索只能按文件名查找，但经常遇到：<br />
+- ❌ 忘记文件名，只记得内容<br />
+- ❌ 文件太多，不知道在哪个文件夹<br />
+- ❌ 需要同时搜索多种类型的文件<br />
+- ❌ 需要根据内容筛选文件</p>
+<p><strong>OpenClaw的智能搜索可以</strong>：<br />
+- ✅ 根据文件内容搜索<br />
+- ✅ 理解自然语言描述<br />
+- ✅ 跨文件夹搜索<br />
+- ✅ 智能过滤和排序</p>
+<h3 id="1">场景1：找文件</h3>
+<p><strong>真实案例</strong>：找发票</p>
+<blockquote>
+<p>我电脑里有一堆发票，特别乱，我忘了哪一张是买跑步机的了。<br />
+按过去，我得一张一张点开来搜索。真的，这事太呆逼了。</p>
+</blockquote>
+<p><img alt="混乱的发票文件夹 - 传统文件管理的痛点" src="https://upload.maynor1024.live/file/1770176215000_image_4.jpg" /></p>
+<p><strong>传统方法</strong>：<br />
+1. 打开文件夹<br />
+2. 一张一张点开图片<br />
+3. 查看内容<br />
+4. 找到目标文件<br />
+5. 耗时：10-30分钟</p>
+<p><strong>OpenClaw方法</strong>：</p>
+<div class="codehilite"><pre><span></span><code>我：帮我找一下我电脑上的一张发票，里面详情是买了一个跑步机，
+然后把那个发票用文件发给我。
+```text
+![OpenClaw智能搜索 - 通过语义理解找到目标文件](https://upload.maynor1024.live/file/1770176217951_image_5.jpg)
+
+**OpenClaw执行过程**：
+1. 🔍 搜索所有图片文件
+2. 📄 使用OCR识别文字
+3. 🎯 匹配&quot;跑步机&quot;关键词
+4. 📤 发送找到的文件
+
+![找到的发票详情 - 精准匹配用户需求](https://upload.maynor1024.live/file/1770176224257_image_6.jpg)
+
+**结果**：
+- ⏱️ 耗时：30-60秒
+- ✅ 准确率：100%
+- 😊 体验：太爽了！
+
+### 搜索命令示例
+
+#### 按内容搜索
+
+```text
+找一下包含&quot;合同&quot;的PDF文件
+搜索所有提到&quot;项目计划&quot;的文档
+找一下我写的关于AI的笔记
+```text
+#### 按类型搜索
+
+```text
+找出所有的PNG图片
+搜索最近下载的PDF文件
+找一下所有的Excel表格
+```text
+#### 按时间搜索
+
+```text
+找一下最近7天修改的文件
+搜索上个月创建的文档
+找一下今天下载的文件
+```text
+#### 按大小搜索
+
+```text
+找出大于100MB的文件
+搜索所有小于1MB的图片
+找一下占用空间最大的10个文件
+```text
+#### 组合搜索
+
+```text
+找一下最近一周内，包含&quot;发票&quot;的图片文件
+搜索下载文件夹里，大于10MB的PDF
+找一下桌面上，今天修改过的Word文档
+```text
+### 搜索技巧
+
+#### 技巧1：描述内容而非文件名
+
+**❌ 不好的搜索**：
+```text
+找一下IMG_1234.jpg
+```text
+**✅ 好的搜索**：
+```text
+找一下我去年在海边拍的照片
+```text
+#### 技巧2：提供上下文
+
+**❌ 不好的搜索**：
+```text
+找发票
+```text
+**✅ 好的搜索**：
+```text
+找一下我上个月买跑步机的发票，应该是在下载文件夹里
+```text
+#### 技巧3：指定搜索范围
+
+**❌ 不好的搜索**：
+```text
+找所有文件
+```text
+**✅ 好的搜索**：
+```text
+在文档文件夹里找所有的PDF文件
+```text
+#### 技巧4：使用排序
+
+**❌ 不好的搜索**：
+```text
+找图片
+```text
+**✅ 好的搜索**：
+```text
+找最近修改的10张图片，按时间排序
+```text
+### 实战练习
+
+**练习1：找照片**
+```text
+帮我找一下我电脑上所有的自拍照片
+```text
+**练习2：找文档**
+```text
+找一下包含&quot;年度总结&quot;的Word文档
+```text
+**练习3：找下载文件**
+```text
+找一下我最近下载的所有PDF文件
+```text
+## 4.2 批量文件处理
+
+### 场景2：整理发票报销
+
+**真实案例**：自动填写报销单
+
+&gt; 公司财务有个非常严格的规定，就是发票需要填写在1个excel模板上，
+&gt; 然后把发票和这个excel文件一起提交给财务。
+&gt; 
+&gt; 以前，虽然都不会笨到用手填，但还是要把所有发票都传到ChatGPT
+&gt; 或者别的AI产品上，然后让他们来帮忙填写。
+
+**传统方法**：
+1. 打开ChatGPT
+2. 上传发票图片（一张一张）
+3. 让AI提取信息
+4. 复制到Excel
+5. 重复N次
+6. 耗时：30-60分钟
+
+**OpenClaw方法**：
+
+```text
+我：我希望你帮我把我本地那个1月发票文件夹里的所有发票都整理一下，
+按照那个下载文件里报销单.xlsx的模板格式填进去，
+再把填好的表格用文件发送给我。
+```text
+![批量整理发票 - 自动分类和重命名](https://upload.maynor1024.live/file/1770176222217_image_7.jpg)
+
+**OpenClaw执行过程**：
+1. 📁 读取发票文件夹
+2. 🔍 识别所有发票图片
+3. 📄 OCR提取信息（日期、金额、商家等）
+4. 📊 读取Excel模板
+5. ✍️ 按模板格式填写
+6. 💾 保存新文件
+7. 📤 发送给你
+
+**结果**：
+- ⏱️ 耗时：2-5分钟
+- ✅ 准确率：95%+
+- 😊 体验：直接搞定！
+
+### 批量处理命令示例
+
+#### 批量读取
+
+```text
+读取文档文件夹里所有的PDF文件
+提取所有图片中的文字
+读取所有Excel表格的第一行
+```text
+#### 批量提取信息
+
+```text
+从所有发票中提取日期、金额、商家信息
+从所有简历中提取姓名、电话、邮箱
+从所有合同中提取甲方、乙方、金额
+```text
+#### 批量格式转换
+
+```text
+把所有Word文档转换成PDF
+把所有PNG图片转换成JPG
+把所有Excel表格导出为CSV
+```text
+#### 批量数据整理
+
+```text
+把所有发票信息整理到一个Excel表格
+把所有联系人信息整理成通讯录
+把所有会议记录整理成一份总结
+```text
+### 实战案例
+
+#### 案例1：整理客户信息
+
+**场景**：
+- 有100份客户资料（Word文档）
+- 需要提取：公司名、联系人、电话、邮箱
+- 整理到Excel表格
+
+**命令**：
+```text
+帮我从&quot;客户资料&quot;文件夹里的所有Word文档中，
+提取公司名、联系人、电话、邮箱，
+整理到一个Excel表格里，
+按公司名排序。
+```text
+**结果**：
+- 自动提取100份资料
+- 生成规范的Excel表格
+- 耗时：5-10分钟
+
+#### 案例2：批量提取PDF内容
+
+**场景**：
+- 有50份PDF报告
+- 需要提取每份报告的摘要
+- 整理成一份汇总文档
+
+**命令**：
+```text
+读取&quot;报告&quot;文件夹里所有的PDF文件，
+提取每份报告的摘要部分（通常在第一页），
+整理成一份Word文档，
+每个摘要标注来源文件名。
+```text
+**结果**：
+- 自动读取50份PDF
+- 提取摘要内容
+- 生成汇总文档
+
+#### 案例3：批量图片识别
+
+**场景**：
+- 有200张名片照片
+- 需要提取联系信息
+- 整理成通讯录
+
+**命令**：
+```text
+识别&quot;名片&quot;文件夹里所有图片，
+提取姓名、公司、职位、电话、邮箱，
+整理成Excel通讯录，
+按公司分类。
+```text
+**结果**：
+- OCR识别200张名片
+- 自动分类整理
+- 生成标准通讯录
+
+### 错误处理和容错
+
+#### 处理识别错误
+</code></pre></div>
+
+<p>我：帮我检查一下刚才生成的Excel表格，<br />
+看看有没有识别错误的地方，<br />
+比如电话号码格式不对、金额异常等。</p>
+<div class="codehilite"><pre><span></span><code>#### 处理缺失信息
+</code></pre></div>
+
+<p>我：有些发票可能信息不全，<br />
+如果缺少必填项，请单独列出来，<br />
+我手动补充。</p>
+<div class="codehilite"><pre><span></span><code>#### 处理格式问题
+</code></pre></div>
+
+<p>我：如果遇到无法识别的文件格式，<br />
+请跳过并告诉我，<br />
+我会手动处理。</p>
+<div class="codehilite"><pre><span></span><code>## 4.3 文件自动整理
+
+### 场景3：批量重命名文件
+
+**真实案例**：邀请函重命名
+
+&gt; 设计同学给我做了一些邀请函，是微信发我的，然后我存下来的。
+&gt; 存完了以后，发现一个BUG。
+&gt; 名字全特么是微信文件XXX。
+&gt; 太BUG了，我根本不知道谁是谁的。
+
+![混乱的邀请函文件 - 文件名不规范](https://upload.maynor1024.live/file/1770176232438_image_8.jpg)
+
+**传统方法**：
+1. 打开每张图片
+2. 看内容
+3. 手动重命名
+4. 重复N次
+5. 耗时：20-30分钟
+
+**OpenClaw方法**：
+</code></pre></div>
+
+<p>我：让OpenClaw根据我邀请函里面对应的人名，<br />
+把外面的名字改成"人名-邀请函.jpg"的格式。</p>
+<div class="codehilite"><pre><span></span><code>![批量重命名后 - 文件名清晰规范](https://upload.maynor1024.live/file/1770176231952_image_9.jpg)
+
+**OpenClaw执行过程**：
+1. 📁 读取所有图片
+2. 🔍 OCR识别人名
+3. ✍️ 生成新文件名
+4. 📝 批量重命名
+5. ✅ 完成
+
+**结果**：
+- ⏱️ 耗时：1-2分钟
+- ✅ 准确率：100%
+- 😊 体验：一句话搞定！
+
+### 文件整理命令示例
+
+#### 批量重命名
+</code></pre></div>
+
+<p>把所有图片按拍摄日期重命名，格式：YYYY-MM-DD_序号.jpg<br />
+把所有文档按内容主题重命名<br />
+把所有下载文件按类型重命名</p>
+<div class="codehilite"><pre><span></span><code>#### 文件分类
+</code></pre></div>
+
+<p>把桌面上的文件按类型分类到不同文件夹<br />
+把下载文件夹里的文件按日期分类<br />
+把照片按拍摄地点分类</p>
+<div class="codehilite"><pre><span></span><code>#### 文件夹结构优化
+</code></pre></div>
+
+<p>帮我整理一下项目文件夹，按功能模块分类<br />
+优化我的文档文件夹结构，让它更清晰<br />
+把所有散乱的文件整理到合适的文件夹</p>
+<div class="codehilite"><pre><span></span><code>### 实战案例
+
+#### 案例1：整理下载文件夹
+
+**场景**：
+- 下载文件夹有500+文件
+- 各种类型混在一起
+- 需要分类整理
+
+**命令**：
+</code></pre></div>
+
+<p>帮我整理下载文件夹：<br />
+1. 按文件类型分类（文档、图片、视频、压缩包等）<br />
+2. 每个类型创建一个子文件夹<br />
+3. 把文件移动到对应文件夹<br />
+4. 删除重复文件<br />
+5. 告诉我整理结果</p>
+<div class="codehilite"><pre><span></span><code>**结果**：
+</code></pre></div>
+
+<p>✅ 整理完成！</p>
+<p>📊 统计：<br />
+- 文档：120个 → Documents/<br />
+- 图片：200个 → Images/<br />
+- 视频：50个 → Videos/<br />
+- 压缩包：30个 → Archives/<br />
+- 其他：100个 → Others/</p>
+<p>🗑️ 删除重复文件：15个<br />
+💾 释放空间：2.3GB</p>
+<div class="codehilite"><pre><span></span><code>#### 案例2：照片自动分类
+
+**场景**：
+- 有1000+张照片
+- 需要按日期和地点分类
+- 方便查找
+
+**命令**：
+</code></pre></div>
+
+<p>帮我整理照片文件夹：<br />
+1. 按拍摄日期创建文件夹（YYYY-MM格式）<br />
+2. 如果照片有地理位置信息，在文件名中标注<br />
+3. 删除模糊和重复的照片<br />
+4. 生成一个索引文件</p>
+<div class="codehilite"><pre><span></span><code>**结果**：
+</code></pre></div>
+
+<p>✅ 整理完成！</p>
+<p>📁 文件夹结构：<br />
+Photos/<br />
+├── 2025-12/<br />
+│   ├── 2025-12-01_北京_001.jpg<br />
+│   ├── 2025-12-01_北京_002.jpg<br />
+│   └── ...<br />
+├── 2026-01/<br />
+│   ├── 2026-01-15_上海_001.jpg<br />
+│   └── ...<br />
+└── index.txt (索引文件)</p>
+<p>🗑️ 删除模糊照片：50张<br />
+🗑️ 删除重复照片：30张</p>
+<div class="codehilite"><pre><span></span><code>#### 案例3：文档归档
+
+**场景**：
+- 项目结束，需要归档
+- 文档散落在各处
+- 需要统一整理
+
+**命令**：
+</code></pre></div>
+
+<p>帮我归档"XX项目"的所有文档：<br />
+1. 搜索所有相关文档（包含项目名称）<br />
+2. 按文档类型分类（需求、设计、代码、测试等）<br />
+3. 创建归档文件夹结构<br />
+4. 移动文件到对应位置<br />
+5. 生成项目文档清单</p>
+<div class="codehilite"><pre><span></span><code>**结果**：
+</code></pre></div>
+
+<p>✅ 归档完成！</p>
+<p>📁 文件夹结构：<br />
+XX项目_归档_2026-02-10/<br />
+├── 01_需求文档/<br />
+├── 02_设计文档/<br />
+├── 03_开发文档/<br />
+├── 04_测试文档/<br />
+├── 05_部署文档/<br />
+└── 文档清单.xlsx</p>
+<p>📊 统计：<br />
+- 总文件数：156个<br />
+- 总大小：1.2GB</p>
+<div class="codehilite"><pre><span></span><code>### 自动化脚本编写
+
+如果你经常需要整理某类文件，可以让OpenClaw生成自动化脚本：
+</code></pre></div>
+
+<p>我：帮我写1个脚本，每周自动整理下载文件夹，<br />
+按照刚才的规则分类。</p>
+<div class="codehilite"><pre><span></span><code>OpenClaw会生成一个可以定时运行的脚本，实现自动化整理。
+
+## 4.4 硬盘清理优化
+
+### 场景4：清理硬盘垃圾
+
+**真实案例**：释放硬盘空间
+
+&gt; 如果你硬盘快满了，你也别下那些扫描清垃圾的软件了。
+&gt; 直接让OpenClaw给你过一遍。
+
+![硬盘空间清理 - 智能识别大文件和重复文件](https://upload.maynor1024.live/file/1770176234805_image_10.jpg)
+
+**传统方法**：
+1. 下载清理软件
+2. 扫描硬盘
+3. 手动选择删除
+4. 担心误删重要文件
+5. 耗时：30-60分钟
+
+**OpenClaw方法**：
+</code></pre></div>
+
+<p>我：帮我分析一下硬盘空间使用情况，<br />
+找出占用空间最大的文件和文件夹，<br />
+建议哪些可以清理。</p>
+<div class="codehilite"><pre><span></span><code>**OpenClaw执行过程**：
+1. 📊 扫描硬盘
+2. 📈 分析空间占用
+3. 🔍 找出大文件
+4. 🗑️ 识别垃圾文件
+5. 💡 提供清理建议
+
+### 清理命令示例
+
+#### 查找大文件
+</code></pre></div>
+
+<p>找出占用空间最大的10个文件<br />
+查找大于1GB的文件<br />
+分析哪个文件夹占用空间最多</p>
+<div class="codehilite"><pre><span></span><code>#### 查找重复文件
+</code></pre></div>
+
+<p>找出所有重复的文件<br />
+查找重复的照片<br />
+找出重复的文档</p>
+<div class="codehilite"><pre><span></span><code>#### 查找临时文件
+</code></pre></div>
+
+<p>找出所有临时文件<br />
+查找缓存文件<br />
+找出可以安全删除的文件</p>
+<div class="codehilite"><pre><span></span><code>#### 清理建议
+</code></pre></div>
+
+<p>分析我的硬盘，给出清理建议<br />
+哪些文件可以移动到外部硬盘<br />
+哪些文件可以压缩存储</p>
+<div class="codehilite"><pre><span></span><code>### 实战案例：释放100GB空间
+
+**第一步：分析空间占用**
+</code></pre></div>
+
+<p>我：帮我分析一下硬盘空间使用情况</p>
+<div class="codehilite"><pre><span></span><code>**OpenClaw回复**：
+</code></pre></div>
+
+<p>📊 硬盘空间分析：</p>
+<p>总容量：500GB<br />
+已使用：450GB (90%)<br />
+剩余：50GB (10%)</p>
+<p>⚠️ 空间不足警告！</p>
+<p>占用空间最多的文件夹：<br />
+1. ~/Library/Caches - 80GB<br />
+2. ~/Downloads - 50GB<br />
+3. ~/Movies - 120GB<br />
+4. ~/Documents - 100GB<br />
+5. ~/Desktop - 30GB</p>
+<div class="codehilite"><pre><span></span><code>**第二步：查找大文件**
+</code></pre></div>
+
+<p>我：找出大于1GB的文件</p>
+<div class="codehilite"><pre><span></span><code>**OpenClaw回复**：
+</code></pre></div>
+
+<p>🔍 找到35个大于1GB的文件：</p>
+<p>视频文件（25个）：<br />
+1. 项目演示.mov - 15GB<br />
+2. 会议录像_2025-12.mp4 - 8GB<br />
+3. ...</p>
+<p>虚拟机镜像（5个）：<br />
+1. Windows.vmdk - 50GB<br />
+2. Ubuntu.vmdk - 30GB<br />
+3. ...</p>
+<p>备份文件（5个）：<br />
+1. iPhone备份_2025-12.backup - 20GB<br />
+2. ...</p>
+<p>💡 建议：<br />
+- 视频文件可以压缩或移动到外部硬盘<br />
+- 旧的虚拟机镜像可以删除<br />
+- 旧的备份文件可以删除</p>
+<div class="codehilite"><pre><span></span><code>**第三步：查找重复文件**
+</code></pre></div>
+
+<p>我：找出所有重复的文件</p>
+<div class="codehilite"><pre><span></span><code>**OpenClaw回复**：
+</code></pre></div>
+
+<p>🔍 找到120组重复文件：</p>
+<p>重复照片（80组）：<br />
+- IMG_1234.jpg (3份) - 15MB<br />
+- IMG_5678.jpg (2份) - 10MB<br />
+- ...</p>
+<p>重复文档（30组）：<br />
+- 报告_v1.docx (4份) - 5MB<br />
+- 方案_final.pptx (3份) - 20MB<br />
+- ...</p>
+<p>重复下载（10组）：<br />
+- setup.exe (2份) - 100MB<br />
+- ...</p>
+<p>💡 可释放空间：约8GB</p>
+<div class="codehilite"><pre><span></span><code>**第四步：清理临时文件**
+</code></pre></div>
+
+<p>我：找出所有可以安全删除的临时文件和缓存</p>
+<div class="codehilite"><pre><span></span><code>**OpenClaw回复**：
+</code></pre></div>
+
+<p>🗑️ 可安全删除的文件：</p>
+<p>系统缓存：<br />
+- ~/Library/Caches - 80GB<br />
+  - Safari缓存 - 20GB<br />
+  - Chrome缓存 - 30GB<br />
+  - 其他应用缓存 - 30GB</p>
+<p>临时文件：<br />
+- /tmp - 5GB<br />
+- ~/Downloads/临时文件 - 10GB</p>
+<p>日志文件：<br />
+- ~/Library/Logs - 3GB</p>
+<p>💡 可释放空间：约98GB</p>
+<p>⚠️ 建议：<br />
+- 系统缓存可以全部清理<br />
+- 临时文件可以全部删除<br />
+- 日志文件保留最近1个月的</p>
+<div class="codehilite"><pre><span></span><code>**第五步：执行清理**
+</code></pre></div>
+
+<p>我：好的，帮我清理这些文件，<br />
+但是要先备份重要的，<br />
+然后再删除。</p>
+<div class="codehilite"><pre><span></span><code>**OpenClaw回复**：
+</code></pre></div>
+
+<p>✅ 清理完成！</p>
+<p>📊 清理结果：<br />
+- 删除缓存文件：80GB<br />
+- 删除临时文件：15GB<br />
+- 删除重复文件：8GB<br />
+- 删除旧备份：20GB</p>
+<p>💾 总共释放空间：123GB</p>
+<p>📁 备份位置：<br />
+- 重要文件已备份到：~/Backup/清理前备份_2026-02-10/</p>
+<p>⚠️ 建议：<br />
+- 定期清理缓存（每月一次）<br />
+- 及时删除不需要的下载文件<br />
+- 使用外部硬盘存储大文件</p>
+<div class="codehilite"><pre><span></span><code>### 安全删除策略
+
+#### 三步确认法
+
+1. **第一步：分析**
+   ```
+   分析哪些文件可以删除
+   ```
+
+2. **第二步：备份**
+   ```
+   把重要文件备份到安全位置
+   ```
+
+3. **第三步：删除**
+   ```
+   确认无误后，删除文件
+   ```
+
+#### 保护重要文件
+</code></pre></div>
+
+<p>我：在清理之前，请确保以下文件夹不被删除：<br />
+- ~/Documents/重要文档<br />
+- ~/Projects<br />
+- ~/Photos</p>
+<div class="codehilite"><pre><span></span><code>#### 可恢复删除
+</code></pre></div>
+
+<p>我：先把文件移动到回收站，<br />
+而不是直接删除，<br />
+这样如果误删了还能恢复。</p>
+<div class="codehilite"><pre><span></span><code>### 定期清理计划
+
+让OpenClaw帮你制定定期清理计划：
+</code></pre></div>
+
+<p>我：帮我制定一个定期清理计划，<br />
+每周自动清理缓存和临时文件，<br />
+每月检查大文件和重复文件。</p>
+<div class="codehilite"><pre><span></span><code>**OpenClaw回复**：
+</code></pre></div>
+
+<p>✅ 已创建定期清理计划：</p>
+<p>📅 每周任务（每周日晚上10点）：<br />
+- 清理系统缓存<br />
+- 清理浏览器缓存<br />
+- 清理临时文件<br />
+- 清理下载文件夹（超过30天的文件）</p>
+<p>📅 每月任务（每月1号）：<br />
+- 查找大文件（&gt;1GB）<br />
+- 查找重复文件<br />
+- 分析空间占用<br />
+- 生成清理报告</p>
+<p>💡 预计每月可释放：20-30GB</p>
+<p>⚠️ 重要提醒：<br />
+- 清理前会自动备份<br />
+- 清理后会发送通知<br />
+- 可以随时取消任务</p>
+<div class="codehilite"><pre><span></span><code>## 本章小结
+
+通过本章，你应该已经掌握了：
+
+✅ **智能文件搜索**：根据内容找文件，不再依赖文件名  
+✅ **批量文件处理**：一次处理100+文件，自动提取信息  
+✅ **文件自动整理**：智能分类、重命名、归档  
+✅ **硬盘清理优化**：找出垃圾文件，释放大量空间  
+
+**关键要点**：
+- OpenClaw可以访问本地文件，这是在线AI做不到的
+- 描述内容而非文件名，让AI理解你的需求
+- 批量处理节省大量时间
+- 定期清理保持硬盘健康
+
+## 实战项目：打造你的文件管理助手
+
+### 项目目标
+
+创建一个完整的文件管理工作流，包括：
+1. 每天自动整理下载文件夹
+2. 每周清理缓存和临时文件
+3. 每月检查大文件和重复文件
+4. 重要文件自动备份
+
+### 实施步骤
+
+**第一步：设置自动整理**
+</code></pre></div>
+
+<p>帮我设置每天晚上10点自动整理下载文件夹，<br />
+按文件类型分类。</p>
+<div class="codehilite"><pre><span></span><code>**第二步：设置定期清理**
+</code></pre></div>
+
+<p>设置每周日晚上11点清理缓存和临时文件。</p>
+<div class="codehilite"><pre><span></span><code>**第三步：设置月度检查**
+</code></pre></div>
+
+<p>设置每月1号检查大文件和重复文件，<br />
+生成清理报告。</p>
+<div class="codehilite"><pre><span></span><code>**第四步：设置自动备份**
+</code></pre></div>
+
+<p>设置每天自动备份重要文件夹到外部硬盘。<br />
+```</p>
+<h3 id="_3">预期效果</h3>
+<ul>
+<li>📁 下载文件夹始终保持整洁</li>
+<li>💾 硬盘空间充足（至少保持20%空闲）</li>
+<li>🔒 重要文件有备份</li>
+<li>⏱️ 每月节省5-10小时整理时间</li>
+</ul>
+<hr />
+<p><strong>下一章</strong>：<a href="05-knowledge-base.md">第5章：知识库管理</a> - 打造个人知识库系统</p>
+<p><strong>返回目录</strong>：<a href="../../README.md">README</a></p>
+        </div>
+    </div>
+</body>
+</html>

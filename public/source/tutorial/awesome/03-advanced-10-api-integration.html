@@ -1,0 +1,2584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第10章 API服务集成（绘图/Notion/视频/语音） - OpenClaw 教程</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .markdown-body {
+            background: transparent !important;
+            color: #c9d1d9 !important;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #58a6ff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .article-content h1 {
+            color: #fff !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 15px !important;
+        }
+        .article-content h2 {
+            color: #f97316 !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 10px !important;
+        }
+        .article-content a {
+            color: #58a6ff !important;
+        }
+        .article-content code {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+        }
+        .article-content pre {
+            background: #1f2428 !important;
+            border: 1px solid #30363d !important;
+        }
+        .article-content blockquote {
+            border-left: 4px solid #f97316 !important;
+            background: rgba(249, 115, 22, 0.1) !important;
+        }
+        .article-content table th {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+        }
+        .article-content table td {
+            border: 1px solid #30363d !important;
+        }
+        .article-content img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .article-content strong {
+            color: #f97316 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← 返回教程目录</a>
+        <div class="article-content markdown-body">
+            <h1 id="10-apinotion">第10章 API服务集成（绘图/Notion/视频/语音）</h1>
+<blockquote>
+<p>接入第三方服务，让AI能力更强大</p>
+</blockquote>
+<p>本章将介绍如何将OpenClaw与各种第三方API服务集成，扩展AI的能力边界。重点介绍4个实用场景的配置方法：AI绘图、Notion数据同步、视频生成和语音合成。</p>
+<p>💡 <strong>本章重点</strong>：API集成的配置方法和基础使用。详细的实战案例请参考第14章《创意应用探索》。</p>
+<hr />
+<h2 id="101-ai">10.1 AI绘图服务集成</h2>
+<h3 id="1011">10.1.1 服务选择</h3>
+<p>OpenClaw支持多种AI绘图服务：</p>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>特点</th>
+<th>成本</th>
+<th>推荐场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gemini图像生成</td>
+<td>中文好、白板图擅长</td>
+<td>低（0.05-0.4元/张）</td>
+<td>教程配图、白板图</td>
+</tr>
+<tr>
+<td>DALL-E 3</td>
+<td>质量高、风格多</td>
+<td>中</td>
+<td>创意设计</td>
+</tr>
+<tr>
+<td>Midjourney</td>
+<td>艺术性强</td>
+<td>高</td>
+<td>艺术创作</td>
+</tr>
+<tr>
+<td>Stable Diffusion</td>
+<td>开源免费</td>
+<td>免费（需自建）</td>
+<td>批量生成</td>
+</tr>
+</tbody>
+</table>
+<p><strong>推荐：Gemini图像生成</strong><br />
+- ✅ 集成简单（Chat API）<br />
+- ✅ 成本低廉<br />
+- ✅ 中文支持好<br />
+- ✅ 适合教程配图、白板图</p>
+<h3 id="1012-bananapro-image-gen-skill">10.1.2 安装bananapro-image-gen Skill</h3>
+<p><strong>方式1：从GitHub安装（推荐）</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 克隆技能仓库</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/xianyu110/awesome-openclaw-tutorial.git
+
+<span class="c1"># 复制到OpenClaw的skills目录</span>
+cp<span class="w"> </span>-r<span class="w"> </span>expert-skills-hub/skills/bananapro-image-gen<span class="w"> </span>~/.openclaw/skills/
+
+<span class="c1"># 安装依赖</span>
+<span class="nb">cd</span><span class="w"> </span>~/.openclaw/skills/bananapro-image-gen
+pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<span class="sb">```</span>text
+**方式2：使用npx命令**
+
+<span class="sb">```</span>bash
+npx<span class="w"> </span>skills<span class="w"> </span>add<span class="w"> </span>https://github.com/xianyu110/awesome-openclaw-tutorial<span class="w"> </span>--skill<span class="w"> </span>bananapro-image-gen
+<span class="sb">```</span>text
+**验证安装：**
+
+<span class="sb">```</span>bash
+ls<span class="w"> </span>~/.openclaw/skills/bananapro-image-gen
+<span class="c1"># 应该看到：SKILL.md, README.md, scripts/, test.sh 等文件</span>
+<span class="sb">```</span>text
+<span class="c1">### 10.1.3 配置API</span>
+
+**步骤1：获取API<span class="w"> </span>密钥**
+
+<span class="m">1</span>.<span class="w"> </span>访问中转API服务商（推荐支持Gemini的服务）
+<span class="m">2</span>.<span class="w"> </span>注册并充值（建议10-20元测试）
+<span class="m">3</span>.<span class="w"> </span>获取API<span class="w"> </span>Key
+
+**步骤2：配置<span class="w"> </span>OpenClaw**
+
+<span class="sb">```</span>bash
+nano<span class="w"> </span>~/.openclaw/openclaw.json
+<span class="sb">```</span>text
+添加配置：
+
+<span class="sb">```</span>json
+<span class="o">{</span>
+<span class="w">  </span><span class="s2">&quot;api&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;gemini&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="s2">&quot;apiKey&quot;</span>:<span class="w"> </span><span class="s2">&quot;your-api-key-here&quot;</span>,
+<span class="w">      </span><span class="s2">&quot;baseUrl&quot;</span>:<span class="w"> </span><span class="s2">&quot;https://apipro.maynor1024.live&quot;</span>,
+<span class="w">      </span><span class="s2">&quot;model&quot;</span>:<span class="w"> </span><span class="s2">&quot;gemini-3-pro-image-preview&quot;</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
+<span class="sb">```</span>text
+**步骤3：测试连接**
+
+<span class="sb">```</span>bash
+<span class="nb">cd</span><span class="w"> </span>~/.openclaw/skills/bananapro-image-gen
+bash<span class="w"> </span>test.sh
+<span class="sb">```</span>text
+如果看到生成的图片，说明配置成功！
+
+**成本参考：**
+-<span class="w"> </span>生成1张1K图片：约0.05-0.1元
+-<span class="w"> </span>生成1张2K图片：约0.1-0.2元
+-<span class="w"> </span>生成1张4K图片：约0.2-0.4元
+
+💡<span class="w"> </span>**省钱技巧：**<span class="w"> </span>日常使用1K分辨率即可，只有需要打印或高清展示时才用2K/4K。
+
+<span class="c1">### 10.1.4 基础使用教程</span>
+
+安装完成后，你可以直接在OpenClaw中使用绘图功能。
+
+**示例1：生成Logo**
+</code></pre></div>
+
+<p>你：帮我设计1个Logo，主题是"超级个体"，要求：<br />
+- 简洁现代<br />
+- 使用蓝色和橙色<br />
+- 包含一个人和AI的元素<br />
+- 适合用在社交媒体头像</p>
+<div class="codehilite"><pre><span></span><code>OpenClaw会自动调用绘图Skill，生成Logo并保存到本地。
+
+**示例2：生成白板图**
+</code></pre></div>
+
+<p>你：生成一张白板图片，手写字体风格，内容是：</p>
+<p>标题：OpenClaw核心优势</p>
+<p>4大优势：<br />
+1. 本地部署 - 保护隐私<br />
+2. 文件访问 - 智能搜索<br />
+3. Skills扩展 - 无限可能<br />
+4. 多平台支持 - 随时随地</p>
+<p>用手写字体，添加箭头、框图等手绘元素</p>
+<div class="codehilite"><pre><span></span><code>**示例3：生成社交媒体配图**
+</code></pre></div>
+
+<p>你：生成一张小红书配图，主题是"AI时代的超级个体"，要求：<br />
+- 9:16竖版<br />
+- 温暖的配色<br />
+- 包含文字：一个人 + AI = 无限可能<br />
+- 简约风格</p>
+<div class="codehilite"><pre><span></span><code>### 10.1.5 命令行使用（进阶）
+
+如果你想批量生成图片或集成到自动化脚本中，可以直接使用命令行：
+
+**基础用法：**
+
+```bash
+cd ~/.openclaw/skills/bananapro-image-gen
+
+# 生成图片（OpenAI格式）
+python3 scripts/generate_image.py \
+    --prompt &quot;1个简约的Logo设计，主题是AI助手&quot; \
+    --filename output.png \
+    --api-format openai
+
+# 生成高清图片（Gemini格式）
+python3 scripts/generate_image.py \
+    --prompt &quot;一张白板图，手写风格&quot; \
+    --filename whiteboard.png \
+    --api-format gemini \
+    --resolution 2K
+```text
+**参数说明：**
+
+| 参数 | 说明 | 默认值 | 示例 |
+|------|------|--------|------|
+| `--prompt` | 图片描述（必填） | - | &quot;1个Logo设计&quot; |
+| `--filename` | 输出文件名 | output.png | my_image.png |
+| `--api-format` | API格式 | openai | openai/gemini |
+| `--resolution` | 分辨率 | 1K | 1K/2K/4K |
+
+**批量生成示例：**
+
+```bash
+# 创建批量生成脚本
+cat &gt; batch_generate.sh &lt;&lt; &#39;EOF&#39;
+#!/bin/bash
+
+# 生成5张不同主题的图片
+prompts=(
+    &quot;Logo设计：超级个体&quot;
+    &quot;白板图：AI工作流&quot;
+    &quot;海报：效率提升10倍&quot;
+    &quot;配图：知识管理系统&quot;
+    &quot;图标：自动化工具&quot;
+)
+
+for i in &quot;${!prompts[@]}&quot;; do
+    echo &quot;生成第 $((i+1)) 张图片...&quot;
+    python3 scripts/generate_image.py \
+        --prompt &quot;${prompts[$i]}&quot; \
+        --filename &quot;output_$((i+1)).png&quot;
+done
+
+echo &quot;批量生成完成！&quot;
+EOF
+
+chmod +x batch_generate.sh
+./batch_generate.sh
+```text
+### 10.1.6 提示词技巧
+
+好的提示词是生成高质量图片的关键。以下是一些实用技巧：
+
+**技巧1：明确风格**
+</code></pre></div>
+
+<p>❌ 不好：生成一张图片<br />
+✅ 好：生成一张白板图片，手写字体风格，简约现代</p>
+<div class="codehilite"><pre><span></span><code>**技巧2：详细描述**
+</code></pre></div>
+
+<p>❌ 不好：画1个Logo<br />
+✅ 好：设计1个Logo，圆形，蓝色渐变，中间是1个抽象的大脑图案，<br />
+      周围有数据流动的线条，现代科技感</p>
+<div class="codehilite"><pre><span></span><code>**技巧3：指定元素**
+</code></pre></div>
+
+<p>❌ 不好：画一张架构图<br />
+✅ 好：画一张系统架构图，包含：<br />
+      - 用户端（手机图标）<br />
+      - 网关（云图标）<br />
+      - 数据库（圆柱图标）<br />
+      - 用箭头连接各个组件<br />
+      - 添加文字标注</p>
+<div class="codehilite"><pre><span></span><code>**技巧4：参考风格**
+</code></pre></div>
+
+<p>✅ 好：生成一张图片，风格类似：<br />
+      - 手绘白板风格<br />
+      - 扁平化设计<br />
+      - 水彩画风格<br />
+      - 像素艺术风格</p>
+<div class="codehilite"><pre><span></span><code>**提示词模板库：**
+
+```bash
+# Logo设计模板
+&quot;设计1个[主题]Logo，要求：
+- 形状：[圆形/方形/抽象]
+- 颜色：[主色调]
+- 元素：[核心元素]
+- 风格：[现代/复古/简约]
+- 用途：[社交媒体/网站/名片]&quot;
+
+# 白板图模板
+&quot;生成一张白板图片，手写字体风格，内容是：
+标题：[标题文字]
+核心要点：
+1. [要点1]
+2. [要点2]
+3. [要点3]
+用手写字体，添加箭头、框图、下划线等手绘元素&quot;
+
+# 社交媒体配图模板
+&quot;生成一张[平台]配图，主题是[主题]，要求：
+- 尺寸：[9:16/16:9/1:1]
+- 配色：[温暖/冷色/对比]
+- 文字：[核心文案]
+- 风格：[简约/丰富/创意]&quot;
+
+# 架构图模板
+&quot;生成一张[系统名称]架构图，包含：
+组件：
+- [组件1]：[描述]
+- [组件2]：[描述]
+- [组件3]：[描述]
+连接关系：
+- [组件1] → [组件2]
+- [组件2] → [组件3]
+用框图、箭头、图标等元素，清晰展示系统结构&quot;
+```text
+### 10.1.7 实战案例
+
+**案例1：为教程生成章节总结图**
+
+场景：你在写一本OpenClaw教程，需要为每章生成一张总结白板图。
+
+```bash
+# 使用提供的测试脚本
+cd ~/.openclaw/skills/bananapro-image-gen
+bash test_chapters.sh
+```text
+这个脚本会自动生成4张图片：
+- `chapter1_summary.png` - 第1章总结
+- `architecture.png` - 核心架构图
+- `chapter2_deployment.png` - 部署方式对比
+- `chapter3_persona.png` - 人设配置
+
+**效果：**
+- 时间节省：手动画图需要30分钟/张，AI生成只需1分钟
+- 成本：每张约0.1元
+- 质量：手写风格，适合教程配图
+
+**案例2：批量生成社交媒体配图**
+
+场景：你是内容创作者，需要为10篇文章生成配图。
+
+```python
+# create_social_images.py
+import subprocess
+import json
+
+# 文章标题列表
+articles = [
+    &quot;AI时代的超级个体&quot;,
+    &quot;效率提升10倍的秘密&quot;,
+    &quot;一个人的无限可能&quot;,
+    # ... 更多标题
+]
+
+for i, title in enumerate(articles, 1):
+    prompt = f&quot;&quot;&quot;生成一张小红书配图，主题是&quot;{title}&quot;，要求：
+    - 9:16竖版
+    - 温暖的配色
+    - 包含标题文字
+    - 简约现代风格
+    &quot;&quot;&quot;
+
+    subprocess.run([
+        &quot;python3&quot;, &quot;scripts/generate_image.py&quot;,
+        &quot;--prompt&quot;, prompt,
+        &quot;--filename&quot;, f&quot;social_{i}.png&quot;,
+        &quot;--resolution&quot;, &quot;2K&quot;
+    ])
+
+    print(f&quot;✅ 生成第{i}张配图&quot;)
+
+print(&quot;🎉 批量生成完成！&quot;)
+```text
+**效果：**
+- 生成10张配图：约10分钟
+- 成本：约2元（2K分辨率）
+- 手动设计：需要5小时+，成本500元+
+
+**案例3：自动化Logo设计**
+
+场景：你需要为多个项目快速生成Logo方案。
+
+```bash
+# 创建Logo生成脚本
+cat &gt; generate_logos.sh &lt;&lt; &#39;EOF&#39;
+#!/bin/bash
+
+# 项目列表
+projects=(
+    &quot;超级个体:蓝色:现代科技&quot;
+    &quot;知识管理:绿色:简约&quot;
+    &quot;效率工具:橙色:活力&quot;
+)
+
+for project in &quot;${projects[@]}&quot;; do
+    IFS=&#39;:&#39; read -r name color style &lt;&lt;&lt; &quot;$project&quot;
+
+    prompt=&quot;设计1个${name}的Logo，要求：
+    - 主色调：${color}
+    - 风格：${style}
+    - 简洁现代
+    - 适合用在社交媒体&quot;
+
+    python3 scripts/generate_image.py \
+        --prompt &quot;$prompt&quot; \
+        --filename &quot;logo_${name}.png&quot;
+
+    echo &quot;✅ 生成 ${name} Logo&quot;
+done
+EOF
+
+chmod +x generate_logos.sh
+./generate_logos.sh
+```text
+### 10.1.8 常见问题
+
+**Q1：生成的图片不符合预期怎么办？**
+
+A：优化提示词，增加更多细节描述。可以尝试：
+- 添加参考风格
+- 明确指定元素
+- 调整分辨率
+- 多生成几次选最好的
+
+**Q2：如何控制成本？**
+
+A：
+- 日常使用1K分辨率（约0.05元/张）
+- 批量生成时使用脚本，避免重复生成
+- 设置每日预算上限
+- 使用中转API，成本更低
+
+**Q3：支持哪些图片格式？**
+
+A：目前支持PNG格式，这是最通用的格式。如需其他格式，可以使用转换工具：
+
+```bash
+# 转换为JPG
+convert output.png output.jpg
+
+# 转换为WebP（更小的文件）
+convert output.png output.webp
+```text
+**Q4：生成速度慢怎么办？**
+
+A：
+- 检查网络连接
+- 使用国内中转API
+- 降低分辨率（1K最快）
+- 避免高峰时段
+
+**Q5：如何集成到自动化工作流？**
+
+A：参考10.1.5的批量生成示例，或者在OpenClaw的自动化任务中调用：
+
+```python
+# 在OpenClaw的自动化脚本中
+from skills.nano_banana_image_gen import generate_image
+
+# 生成图片
+image_path = generate_image(
+    prompt=&quot;你的提示词&quot;,
+    filename=&quot;output.png&quot;,
+    resolution=&quot;1K&quot;
+)
+
+print(f&quot;图片已生成：{image_path}&quot;)
+```text
+### 10.1.9 进阶技巧
+
+**技巧1：使用两种API格式**
+
+Skill支持两种API格式，可以根据需求切换：
+
+```bash
+# OpenAI格式（兼容性好）
+python3 scripts/generate_image.py \
+    --api-format openai \
+    --prompt &quot;你的提示词&quot;
+
+# Gemini格式（功能更强）
+python3 scripts/generate_image.py \
+    --api-format gemini \
+    --prompt &quot;你的提示词&quot; \
+    --resolution 2K
+```text
+**技巧2：图片后处理**
+
+生成图片后，可以使用Python进行后处理：
+
+```python
+from PIL import Image, ImageDraw, ImageFont
+
+# 打开生成的图片
+img = Image.open(&quot;output.png&quot;)
+
+# 添加水印
+draw = ImageDraw.Draw(img)
+font = ImageFont.truetype(&quot;Arial.ttf&quot;, 36)
+draw.text((10, 10), &quot;© 2026&quot;, fill=&quot;white&quot;, font=font)
+
+# 调整大小
+img = img.resize((800, 600))
+
+# 保存
+img.save(&quot;output_processed.png&quot;)
+```text
+**技巧3：创建图片模板**
+
+```python
+# image_templates.py
+TEMPLATES = {
+    &quot;logo&quot;: &quot;&quot;&quot;设计1个{theme}Logo，要求：
+    - 形状：{shape}
+    - 颜色：{color}
+    - 风格：{style}
+    - 用途：{usage}&quot;&quot;&quot;,
+
+    &quot;whiteboard&quot;: &quot;&quot;&quot;生成一张白板图片，手写字体风格，内容是：
+    标题：{title}
+    {content}
+    用手写字体，添加箭头、框图等手绘元素&quot;&quot;&quot;,
+
+    &quot;social&quot;: &quot;&quot;&quot;生成一张{platform}配图，主题是{theme}，要求：
+    - 尺寸：{ratio}
+    - 配色：{color_scheme}
+    - 文字：{text}
+    - 风格：{style}&quot;&quot;&quot;
+}
+
+def generate_from_template(template_name, **kwargs):
+    prompt = TEMPLATES[template_name].format(**kwargs)
+    # 调用生成函数
+    return generate_image(prompt)
+
+# 使用模板
+generate_from_template(
+    &quot;logo&quot;,
+    theme=&quot;AI助手&quot;,
+    shape=&quot;圆形&quot;,
+    color=&quot;蓝色渐变&quot;,
+    style=&quot;现代科技&quot;,
+    usage=&quot;社交媒体&quot;
+)
+```text
+---
+
+## 10.2 Notion数据同步封装
+
+Notion是流行的知识管理工具，通过OpenClaw集成Notion API，可以实现自动化的数据同步和内容管理。
+
+![Notion工作空间 - 知识管理和协作平台](https://upload.maynor1024.live/file/1770869312061_image-20260212120817415.png)
+
+### 10.2.1 为什么要集成Notion？
+
+**应用场景：**
+- 📝 自动创建笔记：OpenClaw处理的内容自动保存到Notion
+- 📊 数据库同步：自动更新Notion数据库
+- 📅 任务管理：自动创建和更新任务
+- 🔄 双向同步：Notion和OpenClaw数据互通
+
+**效率提升：**
+- 手动复制粘贴：5分钟/次
+- 自动同步：5秒/次
+- 效率提升：98%
+
+### 10.2.2 Notion集成方案
+
+由于 ClawHub 市场上目前没有现成的 Notion Skills，你可以通过以下方式集成 Notion：
+
+**方案1：使用 Notion API（推荐）**
+
+直接使用 Notion 官方 API 进行集成：
+
+```bash
+# 安装 Notion SDK
+npm install @notionhq/client
+
+# 或使用 Python SDK
+pip install notion-client
+```text
+**方案2：自定义 Skill**
+
+创建自己的 Notion Skill：
+
+```bash
+# 创建 Skill 目录
+mkdir -p ~/.openclaw/skills/my-notion-skill
+cd ~/.openclaw/skills/my-notion-skill
+
+# 创建 skill.json
+cat &gt; skill.json &lt;&lt; &#39;EOF&#39;
+{
+  &quot;name&quot;: &quot;my-notion-skill&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;Custom Notion integration&quot;,
+  &quot;main&quot;: &quot;index.js&quot;
+}
+EOF
+
+# 安装依赖
+npm init -y
+npm install @notionhq/client
+```text
+**方案3：使用 MCP 服务器**
+
+如果你使用的是支持 MCP (Model Context Protocol) 的版本，可以配置 Notion MCP 服务器：
+
+```json
+{
+  &quot;mcpServers&quot;: {
+    &quot;notion&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;@modelcontextprotocol/server-notion&quot;],
+      &quot;env&quot;: {
+        &quot;NOTION_API_KEY&quot;: &quot;your-api-key&quot;
+      }
+    }
+  }
+}
+```text
+💡 **注意**：由于 ClawHub 市场的 Skills 在不断更新，建议：
+1. 访问 https://clawhub.ai 查看最新可用的 Skills
+2. 使用 `npx clawhub@latest search notion` 搜索相关 Skills
+3. 如果没有现成的 Skill，可以自己创建或使用 API 直接集成
+
+### 10.2.3 Notion API 完整配置指南
+
+要使用 Notion skill，您需要先进行一些设置。这个技能通过 Notion API 来管理页面、数据库和块。
+
+#### 步骤1：创建 Notion Integration
+
+1. **访问集成页面**
+   - 打开浏览器，访问 https://www.notion.so/my-integrations
+   - 使用你的 Notion 账号登录
+
+2. **创建新集成**
+   - 点击页面右上角的 &quot;+ New integration&quot; 按钮
+   - 填写集成信息：
+     - **Name**：OpenClaw Integration（或你喜欢的名称）
+     - **Associated workspace**：选择你要使用的工作区
+     - **Logo**：可选，上传1个图标
+
+3. **配置权限**
+   - 在 &quot;Capabilities&quot; 部分，勾选以下权限：
+     - ✅ **Read content**：读取页面和数据库内容
+     - ✅ **Update content**：更新现有内容
+     - ✅ **Insert content**：创建新页面和数据库条目
+     - ✅ **Read comments**：读取评论（可选）
+     - ✅ **Insert comments**：添加评论（可选）
+
+4. **提交创建**
+   - 点击 &quot;Submit&quot; 按钮
+   - 系统会生成1个 API 密钥（Secret）
+
+#### 步骤2：获取并保存 API Key
+
+1. **复制 API Key**
+   - 在集成详情页面，找到 &quot;Internal Integration Token&quot;
+   - 点击 &quot;Show&quot; 按钮显示密钥
+   - 点击 &quot;Copy&quot; 按钮复制密钥
+   - API 密钥格式通常是：`secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+
+2. **保存 API Key 到配置文件**
+
+   **方式1：使用 OpenClaw 配置文件**
+   ```bash
+   # 编辑 OpenClaw 配置
+   nano ~/.openclaw/openclaw.json
+   ```
+
+   添加 Notion 配置：
+   ```json
+   {
+     &quot;api&quot;: {
+       &quot;notion&quot;: {
+         &quot;apiKey&quot;: &quot;secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;,
+         &quot;version&quot;: &quot;2022-06-28&quot;
+       }
+     }
+   }
+   ```
+
+   **方式2：使用环境变量**
+   ```bash
+   # 添加到 ~/.bashrc 或 ~/.zshrc
+   export NOTION_API_KEY=&quot;secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;
+   export NOTION_VERSION=&quot;2022-06-28&quot;
+
+   # 重新加载配置
+   source ~/.bashrc  # 或 source ~/.zshrc
+   ```
+
+   **方式3：使用独立配置文件**
+   ```bash
+   # 创建 Notion 配置文件
+   mkdir -p ~/.openclaw/config
+   cat &gt; ~/.openclaw/config/notion.json &lt;&lt; &#39;EOF&#39;
+   {
+     &quot;apiKey&quot;: &quot;secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;,
+     &quot;version&quot;: &quot;2022-06-28&quot;
+   }
+   EOF
+
+   # 设置文件权限（保护密钥安全）
+   chmod 600 ~/.openclaw/config/notion.json
+   ```
+
+#### 步骤3：分享页面/数据库给 Integration
+
+这是最关键的一步！即使有了 API Key，Integration 也只能访问明确分享给它的页面和数据库。
+
+**分享单个页面：**
+
+1. 打开你想要 OpenClaw 访问的 Notion 页面
+2. 点击页面右上角的 &quot;Share&quot; 按钮
+3. 在弹出的对话框中，点击 &quot;Invite&quot; 输入框
+4. 搜索你创建的集成名称（例如：OpenClaw Integration）
+5. 点击集成名称，然后点击 &quot;Invite&quot;
+6. 现在这个页面及其所有子页面都可以被 Integration 访问了
+
+**分享数据库：**
+
+1. 打开你的 Notion 数据库页面
+2. 点击右上角的 &quot;...&quot; 菜单
+3. 选择 &quot;Connections&quot; → &quot;Connect to&quot;
+4. 搜索并选择你的集成（OpenClaw Integration）
+5. 点击 &quot;Confirm&quot;
+
+**批量分享（推荐）：**
+
+如果你想让 OpenClaw 访问整个工作区：
+1. 在工作区的根页面（通常是 &quot;Workspace&quot; 页面）
+2. 点击 &quot;Share&quot; → 连接你的 Integration
+3. 这样所有子页面和数据库都会被自动分享
+
+#### 步骤4：获取 Database ID（如需操作数据库）
+
+如果你要让 OpenClaw 操作特定的数据库，需要获取 Database ID。
+
+**方法1：从 URL 获取**
+
+1. 在浏览器中打开 Notion 数据库页面
+2. 复制浏览器地址栏的 URL
+3. Database ID 是 URL 中的 32 位字符串
+
+示例 URL：
+</code></pre></div>
+
+<p>https://www.notion.so/workspace/DatabaseName-1234567890abcdef1234567890abcdef?v=...<br />
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^<br />
+                                                 这部分就是 Database ID</p>
+<div class="codehilite"><pre><span></span><code>去掉连字符后的格式：
+</code></pre></div>
+
+<p>1234567890abcdef1234567890abcdef</p>
+<div class="codehilite"><pre><span></span><code>**方法2：使用 Notion API 查询**
+
+```bash
+# 使用 curl 查询所有可访问的数据库
+curl -X POST https://api.notion.com/v1/search \
+  -H &quot;Authorization: Bearer secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot; \
+  -H &quot;Notion-Version: 2022-06-28&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{
+    &quot;filter&quot;: {
+      &quot;property&quot;: &quot;object&quot;,
+      &quot;value&quot;: &quot;database&quot;
+    }
+  }&#39;
+```text
+**保存 Database ID：**
+
+```bash
+# 添加到 OpenClaw 配置
+nano ~/.openclaw/openclaw.json
+```text
+```json
+{
+  &quot;api&quot;: {
+    &quot;notion&quot;: {
+      &quot;apiKey&quot;: &quot;secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;,
+      &quot;version&quot;: &quot;2022-06-28&quot;
+    }
+  },
+  &quot;notion&quot;: {
+    &quot;databases&quot;: {
+      &quot;notes&quot;: &quot;1234567890abcdef1234567890abcdef&quot;,
+      &quot;tasks&quot;: &quot;abcdef1234567890abcdef1234567890&quot;,
+      &quot;projects&quot;: &quot;567890abcdef1234567890abcdef1234&quot;
+    },
+    &quot;defaultDatabase&quot;: &quot;notes&quot;
+  }
+}
+</code></pre></div>
+
+<h4 id="5">步骤5：测试连接</h4>
+<p><strong>测试1：使用 curl 测试</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 设置变量</span>
+<span class="nv">NOTION_API_KEY</span><span class="o">=</span><span class="s2">&quot;secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span>
+<span class="nv">NOTION_VERSION</span><span class="o">=</span><span class="s2">&quot;2022-06-28&quot;</span>
+
+<span class="c1"># 测试 API 连接</span>
+curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span>https://api.notion.com/v1/users/me<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$NOTION_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Notion-Version: </span><span class="nv">$NOTION_VERSION</span><span class="s2">&quot;</span>
+
+<span class="c1"># 如果成功，会返回你的用户信息</span>
+<span class="sb">```</span>text
+**测试2：查询数据库**
+
+<span class="sb">```</span>bash
+<span class="c1"># 查询特定数据库</span>
+<span class="nv">DATABASE_ID</span><span class="o">=</span><span class="s2">&quot;1234567890abcdef1234567890abcdef&quot;</span>
+
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://api.notion.com/v1/databases/</span><span class="nv">$DATABASE_ID</span><span class="s2">/query&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$NOTION_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Notion-Version: </span><span class="nv">$NOTION_VERSION</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{}&#39;</span>
+
+<span class="c1"># 如果成功，会返回数据库中的条目</span>
+<span class="sb">```</span>text
+**测试3：创建页面**
+
+<span class="sb">```</span>bash
+<span class="c1"># 在数据库中创建1个测试页面</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://api.notion.com/v1/pages<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$NOTION_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Notion-Version: </span><span class="nv">$NOTION_VERSION</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;parent&quot;: {</span>
+<span class="s1">      &quot;database_id&quot;: &quot;&#39;</span><span class="nv">$DATABASE_ID</span><span class="s1">&#39;&quot;</span>
+<span class="s1">    },</span>
+<span class="s1">    &quot;properties&quot;: {</span>
+<span class="s1">      &quot;Name&quot;: {</span>
+<span class="s1">        &quot;title&quot;: [</span>
+<span class="s1">          {</span>
+<span class="s1">            &quot;text&quot;: {</span>
+<span class="s1">              &quot;content&quot;: &quot;OpenClaw 测试页面&quot;</span>
+<span class="s1">            }</span>
+<span class="s1">          }</span>
+<span class="s1">        ]</span>
+<span class="s1">      }</span>
+<span class="s1">    }</span>
+<span class="s1">  }&#39;</span>
+
+<span class="c1"># 如果成功，会返回新创建页面的信息</span>
+<span class="sb">```</span>text
+**测试4：使用<span class="w"> </span>OpenClaw<span class="w"> </span>测试**
+
+<span class="sb">```</span>bash
+<span class="c1"># 如果安装了 Notion Skill</span>
+openclaw<span class="w"> </span>notion<span class="w"> </span><span class="nb">test</span>
+
+<span class="c1"># 或者直接在 OpenClaw 中测试</span>
+你：测试<span class="w"> </span>Notion<span class="w"> </span>连接
+
+OpenClaw：正在测试<span class="w"> </span>Notion<span class="w"> </span>API<span class="w"> </span>连接...
+
+✅<span class="w"> </span>API<span class="w"> </span>连接成功！
+
+📊<span class="w"> </span>连接信息：
+•<span class="w"> </span>API<span class="w"> </span>版本：2022-06-28
+•<span class="w"> </span>用户名：Your<span class="w"> </span>Name
+•<span class="w"> </span>工作区：Your<span class="w"> </span>Workspace
+•<span class="w"> </span>可访问页面：15个
+•<span class="w"> </span>可访问数据库：3个
+
+📁<span class="w"> </span>可用数据库：
+<span class="m">1</span>.<span class="w"> </span>笔记数据库<span class="w"> </span><span class="o">(</span>notes<span class="o">)</span>
+<span class="m">2</span>.<span class="w"> </span>任务数据库<span class="w"> </span><span class="o">(</span>tasks<span class="o">)</span>
+<span class="m">3</span>.<span class="w"> </span>项目数据库<span class="w"> </span><span class="o">(</span>projects<span class="o">)</span>
+
+✅<span class="w"> </span>Notion<span class="w"> </span>集成配置完成！
+<span class="sb">```</span>text
+<span class="c1">#### 常见问题排查</span>
+
+**问题1：API<span class="w"> </span>调用返回<span class="w"> </span><span class="m">401</span><span class="w"> </span>Unauthorized**
+
+原因：API<span class="w"> </span>Key<span class="w"> </span>错误或未正确配置
+
+解决方案：
+<span class="sb">```</span>bash
+<span class="c1"># 检查 API Key 格式</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$NOTION_API_KEY</span>
+<span class="c1"># 应该是：secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+
+<span class="c1"># 重新复制 API Key</span>
+<span class="c1"># 访问 https://www.notion.so/my-integrations</span>
+<span class="c1"># 重新复制密钥并更新配置</span>
+<span class="sb">```</span>text
+**问题2：API<span class="w"> </span>调用返回<span class="w"> </span><span class="m">404</span><span class="w"> </span>Not<span class="w"> </span>Found**
+
+原因：页面或数据库未分享给<span class="w"> </span>Integration
+
+解决方案：
+<span class="m">1</span>.<span class="w"> </span>确认页面/数据库已分享给<span class="w"> </span>Integration
+<span class="m">2</span>.<span class="w"> </span>检查<span class="w"> </span>Database<span class="w"> </span>ID<span class="w"> </span>是否正确
+<span class="m">3</span>.<span class="w"> </span>确认<span class="w"> </span>Integration<span class="w"> </span>有访问权限
+
+**问题3：无法创建页面**
+
+原因：Integration<span class="w"> </span>缺少<span class="w"> </span><span class="s2">&quot;Insert content&quot;</span><span class="w"> </span>权限
+
+解决方案：
+<span class="m">1</span>.<span class="w"> </span>访问<span class="w"> </span>https://www.notion.so/my-integrations
+<span class="m">2</span>.<span class="w"> </span>选择你的<span class="w"> </span>Integration
+<span class="m">3</span>.<span class="w"> </span>在<span class="w"> </span><span class="s2">&quot;Capabilities&quot;</span><span class="w"> </span>中勾选<span class="w"> </span><span class="s2">&quot;Insert content&quot;</span>
+<span class="m">4</span>.<span class="w"> </span>保存更改
+
+**问题4：Database<span class="w"> </span>ID<span class="w"> </span>找不到**
+
+解决方案：
+<span class="sb">```</span>bash
+<span class="c1"># 使用 API 搜索所有数据库</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://api.notion.com/v1/search<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$NOTION_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Notion-Version: </span><span class="nv">$NOTION_VERSION</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">    &quot;filter&quot;: {</span>
+<span class="s1">      &quot;property&quot;: &quot;object&quot;,</span>
+<span class="s1">      &quot;value&quot;: &quot;database&quot;</span>
+<span class="s1">    }</span>
+<span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {id: .id, title: .title}&#39;</span>
+<span class="sb">```</span>text
+<span class="c1">#### 安全建议</span>
+
+**1.<span class="w"> </span>保护<span class="w"> </span>API<span class="w"> </span>Key**
+<span class="sb">```</span>bash
+<span class="c1"># 设置配置文件权限</span>
+chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.openclaw/config/notion.json
+
+<span class="c1"># 不要将 API Key 提交到 Git</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;*.json&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.openclaw/.gitignore
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;openclaw.json&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.gitignore
+<span class="sb">```</span>text
+**2.<span class="w"> </span>使用环境变量**
+<span class="sb">```</span>bash
+<span class="c1"># 在 ~/.bashrc 或 ~/.zshrc 中设置</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">NOTION_API_KEY</span><span class="o">=</span><span class="s2">&quot;secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span>
+
+<span class="c1"># 在脚本中使用</span>
+<span class="nv">NOTION_API_KEY</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">NOTION_API_KEY</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="sb">```</span>text
+**3.<span class="w"> </span>定期轮换密钥**
+<span class="sb">```</span>bash
+<span class="c1"># 每3-6个月更换一次 API Key</span>
+<span class="c1"># 1. 在 Notion 中创建新的 Integration</span>
+<span class="c1"># 2. 更新配置文件</span>
+<span class="c1"># 3. 删除旧的 Integration</span>
+<span class="sb">```</span>text
+**4.<span class="w"> </span>最小权限原则**
+-<span class="w"> </span>只授予必要的权限
+-<span class="w"> </span>只分享需要访问的页面/数据库
+-<span class="w"> </span>定期审查<span class="w"> </span>Integration<span class="w"> </span>的访问权限
+
+<span class="c1">#### 完整配置示例</span>
+
+<span class="sb">```</span>json
+<span class="o">{</span>
+<span class="w">  </span><span class="s2">&quot;api&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;notion&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="s2">&quot;apiKey&quot;</span>:<span class="w"> </span><span class="s2">&quot;secret_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span>,
+<span class="w">      </span><span class="s2">&quot;version&quot;</span>:<span class="w"> </span><span class="s2">&quot;2022-06-28&quot;</span>,
+<span class="w">      </span><span class="s2">&quot;timeout&quot;</span>:<span class="w"> </span><span class="m">30000</span>,
+<span class="w">      </span><span class="s2">&quot;retries&quot;</span>:<span class="w"> </span><span class="m">3</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">  </span><span class="o">}</span>,
+<span class="w">  </span><span class="s2">&quot;notion&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;databases&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="s2">&quot;notes&quot;</span>:<span class="w"> </span><span class="s2">&quot;1234567890abcdef1234567890abcdef&quot;</span>,
+<span class="w">      </span><span class="s2">&quot;tasks&quot;</span>:<span class="w"> </span><span class="s2">&quot;abcdef1234567890abcdef1234567890&quot;</span>,
+<span class="w">      </span><span class="s2">&quot;projects&quot;</span>:<span class="w"> </span><span class="s2">&quot;567890abcdef1234567890abcdef1234&quot;</span>,
+<span class="w">      </span><span class="s2">&quot;meetings&quot;</span>:<span class="w"> </span><span class="s2">&quot;890abcdef1234567890abcdef1234567&quot;</span>
+<span class="w">    </span><span class="o">}</span>,
+<span class="w">    </span><span class="s2">&quot;defaultDatabase&quot;</span>:<span class="w"> </span><span class="s2">&quot;notes&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;autoSync&quot;</span>:<span class="w"> </span>true,
+<span class="w">    </span><span class="s2">&quot;syncInterval&quot;</span>:<span class="w"> </span><span class="m">300</span>,
+<span class="w">    </span><span class="s2">&quot;templates&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="s2">&quot;note&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="s2">&quot;properties&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">          </span><span class="s2">&quot;Tags&quot;</span>:<span class="w"> </span><span class="o">[</span><span class="s2">&quot;学习笔记&quot;</span><span class="o">]</span>,
+<span class="w">          </span><span class="s2">&quot;Status&quot;</span>:<span class="w"> </span><span class="s2">&quot;草稿&quot;</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">      </span><span class="o">}</span>,
+<span class="w">      </span><span class="s2">&quot;task&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">        </span><span class="s2">&quot;properties&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">          </span><span class="s2">&quot;Status&quot;</span>:<span class="w"> </span><span class="s2">&quot;待办&quot;</span>,
+<span class="w">          </span><span class="s2">&quot;Priority&quot;</span>:<span class="w"> </span><span class="s2">&quot;中&quot;</span>
+<span class="w">        </span><span class="o">}</span>
+<span class="w">      </span><span class="o">}</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
+<span class="sb">```</span>text
+完成这些设置后，你就可以通过<span class="w"> </span>OpenClaw<span class="w"> </span>调用<span class="w"> </span>Notion<span class="w"> </span>API<span class="w"> </span>来创建、读取和更新<span class="w"> </span>Notion<span class="w"> </span>中的内容了！
+
+<span class="c1">### 10.2.4 配置Notion集成</span>
+
+<span class="sb">```</span>bash
+<span class="c1"># 编辑OpenClaw 配置</span>
+nano<span class="w"> </span>~/.openclaw/openclaw.json
+<span class="sb">```</span>text
+添加Notion配置：
+
+<span class="sb">```</span>json
+<span class="o">{</span>
+<span class="w">  </span><span class="s2">&quot;api&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;notion&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">      </span><span class="s2">&quot;apiKey&quot;</span>:<span class="w"> </span><span class="s2">&quot;secret_xxxxxxxxxxxxx&quot;</span>,
+<span class="w">      </span><span class="s2">&quot;version&quot;</span>:<span class="w"> </span><span class="s2">&quot;2022-06-28&quot;</span>
+<span class="w">    </span><span class="o">}</span>
+<span class="w">  </span><span class="o">}</span>,
+<span class="w">  </span><span class="s2">&quot;notion&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;defaultDatabase&quot;</span>:<span class="w"> </span><span class="s2">&quot;your-database-id&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;autoSync&quot;</span>:<span class="w"> </span>true,
+<span class="w">    </span><span class="s2">&quot;syncInterval&quot;</span>:<span class="w"> </span><span class="m">300</span>
+<span class="w">  </span><span class="o">}</span>
+<span class="o">}</span>
+<span class="sb">```</span>text
+**配置说明：**
+
+<span class="p">|</span><span class="w"> </span>参数<span class="w"> </span><span class="p">|</span><span class="w"> </span>说明<span class="w"> </span><span class="p">|</span><span class="w"> </span>示例<span class="w"> </span><span class="p">|</span>
+<span class="p">|</span>------<span class="p">|</span>------<span class="p">|</span>------<span class="p">|</span>
+<span class="p">|</span><span class="w"> </span>apiKey<span class="w"> </span><span class="p">|</span><span class="w"> </span>Notion<span class="w"> </span>API<span class="w"> </span>密钥<span class="w"> </span><span class="p">|</span><span class="w"> </span>secret_xxx<span class="w"> </span><span class="p">|</span>
+<span class="p">|</span><span class="w"> </span>version<span class="w"> </span><span class="p">|</span><span class="w"> </span>API版本<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="m">2022</span>-06-28<span class="w"> </span><span class="p">|</span>
+<span class="p">|</span><span class="w"> </span>defaultDatabase<span class="w"> </span><span class="p">|</span><span class="w"> </span>默认数据库ID<span class="w"> </span><span class="p">|</span><span class="w"> </span>32位字符串<span class="w"> </span><span class="p">|</span>
+<span class="p">|</span><span class="w"> </span>autoSync<span class="w"> </span><span class="p">|</span><span class="w"> </span>自动同步<span class="w"> </span><span class="p">|</span><span class="w"> </span>true/false<span class="w"> </span><span class="p">|</span>
+<span class="p">|</span><span class="w"> </span>syncInterval<span class="w"> </span><span class="p">|</span><span class="w"> </span>同步间隔（秒）<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="p">|</span>
+
+<span class="c1">### 10.2.5 基础使用与实战案例</span>
+
+**示例1：自动创建笔记**
+</code></pre></div>
+
+<p>你：把这篇文章保存到Notion</p>
+<p>标题：OpenClaw使用心得<br />
+内容：<br />
+今天学习了OpenClaw的API集成功能，<br />
+主要收获有：<br />
+1. 学会了配置Gemini API<br />
+2. 成功生成了第一张AI图片<br />
+3. 了解了Skills扩展机制</p>
+<p>OpenClaw：好的，正在保存到Notion...</p>
+<p>📝 【创建Notion页面】</p>
+<p>✅ 页面创建成功！</p>
+<p>📄 页面信息：<br />
+• 标题：OpenClaw使用心得<br />
+• 创建时间：2026-02-12 10:30<br />
+• 页面ID：abc123...<br />
+• 链接：https://notion.so/abc123</p>
+<p>📊 内容统计：<br />
+• 字数：120字<br />
+• 段落：4段<br />
+• 列表项：3项</p>
+<p>已自动添加：<br />
+• 标签：#学习笔记 #OpenClaw<br />
+• 分类：技术文档<br />
+• 创建日期：2026-02-12</p>
+<p>🔗 在Notion中打开：<br />
+https://notion.so/abc123</p>
+<div class="codehilite"><pre><span></span><code>**示例2：批量导入文档**
+</code></pre></div>
+
+<p>你：把这个文件夹里的所有Markdown文件导入到Notion</p>
+<p>文件夹：~/Documents/notes/</p>
+<p>OpenClaw：好的，正在扫描文件...</p>
+<p>📁 【批量导入Notion】</p>
+<p>📊 扫描结果：<br />
+• 文件夹：~/Documents/notes/<br />
+• 文件数量：15个<br />
+• 总大小：2.5MB<br />
+• 预计时间：2分钟</p>
+<p>⏳ 导入进度：</p>
+<p>[████████████████████] 100% (15/15)</p>
+<p>✅ 导入完成！</p>
+<p>📊 导入统计：<br />
+• 成功：15个<br />
+• 失败：0个<br />
+• 总耗时：1分45秒</p>
+<p>📁 Notion结构：<br />
+笔记导入/<br />
+├── 学习笔记/<br />
+│   ├── 学习笔记.md<br />
+│   └── 技术文档.md<br />
+├── 项目管理/<br />
+│   ├── 项目规划.md<br />
+│   └── 会议记录.md<br />
+└── 产品设计/<br />
+    └── 产品需求.md</p>
+<p>🔗 在Notion中查看：<br />
+https://notion.so/workspace/notes-import</p>
+<div class="codehilite"><pre><span></span><code>### 10.2.6 进阶技巧
+
+**技巧1：自定义模板**
+
+```bash
+# 创建会议记录模板
+openclaw notion template create &quot;meeting&quot; \
+  --title &quot;会议记录-{date}&quot; \
+  --properties &quot;主题,时间,参会人,内容,决策,任务&quot; \
+  --database &quot;meetings-db-id&quot;
+
+# 使用模板
+你：用会议模板创建今天的会议记录
+```text
+**技巧2：自动化工作流**
+
+```bash
+# 设置自动同步规则
+openclaw config set notion.auto-rules &#39;{
+  &quot;markdown-to-notion&quot;: {
+    &quot;watch&quot;: &quot;~/Documents/notes/&quot;,
+    &quot;target&quot;: &quot;notes-db-id&quot;,
+    &quot;trigger&quot;: &quot;file-save&quot;
+  },
+  &quot;task-sync&quot;: {
+    &quot;watch&quot;: &quot;~/Projects/tasks.md&quot;,
+    &quot;target&quot;: &quot;tasks-db-id&quot;,
+    &quot;trigger&quot;: &quot;file-change&quot;
+  }
+}&#39;
+```text
+**技巧3：双向同步**
+
+```bash
+# 启用双向同步
+openclaw config set notion.bidirectional true
+
+# Notion更新会自动同步到本地
+# 本地更新会自动同步到Notion
+```text
+### 10.2.7 常见问题
+
+**Q1：API调用失败怎么办？**
+
+A：检查以下几点：
+- API Key是否正确
+- Integration是否已分享给页面
+- API版本是否匹配
+- 网络连接是否正常
+
+```bash
+# 测试API连接
+openclaw notion test
+
+# 查看错误日志
+openclaw logs --filter notion
+```text
+**Q2：如何处理大量数据？**
+
+A：使用批量操作和分页：
+
+```bash
+# 批量导入（自动分批）
+openclaw notion import ~/notes/ \
+  --batch-size 10 \
+  --delay 1000
+
+# 分页查询
+openclaw notion query \
+  --database &quot;db-id&quot; \
+  --page-size 100
+```text
+**Q3：如何避免重复创建？**
+
+A：使用唯一标识符：
+
+```bash
+# 配置去重规则
+openclaw config set notion.dedup &#39;{
+  &quot;enabled&quot;: true,
+  &quot;field&quot;: &quot;title&quot;,
+  &quot;action&quot;: &quot;skip&quot;
+}&#39;
+```text
+### 10.2.8 效率提升数据
+
+| 任务类型 | 手动操作 | 自动化 | 节省时间 | 提升比例 |
+|---------|---------|--------|----------|----------|
+| 创建笔记 | 5分钟 | 5秒 | 4分55秒 | 98.3% |
+| 更新数据库 | 10分钟 | 10秒 | 9分50秒 | 98.3% |
+| 批量导入 | 60分钟 | 2分钟 | 58分钟 | 96.7% |
+| 会议记录 | 30分钟 | 1分钟 | 29分钟 | 96.7% |
+
+**成本参考：**
+- Notion API：免费（有速率限制）
+- OpenClaw Skills：免费
+- 总成本：$0/月
+
+---
+
+## 10.3 视频生成服务
+
+AI视频生成是新兴的创意工具，可以将文字脚本自动转换为视频。
+
+### 10.3.1 为什么要集成视频服务？
+
+**应用场景：**
+- 🎬 短视频创作：快速生成抖音、快手短视频
+- 📺 长视频制作：B站、YouTube教程视频
+- 🎥 营销视频：产品介绍、广告宣传
+- 🎞️ 教育视频：课程讲解、知识分享
+
+**效率提升：**
+- 手动剪辑：2-4小时/视频
+- AI生成：10-30分钟/视频
+- 效率提升：80-90%
+
+### 10.3.2 推荐的视频生成Skills
+
+根据ClawHub技能市场，以下是推荐的视频生成Skills：
+
+**1. video-agent - HeyGen视频生成**
+```bash
+# 安装
+npx clawhub@latest install video-agent
+
+# 功能
+• 使用HeyGen API生成AI头像视频
+• 支持多种语言和音色
+• 专业级视频质量
+• 适合教程和营销视频
+```text
+**2. sora-video-gen - OpenAI Sora**
+```bash
+# 安装
+npx clawhub@latest install sora-video-gen
+
+# 功能
+• 使用OpenAI Sora API
+• 文本生成视频
+• 高质量视频输出
+• 创意视频制作
+```text
+**3. veo3-video-gen - Google Veo**
+```bash
+# 安装
+npx clawhub@latest install veo3-video-gen
+
+# 功能
+• 使用Google Veo 3.x
+• 生成和拼接短视频
+• 支持多种风格
+• 适合短视频创作
+```text
+**4. tube-cog - YouTube内容创作**
+```bash
+# 安装
+npx clawhub@latest install tube-cog
+
+# 功能
+• YouTube内容创作
+• 由CellCog提供支持
+• 完整视频制作流程
+• 自动化发布
+```text
+**5. video-cog - 长篇视频制作**
+```bash
+# 安装
+npx clawhub@latest install video-cog
+
+# 功能
+• 长篇AI视频制作
+• 多智能体协作
+• 专业级视频输出
+• 适合教程和课程
+```text
+### 10.3.3 配置视频服务
+
+**配置HeyGen（推荐）：**
+
+```bash
+# 编辑OpenClaw 配置
+nano ~/.openclaw/openclaw.json
+```text
+添加HeyGen配置：
+
+```json
+{
+  &quot;api&quot;: {
+    &quot;heygen&quot;: {
+      &quot;apiKey&quot;: &quot;your-heygen-api-key&quot;,
+      &quot;baseUrl&quot;: &quot;https://api.heygen.com/v1&quot;
+    }
+  },
+  &quot;video&quot;: {
+    &quot;defaultAvatar&quot;: &quot;avatar-id&quot;,
+    &quot;defaultVoice&quot;: &quot;voice-id&quot;,
+    &quot;quality&quot;: &quot;high&quot;,
+    &quot;format&quot;: &quot;mp4&quot;
+  }
+}
+```text
+**获取HeyGen API Key：**
+1. 访问 https://www.heygen.com
+2. 注册并登录账号
+3. 进入 API Settings
+4. 创建并复制 API Key
+
+**成本参考：**
+- HeyGen：$0.5-2/分钟（根据质量）
+- Sora：$0.1-0.5/秒
+- Veo：$0.05-0.2/秒
+
+### 10.3.4 基础使用
+
+**示例1：生成AI头像视频**
+</code></pre></div>
+
+<p>你：生成1个30秒的AI头像视频，内容是：</p>
+<p>主题：OpenClaw快速入门<br />
+脚本：<br />
+您好，我是OpenClaw AI助手。<br />
+今天介绍如何快速上手OpenClaw。<br />
+只需3步：安装、配置、使用。<br />
+开始吧！</p>
+<p>要求：<br />
+- 头像：专业男性<br />
+- 音色：温和<br />
+- 背景：科技感<br />
+- 字幕：中文</p>
+<p>OpenClaw：好的，正在生成视频...</p>
+<p>🎬 【AI视频生成】OpenClaw快速入门</p>
+<p>📊 视频信息：<br />
+• 时长：30秒<br />
+• 分辨率：1080p<br />
+• 格式：MP4<br />
+• 大小：约15MB</p>
+<p>⏳ 生成进度：</p>
+<ol>
+<li>脚本分析 [████████████████████] 100%</li>
+<li>头像渲染 [████████████████████] 100%</li>
+<li>语音合成 [████████████████████] 100%</li>
+<li>视频合成 [████████████████████] 100%</li>
+<li>字幕添加 [████████████████████] 100%</li>
+</ol>
+<p>✅ 视频生成完成！</p>
+<p>📹 视频预览：<br />
+[视频缩略图]</p>
+<p>📊 视频详情：<br />
+• 头像：专业男性（ID: avatar-001）<br />
+• 音色：温和男声（ID: voice-cn-male-01）<br />
+• 背景：科技蓝色渐变<br />
+• 字幕：中文，白色，底部居中</p>
+<p>💰 成本：<br />
+• 生成费用：$1.00<br />
+• 存储费用：$0.01<br />
+• 总计：$1.01</p>
+<p>📁 文件已保存：<br />
+• 视频文件：openclaw_intro.mp4<br />
+• 字幕文件：openclaw_intro.srt<br />
+• 脚本文件：openclaw_intro.txt</p>
+<p>🔗 在线预览：<br />
+https://video.openclaw.com/abc123</p>
+<div class="codehilite"><pre><span></span><code>**示例2：批量生成系列视频**
+</code></pre></div>
+
+<p>你：批量生成OpenClaw教程系列视频，共5集</p>
+<p>第1集：什么是OpenClaw<br />
+第2集：如何安装 OpenClaw<br />
+第3集：基础配置教程<br />
+第4集：Skills扩展使用<br />
+第5集：实战案例分享</p>
+<p>OpenClaw：好的，正在批量生成...</p>
+<p>🎬 【批量视频生成】OpenClaw教程系列</p>
+<p>📊 任务信息：<br />
+• 视频数量：5集<br />
+• 每集时长：3-5分钟<br />
+• 总时长：约20分钟<br />
+• 预计时间：15分钟</p>
+<p>⏳ 生成进度：</p>
+<p>第1集：什么是OpenClaw<br />
+[████████████████████] 100% ✅</p>
+<p>第2集：如何安装 OpenClaw<br />
+[████████████████████] 100% ✅</p>
+<p>第3集：基础配置教程<br />
+[████████████████████] 100% ✅</p>
+<p>第4集：Skills扩展使用<br />
+[████████████████████] 100% ✅</p>
+<p>第5集：实战案例分享<br />
+[████████████████████] 100% ✅</p>
+<p>✅ 全部生成完成！</p>
+<p>📊 生成统计：<br />
+• 成功：5集<br />
+• 失败：0集<br />
+• 总耗时：12分30秒<br />
+• 总大小：150MB</p>
+<p>📁 文件列表：<br />
+1. ✅ 01_什么是OpenClaw.mp4 (30MB)<br />
+2. ✅ 02_如何安装 OpenClaw.mp4 (28MB)<br />
+3. ✅ 03_基础配置教程.mp4 (32MB)<br />
+4. ✅ 04_Skills扩展使用.mp4 (35MB)<br />
+5. ✅ 05_实战案例分享.mp4 (25MB)</p>
+<p>💰 总成本：<br />
+• 生成费用：$15.00<br />
+• 存储费用：$0.15<br />
+• 总计：$15.15</p>
+<p>📦 已打包：<br />
+• OpenClaw教程系列.zip (150MB)</p>
+<p>🔗 下载链接：<br />
+https://video.openclaw.com/series/abc123</p>
+<div class="codehilite"><pre><span></span><code>### 10.3.5 实战案例
+
+**案例1：自动化短视频创作**
+
+场景：每天自动生成一条知识分享短视频。
+
+```bash
+# 创建自动化脚本
+cat &gt; daily_video.sh &lt;&lt; &#39;EOF&#39;
+#!/bin/bash
+
+# 获取今日主题
+topic=$(openclaw ask &quot;推荐1个适合短视频的技术主题&quot;)
+
+# 生成脚本
+script=$(openclaw ask &quot;为主题&#39;${topic}&#39;生成60秒短视频脚本&quot;)
+
+# 生成视频
+openclaw video generate \
+  --script &quot;$script&quot; \
+  --duration 60 \
+  --avatar &quot;professional-male&quot; \
+  --voice &quot;cn-male-01&quot; \
+  --output &quot;daily_$(date +%Y%m%d).mp4&quot;
+
+echo &quot;✅ 今日视频生成完成：${topic}&quot;
+EOF
+
+chmod +x daily_video.sh
+
+# 设置定时任务（每天早上9点）
+openclaw schedule add &quot;daily-video&quot; \
+  --time &quot;09:00&quot; \
+  --command &quot;./daily_video.sh&quot;
+```text
+**案例2：产品介绍视频生成**
+
+场景：为新产品快速生成多语言介绍视频。
+</code></pre></div>
+
+<p>你：为OpenClaw生成产品介绍视频，需要中英日3个版本</p>
+<p>产品特点：<br />
+1. 本地部署，保护隐私<br />
+2. 文件访问，智能搜索<br />
+3. Skills扩展，无限可能<br />
+4. 多平台支持，随时随地</p>
+<p>OpenClaw：好的，正在生成多语言版本...</p>
+<p>🎬 【多语言视频生成】</p>
+<p>📊 任务信息：<br />
+• 语言版本：3个（中文、英文、日文）<br />
+• 视频时长：每个2分钟<br />
+• 预计时间：10分钟</p>
+<p>⏳ 生成进度：</p>
+<p>中文版本：<br />
+[████████████████████] 100% ✅</p>
+<p>英文版本：<br />
+[████████████████████] 100% ✅</p>
+<p>日文版本：<br />
+[████████████████████] 100% ✅</p>
+<p>✅ 全部生成完成！</p>
+<p>📁 文件列表：<br />
+1. ✅ OpenClaw_Intro_CN.mp4 (40MB)<br />
+2. ✅ OpenClaw_Intro_EN.mp4 (38MB)<br />
+3. ✅ OpenClaw_Intro_JP.mp4 (39MB)</p>
+<p>💰 总成本：$6.00</p>
+<p>🔗 在线预览：<br />
+• 中文：https://video.openclaw.com/cn/abc123<br />
+• 英文：https://video.openclaw.com/en/abc123<br />
+• 日文：https://video.openclaw.com/jp/abc123</p>
+<div class="codehilite"><pre><span></span><code>### 10.3.6 进阶技巧
+
+**技巧1：自定义头像**
+
+```bash
+# 上传自定义头像照片
+openclaw video avatar upload \
+  --photo &quot;my_photo.jpg&quot; \
+  --name &quot;my-avatar&quot;
+
+# 使用自定义头像
+openclaw video generate \
+  --avatar &quot;my-avatar&quot; \
+  --script &quot;你的脚本&quot;
+```text
+**技巧2：视频后期处理**
+
+```bash
+# 添加片头片尾
+openclaw video edit \
+  --input &quot;video.mp4&quot; \
+  --intro &quot;intro.mp4&quot; \
+  --outro &quot;outro.mp4&quot; \
+  --output &quot;final.mp4&quot;
+
+# 添加背景音乐
+openclaw video edit \
+  --input &quot;video.mp4&quot; \
+  --bgm &quot;music.mp3&quot; \
+  --volume 0.3 \
+  --output &quot;with_music.mp4&quot;
+```text
+**技巧3：批量处理优化**
+
+```bash
+# 并行生成多个视频
+openclaw video batch \
+  --scripts &quot;scripts/*.txt&quot; \
+  --parallel 3 \
+  --output &quot;videos/&quot;
+```text
+### 10.3.7 常见问题
+
+**Q1：视频生成失败怎么办？**
+
+A：检查以下几点：
+- API Key是否正确
+- 账户余额是否充足
+- 脚本是否符合要求
+- 网络连接是否稳定
+
+**Q2：如何提高视频质量？**
+
+A：
+- 使用高质量模式
+- 优化脚本内容
+- 选择合适的头像和音色
+- 添加背景音乐和特效
+
+**Q3：如何控制成本？**
+
+A：
+- 使用标准质量模式
+- 批量生成享受折扣
+- 复用头像和音色
+- 合理规划视频时长
+
+### 10.3.8 效率提升数据
+
+| 任务类型 | 手动制作 | AI生成 | 节省时间 | 提升比例 |
+|---------|---------|--------|----------|----------|
+| 短视频（1分钟） | 120分钟 | 10分钟 | 110分钟 | 91.7% |
+| 中视频（5分钟） | 300分钟 | 30分钟 | 270分钟 | 90.0% |
+| 长视频（15分钟） | 600分钟 | 60分钟 | 540分钟 | 90.0% |
+| 批量生成（5个） | 1500分钟 | 120分钟 | 1380分钟 | 92.0% |
+
+**成本对比：**
+- 人工制作：$50-200/分钟
+- AI生成：$0.5-2/分钟
+- 成本节省：95-99%
+
+---
+
+## 10.4 语音合成接入
+
+将文字转换为语音，适用于有声读物、视频配音、语音助手等场景。
+
+### 10.4.1 为什么要集成语音服务？
+
+**应用场景：**
+- 📚 有声读物：将文章、书籍转换为音频
+- 🎙️ 视频配音：为视频添加专业配音
+- 🔊 语音助手：实现语音交互功能
+- 📻 播客制作：快速生成播客内容
+
+**效率提升：**
+- 人工录音：30-60分钟/千字
+- AI合成：1-2分钟/千字
+- 效率提升：95-98%
+
+### 10.4.2 推荐的语音合成Skills
+
+根据ClawHub技能市场，以下是推荐的语音合成Skills：
+
+**1. elevenlabs - 顶级语音合成**
+```bash
+# 安装
+npx clawhub@latest install elevenlabs
+
+# 功能
+• 超自然的语音质量
+• 支持多种语言和音色
+• 情感表达丰富
+• 适合专业配音
+```text
+**2. azure-tts - 微软语音服务**
+```bash
+# 安装
+npx clawhub@latest install azure-tts
+
+# 功能
+• 支持140+语言
+• 神经网络语音
+• 高质量输出
+• 企业级稳定性
+```text
+**3. google-tts - Google语音**
+```bash
+# 安装
+npx clawhub@latest install google-tts
+
+# 功能
+• WaveNet技术
+• 自然流畅
+• 多语言支持
+• 性价比高
+```text
+**4. openai-tts - OpenAI语音**
+```bash
+# 安装
+npx clawhub@latest install openai-tts
+
+# 功能
+• 使用OpenAI TTS API
+• 6种高质量音色
+• 支持多种语言
+• 简单易用
+```text
+### 10.4.3 支持的语音服务对比
+
+| 服务 | 特点 | 成本 | 音质 | 语言支持 |
+|------|------|------|------|----------|
+| ElevenLabs | 最自然 | 高 | ⭐⭐⭐⭐⭐ | 29种 |
+| Azure TTS | 企业级 | 中 | ⭐⭐⭐⭐⭐ | 140+种 |
+| Google TTS | 性价比高 | 中 | ⭐⭐⭐⭐ | 100+种 |
+| OpenAI TTS | 简单易用 | 低 | ⭐⭐⭐⭐ | 50+种 |
+| 讯飞语音 | 中文好 | 低 | ⭐⭐⭐⭐ | 中文为主 |
+
+### 10.4.4 配置语音服务
+
+**配置ElevenLabs（推荐）：**
+
+```bash
+# 编辑OpenClaw 配置
+nano ~/.openclaw/openclaw.json
+```text
+添加ElevenLabs配置：
+
+```json
+{
+  &quot;api&quot;: {
+    &quot;elevenlabs&quot;: {
+      &quot;apiKey&quot;: &quot;your-elevenlabs-api-key&quot;,
+      &quot;baseUrl&quot;: &quot;https://api.elevenlabs.io/v1&quot;
+    }
+  },
+  &quot;tts&quot;: {
+    &quot;defaultVoice&quot;: &quot;voice-id&quot;,
+    &quot;defaultModel&quot;: &quot;eleven_multilingual_v2&quot;,
+    &quot;quality&quot;: &quot;high&quot;,
+    &quot;format&quot;: &quot;mp3&quot;
+  }
+}
+```text
+**获取ElevenLabs API Key：**
+1. 访问 https://elevenlabs.io
+2. 注册并登录账号
+3. 进入 Profile → API Keys
+4. 创建并复制 API Key
+
+**成本参考：**
+- ElevenLabs：$0.30/千字符
+- Azure TTS：$0.016/千字符
+- Google TTS：$0.016/千字符
+- OpenAI TTS：$0.015/千字符
+
+### 10.4.5 基础使用
+
+**示例1：文本转语音**
+</code></pre></div>
+
+<p>你：把这段文字转换为语音：</p>
+<p>OpenClaw是1个开源的AI助手框架，<br />
+它可以访问本地文件，操作系统应用，<br />
+扩展各种功能，让AI真正成为你的助手。</p>
+<p>要求：<br />
+- 音色：专业男声<br />
+- 语速：正常<br />
+- 格式：MP3<br />
+- 质量：高清</p>
+<p>OpenClaw：好的，正在转换...</p>
+<p>🔊 【文本转语音】</p>
+<p>📝 文本信息：<br />
+• 字数：52字<br />
+• 语言：中文<br />
+• 预计时长：约15秒</p>
+<p>⏳ 转换进度：</p>
+<ol>
+<li>文本分析 [████████████████████] 100%</li>
+<li>语音合成 [████████████████████] 100%</li>
+<li>音频处理 [████████████████████] 100%</li>
+<li>格式转换 [████████████████████] 100%</li>
+</ol>
+<p>✅ 转换完成！</p>
+<p>🎵 音频信息：<br />
+• 时长：15秒<br />
+• 格式：MP3<br />
+• 比特率：192kbps<br />
+• 大小：360KB</p>
+<p>📊 音频详情：<br />
+• 音色：专业男声（ID: voice-cn-male-01）<br />
+• 语速：正常（1.0x）<br />
+• 音量：标准（0dB）<br />
+• 质量：高清</p>
+<p>💰 成本：<br />
+• 转换费用：$0.02<br />
+• 存储费用：$0.001<br />
+• 总计：$0.021</p>
+<p>📁 文件已保存：<br />
+• 音频文件：openclaw_intro.mp3<br />
+• 文本文件：openclaw_intro.txt</p>
+<p>🔗 在线试听：<br />
+https://audio.openclaw.com/abc123</p>
+<div class="codehilite"><pre><span></span><code>**示例2：批量转换文章**
+</code></pre></div>
+
+<p>你：把这个文件夹里的所有文章都转换为音频</p>
+<p>文件夹：~/Documents/articles/</p>
+<p>OpenClaw：好的，正在扫描文件...</p>
+<p>🔊 【批量文本转语音】</p>
+<p>📊 扫描结果：<br />
+• 文件夹：~/Documents/articles/<br />
+• 文件数量：10篇<br />
+• 总字数：25,000字<br />
+• 预计时长：约50分钟<br />
+• 预计时间：5分钟</p>
+<p>⏳ 转换进度：</p>
+<p>[████████████████████] 100% (10/10)</p>
+<p>✅ 全部转换完成！</p>
+<p>📊 转换统计：<br />
+• 成功：10篇<br />
+• 失败：0篇<br />
+• 总耗时：4分30秒<br />
+• 总时长：48分钟<br />
+• 总大小：115MB</p>
+<p>📁 文件列表：<br />
+1. ✅ AI时代的超级个体.mp3 (12MB, 5分钟)<br />
+2. ✅ 效率提升10倍的秘密.mp3 (10MB, 4分钟)<br />
+3. ✅ 一个人的无限可能.mp3 (15MB, 6分钟)<br />
+4. ✅ 知识管理系统搭建.mp3 (11MB, 4.5分钟)<br />
+5. ✅ 自动化工作流设计.mp3 (13MB, 5.5分钟)<br />
+... (共10个)</p>
+<p>💰 总成本：<br />
+• 转换费用：$7.50<br />
+• 存储费用：$0.12<br />
+• 总计：$7.62</p>
+<p>📦 已打包：<br />
+• 有声文章合集.zip (115MB)</p>
+<p>🔗 下载链接：<br />
+https://audio.openclaw.com/batch/abc123</p>
+<div class="codehilite"><pre><span></span><code>### 10.4.6 实战案例
+
+**案例1：自动化有声读物制作**
+
+场景：将电子书自动转换为有声读物。
+</code></pre></div>
+
+<p>你：把这本电子书转换为有声读物</p>
+<p>文件：OpenClaw完全指南.pdf<br />
+要求：<br />
+- 分章节转换<br />
+- 每章单独文件<br />
+- 添加章节标题语音<br />
+- 生成播放列表</p>
+<p>OpenClaw：好的，正在处理...</p>
+<p>📚 【有声读物制作】</p>
+<p>📖 电子书信息：<br />
+• 书名：OpenClaw完全指南<br />
+• 章节数：16章<br />
+• 总字数：80,000字<br />
+• 预计时长：约3小时</p>
+<p>⏳ 处理进度：</p>
+<ol>
+<li>PDF文本提取 [████████████████████] 100%</li>
+<li>章节分割 [████████████████████] 100%</li>
+<li>语音合成 [████████████████████] 100%</li>
+<li>音频处理 [████████████████████] 100%</li>
+<li>播放列表生成 [████████████████████] 100%</li>
+</ol>
+<p>✅ 制作完成！</p>
+<p>📁 文件结构：<br />
+OpenClaw完全指南_有声版/<br />
+├── 00_书名和前言.mp3 (5分钟)<br />
+├── 01_第1章_OpenClaw简介.mp3 (10分钟)<br />
+├── 02_第2章_快速开始.mp3 (12分钟)<br />
+├── 03_第3章_基础配置.mp3 (15分钟)<br />
+... (共17个文件)<br />
+├── playlist.m3u (播放列表)<br />
+└── metadata.json (元数据)</p>
+<p>📊 制作统计：<br />
+• 总时长：3小时5分钟<br />
+• 总大小：450MB<br />
+• 音频格式：MP3 192kbps<br />
+• 章节数：16章 + 前言</p>
+<p>💰 总成本：$24.00</p>
+<p>📦 已打包：<br />
+• OpenClaw完全指南_有声版.zip (450MB)</p>
+<p>🔗 下载链接：<br />
+https://audio.openclaw.com/audiobook/abc123</p>
+<div class="codehilite"><pre><span></span><code>**案例2：多语言配音生成**
+
+场景：为产品介绍视频生成多语言配音。
+</code></pre></div>
+
+<p>你：为这个视频脚本生成中英日三种语言的配音</p>
+<p>脚本：<br />
+OpenClaw是1个开源的AI助手框架。<br />
+它可以访问本地文件，操作系统应用。<br />
+让AI真正成为你的超级助手。</p>
+<p>OpenClaw：好的，正在生成多语言配音...</p>
+<p>🎙️ 【多语言配音生成】</p>
+<p>📊 任务信息：<br />
+• 语言版本：3个（中文、英文、日文）<br />
+• 脚本字数：52字<br />
+• 预计时长：每个约15秒</p>
+<p>⏳ 生成进度：</p>
+<p>中文配音：<br />
+[████████████████████] 100% ✅</p>
+<p>英文配音：<br />
+[████████████████████] 100% ✅</p>
+<p>日文配音：<br />
+[████████████████████] 100% ✅</p>
+<p>✅ 全部生成完成！</p>
+<p>📁 文件列表：<br />
+1. ✅ openclaw_intro_cn.mp3 (360KB, 15秒)<br />
+2. ✅ openclaw_intro_en.mp3 (380KB, 16秒)<br />
+3. ✅ openclaw_intro_jp.mp3 (370KB, 15秒)</p>
+<p>📊 配音详情：<br />
+• 中文：专业男声，语速正常<br />
+• 英文：美式男声，语速正常<br />
+• 日文：标准男声，语速正常</p>
+<p>💰 总成本：$0.06</p>
+<p>🔗 在线试听：<br />
+• 中文：https://audio.openclaw.com/cn/abc123<br />
+• 英文：https://audio.openclaw.com/en/abc123<br />
+• 日文：https://audio.openclaw.com/jp/abc123</p>
+<div class="codehilite"><pre><span></span><code>### 10.4.7 进阶技巧
+
+**技巧1：自定义音色**
+
+```bash
+# 克隆自己的声音（ElevenLabs）
+openclaw tts voice clone \
+  --samples &quot;voice_samples/*.mp3&quot; \
+  --name &quot;my-voice&quot;
+
+# 使用自定义音色
+openclaw tts generate \
+  --text &quot;你的文本&quot; \
+  --voice &quot;my-voice&quot; \
+  --output &quot;output.mp3&quot;
+```text
+**技巧2：情感控制**
+
+```bash
+# 添加情感标记
+openclaw tts generate \
+  --text &quot;这真是太棒了！[excited]&quot; \
+  --voice &quot;voice-id&quot; \
+  --emotion &quot;excited&quot; \
+  --output &quot;excited.mp3&quot;
+```text
+**技巧3：语速和音调调整**
+
+```bash
+# 调整语速和音调
+openclaw tts generate \
+  --text &quot;你的文本&quot; \
+  --voice &quot;voice-id&quot; \
+  --speed 1.2 \
+  --pitch 1.1 \
+  --output &quot;adjusted.mp3&quot;
+```text
+**技巧4：批量处理优化**
+
+```bash
+# 并行转换多个文件
+openclaw tts batch \
+  --input &quot;texts/*.txt&quot; \
+  --voice &quot;voice-id&quot; \
+  --parallel 5 \
+  --output &quot;audios/&quot;
+```text
+### 10.4.8 常见问题
+
+**Q1：语音听起来不自然怎么办？**
+
+A：
+- 使用更高质量的模型
+- 优化文本标点符号
+- 调整语速和音调
+- 尝试不同的音色
+
+**Q2：如何处理长文本？**
+
+A：
+- 自动分段处理
+- 使用流式合成
+- 批量转换后合并
+
+```bash
+# 长文本自动分段
+openclaw tts generate \
+  --text-file &quot;long_article.txt&quot; \
+  --auto-split true \
+  --max-length 5000 \
+  --output &quot;output.mp3&quot;
+```text
+**Q3：如何控制成本？**
+
+A：
+- 选择性价比高的服务
+- 批量处理享受折扣
+- 复用常用音色
+- 合理控制音频质量
+
+**Q4：支持哪些音频格式？**
+
+A：支持多种格式：
+- MP3：通用格式，文件小
+- WAV：无损格式，质量高
+- OGG：开源格式，压缩好
+- AAC：高质量，文件小
+
+```bash
+# 指定输出格式
+openclaw tts generate \
+  --text &quot;你的文本&quot; \
+  --format &quot;wav&quot; \
+  --output &quot;output.wav&quot;
+```text
+### 10.4.9 效率提升数据
+
+| 任务类型 | 人工录音 | AI合成 | 节省时间 | 提升比例 |
+|---------|---------|--------|----------|----------|
+| 短文本（100字） | 10分钟 | 30秒 | 9.5分钟 | 95.0% |
+| 中文本（1000字） | 60分钟 | 2分钟 | 58分钟 | 96.7% |
+| 长文本（10000字） | 600分钟 | 15分钟 | 585分钟 | 97.5% |
+| 批量转换（10篇） | 6000分钟 | 120分钟 | 5880分钟 | 98.0% |
+
+**成本对比：**
+- 人工录音：$50-200/千字
+- AI合成：$0.015-0.30/千字
+- 成本节省：99%+
+
+**质量对比：**
+- 人工录音：⭐⭐⭐⭐⭐（最自然，但成本高）
+- AI合成（高端）：⭐⭐⭐⭐⭐（接近人工，成本低）
+- AI合成（标准）：⭐⭐⭐⭐（质量好，性价比高）
+
+---
+
+## 📦 本章Skills完整安装指南
+
+### ⚠️ 重要说明
+
+在安装 Skills 之前，请注意：
+
+1. **验证 Skill 是否存在**
+   ```bash
+   # 搜索 Skill
+   npx clawhub@latest search &lt;skill-name&gt;
+
+   # 查看 Skill 详情
+   npx clawhub@latest info &lt;skill-name&gt;
+   ```
+
+2. **ClawHub 市场动态变化**
+   - Skills 可能被移除、更名或更新
+   - 本文档中的某些 Skills 可能不存在
+   - 建议访问 https://clawhub.ai 查看最新列表
+
+3. **替代方案**
+   - 如果 Skill 不存在，可以使用服务的官方 API
+   - 可以自己创建自定义 Skill
+   - 可以在 GitHub 搜索社区贡献的 Skills
+
+4. **安全提示**
+   - 只安装来自可信来源的 Skills
+   - 查看 Skill 的源代码和评价
+   - 注意保护 API 密钥等敏感信息
+
+### 安装所有API集成Skills
+
+**方式1：使用提供的批量安装脚本（推荐）**
+
+```bash
+# 下载并运行批量安装脚本
+curl -O https://raw.githubusercontent.com/xianyu110/awesome-openclaw-tutorial/main/scripts/install_api_skills.sh
+chmod +x install_api_skills.sh
+
+# 查看使用帮助
+./install_api_skills.sh --help
+
+# 安装特定场景的Skills
+./install_api_skills.sh content    # 内容创作者
+./install_api_skills.sh video      # 视频UP主
+./install_api_skills.sh knowledge  # 知识工作者
+./install_api_skills.sh marketing  # 营销人员
+./install_api_skills.sh education  # 教育工作者
+
+# 安装所有Skills
+./install_api_skills.sh all
+```text
+**方式2：手动逐个安装**
+
+```bash
+# AI绘图服务 Skills（需要先验证是否存在）
+# 使用前建议先搜索：npx clawhub@latest search &lt;skill-name&gt;
+npx clawhub@latest install fal-ai
+npx clawhub@latest install nvidia-image-gen
+npx clawhub@latest install pollinations
+npx clawhub@latest install venice-ai
+npx clawhub@latest install recraft
+
+# Notion集成（目前ClawHub可能没有现成的Skill）
+# 建议使用 Notion API 直接集成或自定义 Skill
+
+# 视频生成服务 Skills
+npx clawhub@latest install video-agent
+npx clawhub@latest install sora-video-gen
+npx clawhub@latest install veo3-video-gen
+npx clawhub@latest install tube-cog
+npx clawhub@latest install video-cog
+
+# 语音合成服务 Skills
+npx clawhub@latest install elevenlabs
+npx clawhub@latest install azure-tts
+npx clawhub@latest install google-tts
+npx clawhub@latest install openai-tts
+```text
+**💡 重要提示**：
+- ClawHub 市场的 Skills 在不断更新，某些 Skills 可能不存在或已更名
+- 安装前建议先搜索：`npx clawhub@latest search &lt;skill-name&gt;`
+- 如果 Skill 不存在，可以：
+  1. 使用对应服务的官方 API 直接集成
+  2. 自己创建自定义 Skill
+  3. 在 GitHub 上搜索社区贡献的 Skills
+
+### 分场景安装建议
+
+**场景1：内容创作者（必装）**
+```bash
+npx clawhub@latest install fal-ai
+npx clawhub@latest install elevenlabs
+# Notion 建议使用 API 直接集成
+```text
+- fal-ai：快速生成配图
+- elevenlabs：高质量配音
+- Notion：使用官方 API 集成（见 10.2.2 节）
+
+**场景2：视频UP主（推荐）**
+```bash
+npx clawhub@latest install video-agent
+npx clawhub@latest install tube-cog
+npx clawhub@latest install elevenlabs
+```text
+- video-agent：AI头像视频
+- tube-cog：YouTube内容创作
+- elevenlabs：专业配音
+
+**场景3：知识工作者（推荐）**
+```bash
+npx clawhub@latest install openai-tts
+# Notion 建议使用 API 直接集成
+```text
+- openai-tts：文档转音频
+- Notion：使用官方 API 集成（见 10.2.2 节）
+
+**场景4：营销人员（推荐）**
+```bash
+npx clawhub@latest install fal-ai
+npx clawhub@latest install video-agent
+npx clawhub@latest install elevenlabs
+```text
+- fal-ai：营销素材生成
+- video-agent：产品介绍视频
+- elevenlabs：广告配音
+
+**场景5：教育工作者（推荐）**
+```bash
+npx clawhub@latest install fal-ai
+npx clawhub@latest install video-cog
+npx clawhub@latest install openai-tts
+```text
+- fal-ai：教学配图
+- video-cog：课程视频制作
+- openai-tts：有声课件
+
+### 配置优先级
+
+**必装Skills（优先级：⭐⭐⭐⭐⭐）**
+- notion - 知识管理（免费）
+- openai-tts - 语音合成（性价比高）
+- fal-ai - AI绘画（功能全面）
+
+**推荐Skills（优先级：⭐⭐⭐⭐）**
+- video-agent - 视频生成（质量高）
+- elevenlabs - 语音合成（最自然）
+- notion-mcp - Notion高级功能
+
+**可选Skills（优先级：⭐⭐⭐）**
+- 根据具体需求选择安装
+- 可以先试用再决定
+
+### 成本预算参考
+
+**月度成本估算**：
+
+| 使用场景 | Skills组合 | API成本 | 总成本/月 |
+|---------|-----------|---------|----------|
+| 轻度使用 | 基础3个 | $5-10 | $5-10 |
+| 中度使用 | 推荐6个 | $20-50 | $20-50 |
+| 重度使用 | 全部安装 | $50-150 | $50-150 |
+| 专业创作 | 高端组合 | $100-300 | $100-300 |
+
+**各服务成本明细**：
+
+| 服务类型 | 轻度使用 | 中度使用 | 重度使用 |
+|---------|---------|---------|---------|
+| AI绘图 | $2-5 | $10-20 | $30-50 |
+| Notion | $0 | $0 | $0 |
+| 视频生成 | $5-10 | $20-50 | $50-100 |
+| 语音合成 | $2-5 | $10-20 | $20-50 |
+
+**成本优化建议**：
+</code></pre></div>
+
+<p>✅ 使用国产模型（DeepSeek、Kimi）<br />
+✅ 批量处理任务<br />
+✅ 复用生成结果<br />
+✅ 设置Token限制<br />
+✅ 选择合适的质量等级<br />
+✅ 利用免费额度<br />
+✅ 批量购买享受折扣</p>
+<div class="codehilite"><pre><span></span><code>### 常见问题
+
+**Q1：Skills 安装失败怎么办？**
+```bash
+# 检查网络连接
+ping github.com
+
+# 使用国内镜像
+npm config set registry https://registry.npmmirror.com
+
+# 重试安装
+npx clawhub@latest install &lt;skill-name&gt;
+
+# 查看详细错误
+npx clawhub@latest install &lt;skill-name&gt; --verbose
+```text
+**Q2：Skills加载失败怎么办？**
+```bash
+# 查看Skills列表
+openclaw skills list
+
+# 检查Skills状态
+openclaw skills check
+
+# 查看Skill详细信息
+openclaw skills info &lt;skill-name&gt;
+
+# 重启OpenClaw
+openclaw restart
+```text
+**Q3：API调用失败怎么办？**
+```bash
+# 检查API配置
+openclaw config get api
+
+# 测试API连接
+openclaw api test &lt;service-name&gt;
+
+# 查看错误日志
+openclaw logs --tail 50 --filter &lt;service-name&gt;
+
+# 验证API 密钥
+openclaw api verify &lt;service-name&gt;
+```text
+**Q4：如何更新Skills？**
+```bash
+# 更新单个Skill
+npx clawhub@latest update &lt;skill-name&gt;
+
+# 更新所有Skills
+npx clawhub@latest update --all
+
+# 查看可更新的Skills
+npx clawhub@latest list --outdated
+
+# 查看更新日志
+npx clawhub@latest changelog &lt;skill-name&gt;
+```text
+**Q5：如何卸载不需要的Skills？**
+```bash
+# 卸载单个Skill
+npx clawhub@latest uninstall &lt;skill-name&gt;
+
+# 卸载多个Skills
+npx clawhub@latest uninstall &lt;skill1&gt; &lt;skill2&gt; &lt;skill3&gt;
+
+# 检查Skills依赖
+openclaw skills check
+```text
+### 最佳实践
+
+**1. 渐进式安装**
+</code></pre></div>
+
+<p>第1周：安装基础Skills（notion, openai-tts）<br />
+      熟悉基本使用，建立工作流程</p>
+<p>第2周：添加创作Skills（fal-ai, video-agent）<br />
+      根据需求扩展功能</p>
+<p>第3周：优化配置和成本<br />
+      调整参数，提升效率</p>
+<p>第4周：建立自动化工作流<br />
+      整合所有Skills，实现自动化</p>
+<div class="codehilite"><pre><span></span><code>**2. 定期维护**
+```bash
+# 每周检查更新
+npx clawhub@latest list --outdated
+
+# 定期检查Skills状态
+openclaw skills check
+
+# 每季度备份配置
+openclaw backup create
+
+# 每半年评估使用情况
+openclaw stats --period 6m
+```text
+**3. 性能优化**
+```bash
+# 只加载需要的Skills
+openclaw config set skills.lazy-load true
+
+# 设置并发限制
+openclaw config set skills.max-concurrent 3
+
+# 启用缓存
+openclaw config set skills.cache.enabled true
+openclaw config set skills.cache.ttl 3600
+
+# 设置超时时间
+openclaw config set skills.timeout 30000
+```text
+**4. 成本监控**
+```bash
+# 查看API使用统计
+openclaw stats api --period 1m
+
+# 设置成本预警
+openclaw config set cost.alert.enabled true
+openclaw config set cost.alert.threshold 100
+
+# 查看成本报告
+openclaw cost report --period 1m
+
+# 导出成本数据
+openclaw cost export --format csv
+```text
+### 进阶技巧
+
+**技巧1：使用配置文件管理Skills**
+```bash
+# 创建内容创作配置
+cat &gt; ~/.openclaw/profiles/content-creation.json &lt;&lt;EOF
+{
+  &quot;skills&quot;: [&quot;fal-ai&quot;, &quot;video-agent&quot;, &quot;elevenlabs&quot;, &quot;notion&quot;],
+  &quot;description&quot;: &quot;内容创作工具集&quot;
+}
+EOF
+
+# 创建知识管理配置
+cat &gt; ~/.openclaw/profiles/knowledge-management.json &lt;&lt;EOF
+{
+  &quot;skills&quot;: [&quot;notion&quot;, &quot;notion-mcp&quot;, &quot;openai-tts&quot;],
+  &quot;description&quot;: &quot;知识管理工具集&quot;
+}
+EOF
+</code></pre></div>
+
+<p><strong>技巧2：自定义快捷命令</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 创建快捷命令</span>
+openclaw<span class="w"> </span><span class="nb">alias</span><span class="w"> </span>create<span class="w"> </span><span class="s2">&quot;画图&quot;</span><span class="w"> </span><span class="s2">&quot;使用fal-ai生成图片&quot;</span>
+openclaw<span class="w"> </span><span class="nb">alias</span><span class="w"> </span>create<span class="w"> </span><span class="s2">&quot;记笔记&quot;</span><span class="w"> </span><span class="s2">&quot;保存到Notion&quot;</span>
+openclaw<span class="w"> </span><span class="nb">alias</span><span class="w"> </span>create<span class="w"> </span><span class="s2">&quot;配音&quot;</span><span class="w"> </span><span class="s2">&quot;使用elevenlabs转语音&quot;</span>
+openclaw<span class="w"> </span><span class="nb">alias</span><span class="w"> </span>create<span class="w"> </span><span class="s2">&quot;做视频&quot;</span><span class="w"> </span><span class="s2">&quot;使用video-agent生成视频&quot;</span>
+
+<span class="c1"># 使用快捷命令</span>
+你：画图<span class="w"> </span>1个可爱的小龙虾
+你：记笔记<span class="w"> </span>今天学习了API集成
+你：配音<span class="w"> </span>这段文字
+你：做视频<span class="w"> </span>产品介绍脚本
+<span class="sb">```</span>text
+**技巧3：批量安装脚本**
+
+由于<span class="w"> </span><span class="sb">`</span>clawhub<span class="sb">`</span><span class="w"> </span>一次只能安装1个<span class="w"> </span>Skill，可以创建批量安装脚本：
+
+<span class="sb">```</span>bash
+<span class="c1"># 创建批量安装脚本</span>
+cat<span class="w"> </span>&gt;<span class="w"> </span>install_skills.sh<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s">#!/bin/bash</span>
+
+<span class="s"># 定义要安装的Skills</span>
+<span class="s">skills=(</span>
+<span class="s">    &quot;fal-ai&quot;</span>
+<span class="s">    &quot;notion&quot;</span>
+<span class="s">    &quot;elevenlabs&quot;</span>
+<span class="s">    &quot;video-agent&quot;</span>
+<span class="s">)</span>
+
+<span class="s">echo &quot;开始批量安装 Skills...&quot;</span>
+
+<span class="s">for skill in &quot;${skills[@]}&quot;; do</span>
+<span class="s">    echo &quot;正在安装: $skill&quot;</span>
+<span class="s">    npx clawhub@latest install &quot;$skill&quot;</span>
+
+<span class="s">    if [ $? -eq 0 ]; then</span>
+<span class="s">        echo &quot;✅ $skill 安装成功&quot;</span>
+<span class="s">    else</span>
+<span class="s">        echo &quot;❌ $skill 安装失败&quot;</span>
+<span class="s">    fi</span>
+<span class="s">    echo &quot;---&quot;</span>
+<span class="s">done</span>
+
+<span class="s">echo &quot;批量安装完成！&quot;</span>
+<span class="s">EOF</span>
+
+chmod<span class="w"> </span>+x<span class="w"> </span>install_skills.sh
+./install_skills.sh
+<span class="sb">```</span>text
+<span class="sb">```</span>bash
+<span class="c1"># 批量生成图片</span>
+openclaw<span class="w"> </span>batch<span class="w"> </span>run<span class="w"> </span><span class="s2">&quot;fal-ai&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;prompts.txt&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span><span class="s2">&quot;images/&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--parallel<span class="w"> </span><span class="m">3</span>
+
+<span class="c1"># 批量转换音频</span>
+openclaw<span class="w"> </span>batch<span class="w"> </span>run<span class="w"> </span><span class="s2">&quot;elevenlabs&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;texts/&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span><span class="s2">&quot;audios/&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--parallel<span class="w"> </span><span class="m">5</span>
+
+<span class="c1"># 批量导入Notion</span>
+openclaw<span class="w"> </span>batch<span class="w"> </span>run<span class="w"> </span><span class="s2">&quot;notion&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;notes/&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--database<span class="w"> </span><span class="s2">&quot;db-id&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--parallel<span class="w"> </span><span class="m">2</span>
+</code></pre></div>
+
+<p><strong>技巧4：工作流自动化</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 创建自动化工作流</span>
+openclaw<span class="w"> </span>workflow<span class="w"> </span>create<span class="w"> </span><span class="s2">&quot;daily-content&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--trigger<span class="w"> </span><span class="s2">&quot;schedule:09:00&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--steps<span class="w"> </span><span class="s2">&quot;</span>
+<span class="s2">    1. 生成今日主题（ask）</span>
+<span class="s2">    2. 生成配图（fal-ai）</span>
+<span class="s2">    3. 生成视频（video-agent）</span>
+<span class="s2">    4. 生成配音（elevenlabs）</span>
+<span class="s2">    5. 保存到Notion（notion）</span>
+<span class="s2">  &quot;</span>
+
+<span class="c1"># 启用工作流</span>
+openclaw<span class="w"> </span>workflow<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="s2">&quot;daily-content&quot;</span>
+
+<span class="c1"># 查看工作流状态</span>
+openclaw<span class="w"> </span>workflow<span class="w"> </span>status<span class="w"> </span><span class="s2">&quot;daily-content&quot;</span>
+<span class="sb">```</span>text
+<span class="c1">### 故障排查</span>
+
+**问题1：Skills无法加载**
+
+可能原因：
+-<span class="w"> </span>依赖未安装
+-<span class="w"> </span>配置文件错误
+-<span class="w"> </span>权限不足
+
+解决方案：
+<span class="sb">```</span>bash
+<span class="c1"># 查看Skill依赖</span>
+openclaw<span class="w"> </span>skills<span class="w"> </span>info<span class="w"> </span>&lt;skill-name&gt;
+
+<span class="c1"># 重新安装依赖</span>
+<span class="nb">cd</span><span class="w"> </span>~/.openclaw/skills/&lt;skill-name&gt;
+npm<span class="w"> </span>install
+
+<span class="c1"># 检查配置</span>
+openclaw<span class="w"> </span>config<span class="w"> </span>validate
+
+<span class="c1"># 修复权限</span>
+chmod<span class="w"> </span>-R<span class="w"> </span><span class="m">755</span><span class="w"> </span>~/.openclaw/skills/
+<span class="sb">```</span>text
+**问题2：API调用超时**
+
+可能原因：
+-<span class="w"> </span>网络不稳定
+-<span class="w"> </span>API服务器繁忙
+-<span class="w"> </span>超时设置过短
+
+解决方案：
+<span class="sb">```</span>bash
+<span class="c1"># 增加超时时间</span>
+openclaw<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>api.timeout<span class="w"> </span><span class="m">60000</span>
+
+<span class="c1"># 使用代理</span>
+openclaw<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>api.proxy<span class="w"> </span><span class="s2">&quot;http://proxy:port&quot;</span>
+
+<span class="c1"># 重试机制</span>
+openclaw<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>api.retry.enabled<span class="w"> </span><span class="nb">true</span>
+openclaw<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>api.retry.max<span class="w"> </span><span class="m">3</span>
+<span class="sb">```</span>text
+**问题3：成本超支**
+
+可能原因：
+-<span class="w"> </span>使用频率过高
+-<span class="w"> </span>质量设置过高
+-<span class="w"> </span>未设置限制
+
+解决方案：
+<span class="sb">```</span>bash
+<span class="c1"># 设置每日限额</span>
+openclaw<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>cost.daily-limit<span class="w"> </span><span class="m">10</span>
+
+<span class="c1"># 降低质量设置</span>
+openclaw<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>image.quality<span class="w"> </span><span class="s2">&quot;standard&quot;</span>
+openclaw<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>video.quality<span class="w"> </span><span class="s2">&quot;medium&quot;</span>
+
+<span class="c1"># 启用缓存</span>
+openclaw<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>cache.enabled<span class="w"> </span><span class="nb">true</span>
+
+<span class="c1"># 查看成本明细</span>
+openclaw<span class="w"> </span>cost<span class="w"> </span>detail<span class="w"> </span>--period<span class="w"> </span>1d
+<span class="sb">```</span>text
+---
+
+<span class="c1">## 本章小结</span>
+
+本章详细介绍了OpenClaw与第三方API服务的集成方法，涵盖了4个核心应用场景：
+
+<span class="c1">### 核心内容回顾</span>
+
+**10.1<span class="w"> </span>AI绘图服务集成**<span class="w"> </span>-<span class="w"> </span>效率提升90%+
+-<span class="w"> </span>完整的bananapro-image-gen<span class="w"> </span>Skill安装和配置教程
+-<span class="w"> </span>从基础使用到批量生成的实战案例
+-<span class="w"> </span>提示词优化技巧和成本控制方法
+-<span class="w"> </span>推荐5个ClawHub市场的AI绘画Skills
+
+**10.2<span class="w"> </span>Notion数据同步**<span class="w"> </span>-<span class="w"> </span>效率提升98%+
+-<span class="w"> </span>3个推荐的Notion集成Skills（notion,<span class="w"> </span>notion-mcp,<span class="w"> </span>notion-database）
+-<span class="w"> </span>完整的API配置和权限设置流程
+-<span class="w"> </span>自动创建笔记、批量导入、会议记录等实战案例
+-<span class="w"> </span>自定义模板和自动化工作流配置
+
+**10.3<span class="w"> </span>视频生成服务**<span class="w"> </span>-<span class="w"> </span>效率提升90%+
+-<span class="w"> </span>5个推荐的视频生成Skills（video-agent,<span class="w"> </span>sora-video-gen等）
+-<span class="w"> </span>HeyGen、Sora、Veo等主流服务的配置方法
+-<span class="w"> </span>AI头像视频、批量生成、多语言版本等实战案例
+-<span class="w"> </span>自定义头像、视频后期处理等进阶技巧
+
+**10.4<span class="w"> </span>语音合成接入**<span class="w"> </span>-<span class="w"> </span>效率提升95%+
+-<span class="w"> </span>4个推荐的语音合成Skills（elevenlabs,<span class="w"> </span>azure-tts等）
+-<span class="w"> </span>ElevenLabs、Azure、Google等服务的对比和配置
+-<span class="w"> </span>文本转语音、有声读物、多语言配音等实战案例
+-<span class="w"> </span>自定义音色、情感控制、批量处理等进阶技巧
+
+<span class="c1">### 综合效率提升</span>
+
+**平均效率提升**：93%+
+**平均成本节省**：95%+
+**适用场景**：创作、管理、营销、教育
+
+<span class="c1">### 核心价值</span>
+
+**1.<span class="w"> </span>能力扩展**
+</code></pre></div>
+
+<p>✅ AI绘图：从文字到图像<br />
+✅ 知识管理：自动化笔记和数据库<br />
+✅ 视频创作：从脚本到成片<br />
+✅ 语音合成：从文字到声音</p>
+<div class="codehilite"><pre><span></span><code>**2. 效率提升**
+</code></pre></div>
+
+<p>✅ 绘图：30分钟 → 1分钟<br />
+✅ 笔记：5分钟 → 5秒<br />
+✅ 视频：2小时 → 10分钟<br />
+✅ 配音：1小时 → 2分钟</p>
+<div class="codehilite"><pre><span></span><code>**3. 成本优化**
+</code></pre></div>
+
+<p>✅ 绘图成本：$50 → $0.1<br />
+✅ Notion：免费<br />
+✅ 视频成本：$200 → $2<br />
+✅ 配音成本：$100 → $0.3</p>
+<div class="codehilite"><pre><span></span><code>**4. 质量保证**
+</code></pre></div>
+
+<p>✅ 专业级输出质量<br />
+✅ 多语言支持<br />
+✅ 批量处理能力<br />
+✅ 自动化工作流<br />
+```</p>
+<h3 id="_1">实战技巧总结</h3>
+<p><strong>1. Skills选择</strong><br />
+- 根据需求选择合适的Skills<br />
+- 优先使用ClawHub市场的成熟Skills<br />
+- 关注成本和质量的平衡</p>
+<p><strong>2. 配置优化</strong><br />
+- 正确配置API 密钥和权限<br />
+- 设置合理的默认参数<br />
+- 启用自动化规则</p>
+<p><strong>3. 成本控制</strong><br />
+- 使用合适的质量等级<br />
+- 批量处理享受折扣<br />
+- 复用生成结果</p>
+<p><strong>4. 质量提升</strong><br />
+- 优化输入内容（提示词、脚本、文本）<br />
+- 使用高质量模型<br />
+- 进行后期处理</p>
+<h3 id="_2">下一步行动</h3>
+<ol>
+<li><strong>立即开始</strong>：选择1个场景，安装对应的Skills</li>
+<li><strong>实践验证</strong>：通过实际案例测试效果</li>
+<li><strong>优化流程</strong>：根据使用情况调整配置</li>
+<li><strong>扩展应用</strong>：探索更多集成可能性</li>
+</ol>
+<p>通过API集成，OpenClaw从1个AI助手升级为全能创作平台。掌握这些集成方法，你将拥有：<br />
+- 🎨 AI绘画能力<br />
+- 📝 自动化知识管理<br />
+- 🎬 视频创作能力<br />
+- 🎙️ 语音合成能力</p>
+<p>开始使用这些强大的API集成功能，让OpenClaw成为你的超级创作助手！</p>
+<hr />
+<p><strong>下一章预告：</strong> 第11章 高级配置（多模型切换/成本优化/性能调优）</p>
+        </div>
+    </div>
+</body>
+</html>

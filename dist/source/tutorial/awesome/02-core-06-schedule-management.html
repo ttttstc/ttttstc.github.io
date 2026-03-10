@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第6章 日程与任务管理 - OpenClaw 教程</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .markdown-body {
+            background: transparent !important;
+            color: #c9d1d9 !important;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #58a6ff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .article-content h1 {
+            color: #fff !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 15px !important;
+        }
+        .article-content h2 {
+            color: #f97316 !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 10px !important;
+        }
+        .article-content a {
+            color: #58a6ff !important;
+        }
+        .article-content code {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+        }
+        .article-content pre {
+            background: #1f2428 !important;
+            border: 1px solid #30363d !important;
+        }
+        .article-content blockquote {
+            border-left: 4px solid #f97316 !important;
+            background: rgba(249, 115, 22, 0.1) !important;
+        }
+        .article-content table th {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+        }
+        .article-content table td {
+            border: 1px solid #30363d !important;
+        }
+        .article-content img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .article-content strong {
+            color: #f97316 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← 返回教程目录</a>
+        <div class="article-content markdown-body">
+            <h1 id="6">第6章 日程与任务管理</h1>
+<blockquote>
+<p>💡 <strong>本章目标</strong>：学会使用 OpenClaw管理日程和任务，实现日历自动创建、微信截图识别、批量日程导入和智能提醒设置。</p>
+</blockquote>
+<h2 id="_1">📅 本章内容</h2>
+<ul>
+<li>6.1 日历自动创建</li>
+<li>6.2 微信截图识别</li>
+<li>6.3 批量日程导入</li>
+<li>6.4 提醒设置技巧</li>
+</ul>
+<hr />
+<h2 id="61">6.1 日历自动创建</h2>
+<h3 id="611">6.1.1 为什么需要日历自动创建</h3>
+<p>在日常工作中，经常遇到这些场景：<br />
+- 📱 微信聊天中约定会议时间<br />
+- 📧 邮件中收到活动邀请<br />
+- 💬 群聊中讨论项目deadline<br />
+- 📝 文档中记录的重要日期</p>
+<p>传统做法：<br />
+1. 记住时间地点<br />
+2. 打开日历App<br />
+3. 手动创建事件<br />
+4. 设置提醒</p>
+<p><strong>问题</strong>：<br />
+- ❌ 容易遗忘<br />
+- ❌ 操作繁琐<br />
+- ❌ 信息容易丢失<br />
+- ❌ 效率低下</p>
+<p>OpenClaw可以自动识别并创建日历事件！</p>
+<h3 id="612">6.1.2 核心原理</h3>
+<p>OpenClaw的日历管理基于Mac日历Skills：</p>
+<div class="codehilite"><pre><span></span><code>文本/截图 → OpenClaw识别 → 提取信息 → 创建日历事件 → 同步到iPhone
+</code></pre></div>
+
+<p><strong>关键能力</strong>：<br />
+1. <strong>智能识别</strong>：自动识别时间、地点、人物<br />
+2. <strong>自动创建</strong>：一键创建日历事件<br />
+3. <strong>跨设备同步</strong>：Mac日历自动同步到iPhone<br />
+4. <strong>智能提醒</strong>：自动设置合理的提醒时间</p>
+<h3 id="613-1">6.1.3 实战案例1：文本创建日历</h3>
+<p><strong>场景</strong>：你在微信上约了一个会议。</p>
+<p><strong>微信聊天内容</strong>：</p>
+<div class="codehilite"><pre><span></span><code>张三：明天下午3点，在会议室A讨论项目方案，记得带笔记本
+</code></pre></div>
+
+<p><strong>OpenClaw操作</strong>：</p>
+<div class="codehilite"><pre><span></span><code>你：帮我创建一个日历事件：
+明天下午3点，在会议室A讨论项目方案
+
+OpenClaw：好的，我来帮你创建日历事件。
+
+[分析中...]
+
+OpenClaw：已创建日历事件！
+
+📅 事件详情：
+- 标题：讨论项目方案
+- 时间：2026-02-11 15:00-16:00
+- 地点：会议室A
+- 参与人：张三
+- 备注：记得带笔记本
+
+提醒设置：
+- 提前15分钟提醒
+- 提前1小时提醒
+
+已同步到：
+- Mac日历 ✅
+- iPhone日历 ✅
+</code></pre></div>
+
+<p><img alt="image-20260212231420791" src="https://upload.maynor1024.live/file/1770909307160_image-20260212231420791.png" /></p>
+<p><strong>查看效果</strong>：</p>
+<p>打开Mac日历，你会看到：</p>
+<p><img alt="Mac日历显示" src="https://upload.maynor1024.live/file/1770176284226_image_21.jpg" /></p>
+<div class="codehilite"><pre><span></span><code>2026年2月11日 星期二
+
+15:00-16:00  讨论项目方案
+             📍 会议室A
+             👤 张三
+             📝 记得带笔记本
+
+             🔔 提前15分钟提醒
+             🔔 提前1小时提醒
+</code></pre></div>
+
+<p>打开iPhone日历，自动同步显示相同内容。</p>
+<h3 id="614-2">6.1.4 实战案例2：复杂日程创建</h3>
+<p><strong>场景</strong>：你收到一封会议邀请邮件。</p>
+<p><strong>邮件内容</strong>：</p>
+<div class="codehilite"><pre><span></span><code>主题：2026年Q1产品规划会议
+
+时间：2026年2月15日（周五）14:00-17:00
+地点：总部大楼3楼会议室
+参会人员：产品团队全体成员
+会议议程：
+1. Q1产品回顾（30分钟）
+2. Q2产品规划（60分钟）
+3. 资源分配讨论（60分钟）
+4. 总结与行动项（30分钟）
+
+请提前准备：
+- Q1产品数据报告
+- Q2产品规划草案
+- 资源需求清单
+</code></pre></div>
+
+<p><strong>OpenClaw操作</strong>：</p>
+<div class="codehilite"><pre><span></span><code>你：帮我根据这封邮件创建日历事件
+[粘贴邮件内容]
+
+OpenClaw：正在分析邮件内容...
+
+[分析完成]
+
+OpenClaw：已创建详细日历事件！
+
+📅 事件详情：
+- 标题：2026年Q1产品规划会议
+- 时间：2026-02-15 14:00-17:00（3小时）
+- 地点：总部大楼3楼会议室
+- 参与人：产品团队全体成员
+
+会议议程：
+1. 14:00-14:30 Q1产品回顾
+2. 14:30-15:30 Q2产品规划
+3. 15:30-16:30 资源分配讨论
+4. 16:30-17:00 总结与行动项
+
+准备事项：
+✓ Q1产品数据报告
+✓ Q2产品规划草案
+✓ 资源需求清单
+
+提醒设置：
+- 提前1天提醒（准备材料）
+- 提前2小时提醒（检查准备）
+- 提前30分钟提醒（前往会议室）
+
+已同步到Mac和iPhone日历 ✅
+</code></pre></div>
+
+<h3 id="615-3">6.1.5 实战案例3：周期性事件</h3>
+<p><strong>场景</strong>：你需要设置每周例会。</p>
+<p><strong>OpenClaw操作</strong>：</p>
+<div class="codehilite"><pre><span></span><code>你：帮我创建一个周期性日历事件：
+每周一上午10点，团队周会，持续1小时，会议室B
+
+OpenClaw：已创建周期性事件！
+
+📅 事件详情：
+- 标题：团队周会
+- 时间：每周一 10:00-11:00
+- 地点：会议室B
+- 重复：每周
+- 结束：无限期（或指定结束日期）
+
+提醒设置：
+- 提前15分钟提醒
+
+已创建未来12周的事件：
+- 2026-02-10（周一）10:00
+- 2026-02-17（周一）10:00
+- 2026-02-24（周一）10:00
+- ... （共12次）
+
+已同步到Mac和iPhone日历 ✅
+</code></pre></div>
+
+<h3 id="616">6.1.6 日历模板和最佳实践</h3>
+<p><strong>常用日历模板</strong>：</p>
+<p><strong>模板1：会议事件</strong></p>
+<div class="codehilite"><pre><span></span><code>标题：[会议主题]
+时间：[日期] [开始时间]-[结束时间]
+地点：[会议室/线上链接]
+参与人：[参会人员]
+议程：[会议议程]
+准备：[需要准备的材料]
+提醒：提前1天、提前1小时、提前15分钟
+</code></pre></div>
+
+<p><strong>模板2：项目deadline</strong></p>
+<div class="codehilite"><pre><span></span><code>标题：[项目名称] - Deadline
+时间：[截止日期] 全天
+优先级：高
+提醒：提前1周、提前3天、提前1天、当天早上
+备注：[交付物清单]
+</code></pre></div>
+
+<p><strong>模板3：个人事项</strong></p>
+<div class="codehilite"><pre><span></span><code>标题：[事项名称]
+时间：[日期] [时间]
+地点：[地点]
+提醒：提前30分钟
+备注：[相关信息]
+</code></pre></div>
+
+<p><strong>最佳实践</strong>：</p>
+<ol>
+<li><strong>统一命名规范</strong></li>
+</ol>
+<div class="codehilite"><pre><span></span><code>会议：[会议] 项目讨论
+任务：[任务] 完成报告
+活动：[活动] 团建
+学习：[学习] 技术分享
+</code></pre></div>
+
+<ol>
+<li><strong>合理设置提醒</strong></li>
+</ol>
+<div class="codehilite"><pre><span></span><code>重要会议：提前1天、1小时、15分钟
+普通会议：提前1小时、15分钟
+deadline：提前1周、3天、1天
+个人事项：提前30分钟
+</code></pre></div>
+
+<ol>
+<li><strong>添加详细信息</strong></li>
+</ol>
+<div class="codehilite"><pre><span></span><code>- 会议链接（线上会议）
+- 会议室位置（线下会议）
+- 参会人员联系方式
+- 准备材料清单
+- 相关文档链接
+</code></pre></div>
+
+<ol>
+<li><strong>使用颜色分类</strong></li>
+</ol>
+<div class="codehilite"><pre><span></span><code>红色：紧急重要
+橙色：重要不紧急
+黄色：紧急不重要
+绿色：个人事项
+蓝色：学习成长
+</code></pre></div>
+
+<hr />
+<h2 id="62">6.2 微信截图识别</h2>
+<h3 id="621">6.2.1 为什么需要截图识别</h3>
+<p><strong>真实场景</strong>：</p>
+<p>你在微信上收到这样的消息：</p>
+<p><img alt="微信日程提醒消息" src="https://upload.maynor1024.live/file/1771085154272_1b87855aba3ddbd3b354c0c25b88cc18.jpg" /></p>
+<div class="codehilite"><pre><span></span><code>张三：明天下午2点，在星巴克（国贸店）见面讨论新项目的事，
+记得带上你的方案，我请你喝咖啡😊
+</code></pre></div>
+
+<p><strong>传统做法</strong>：</p>
+<ol>
+<li>看到消息</li>
+<li>记住时间地点</li>
+<li>打开日历</li>
+<li>手动输入信息</li>
+<li>设置提醒</li>
+</ol>
+<p><strong>问题</strong>：<br />
+- ❌ 步骤繁琐（5步）<br />
+- ❌ 容易遗忘<br />
+- ❌ 信息可能记错<br />
+- ❌ 效率低下</p>
+<p><strong>OpenClaw做法</strong>：<br />
+1. 截图发给OpenClaw<br />
+2. 完成！</p>
+<h3 id="622">6.2.2 核心原理</h3>
+<p>OpenClaw的截图识别流程：</p>
+<div class="codehilite"><pre><span></span><code>微信截图 → OCR文字识别 → NLP信息提取 → 创建日历事件
+</code></pre></div>
+
+<p><strong>关键技术</strong>：<br />
+1. <strong>OCR识别</strong>：提取截图中的文字<br />
+2. <strong>时间解析</strong>：识别"明天下午2点"等自然语言<br />
+3. <strong>地点提取</strong>：识别"星巴克（国贸店）"<br />
+4. <strong>人物识别</strong>：识别"张三"<br />
+5. <strong>事项提取</strong>：识别"聊新项目"</p>
+<h3 id="623-1">6.2.3 实战案例1：简单约会</h3>
+<p><strong>微信截图内容</strong>：</p>
+<div class="codehilite"><pre><span></span><code>李四：后天晚上7点，老地方吃饭？
+你：好的！
+</code></pre></div>
+
+<p><strong>OpenClaw操作</strong>：</p>
+<div class="codehilite"><pre><span></span><code>你：[发送微信截图]
+帮我创建日历事件
+
+OpenClaw：正在识别截图内容...
+
+[OCR识别完成]
+
+OpenClaw：已识别到约会信息！
+
+📅 事件详情：
+- 标题：和李四吃饭
+- 时间：2026-02-12 19:00-20:30
+- 地点：老地方（需要你确认具体地址）
+- 参与人：李四
+
+提醒设置：
+- 提前2小时提醒
+
+已创建日历事件 ✅
+
+💡 提示：如果&quot;老地方&quot;有具体地址，
+可以告诉我，我帮你更新到日历中。
+</code></pre></div>
+
+<p><strong>补充地址</strong>：</p>
+<div class="codehilite"><pre><span></span><code>你：老地方是&quot;海底捞（三里屯店）&quot;
+
+OpenClaw：已更新地址！
+
+📍 地点：海底捞（三里屯店）
+📍 地址：北京市朝阳区三里屯路19号
+
+已同步到日历 ✅
+</code></pre></div>
+
+<h3 id="624-2">6.2.4 实战案例2：复杂会议安排</h3>
+<p><strong>微信群聊截图</strong>：</p>
+<div class="codehilite"><pre><span></span><code>项目经理：@全体成员
+下周三上午9:30，在公司5楼大会议室开项目启动会
+请务必参加，会议预计2小时
+需要准备：
+1. 项目需求文档
+2. 技术方案
+3. 时间排期
+
+会后会有工作午餐
+</code></pre></div>
+
+<p><strong>OpenClaw操作</strong>：</p>
+<div class="codehilite"><pre><span></span><code>你：[发送群聊截图]
+帮我创建日历事件
+
+OpenClaw：正在识别群聊内容...
+
+[识别完成]
+
+OpenClaw：已识别到会议信息！
+
+📅 事件详情：
+- 标题：项目启动会
+- 时间：2026-02-19 09:30-11:30（2小时）
+- 地点：公司5楼大会议室
+- 参与人：项目团队全体成员
+
+准备事项：
+✓ 项目需求文档
+✓ 技术方案
+✓ 时间排期
+
+备注：
+- 会后有工作午餐
+- 务必参加
+
+提醒设置：
+- 提前1天提醒（准备材料）
+- 提前1小时提醒
+- 提前15分钟提醒
+
+已创建日历事件 ✅
+
+💡 提示：已自动预留11:30-13:00的午餐时间
+</code></pre></div>
+
+<h3 id="625-3">6.2.5 实战案例3：多个事件批量创建</h3>
+<p><strong>微信截图内容</strong>：</p>
+<div class="codehilite"><pre><span></span><code>本周安排：
+周一10:00 - 团队周会（会议室A）
+周三14:00 - 客户拜访（客户公司）
+周五16:00 - 项目复盘（线上会议）
+</code></pre></div>
+
+<p><strong>OpenClaw操作</strong>：</p>
+<div class="codehilite"><pre><span></span><code>你：[发送截图]
+帮我批量创建这些日历事件
+
+OpenClaw：正在识别多个事件...
+
+[识别完成]
+
+OpenClaw：已识别到3个事件！
+
+📅 事件1：团队周会
+- 时间：2026-02-10 10:00-11:00
+- 地点：会议室A
+✅ 已创建
+
+📅 事件2：客户拜访
+- 时间：2026-02-12 14:00-15:30
+- 地点：客户公司（需要具体地址）
+✅ 已创建
+
+📅 事件3：项目复盘
+- 时间：2026-02-14 16:00-17:00
+- 地点：线上会议（需要会议链接）
+✅ 已创建
+
+所有事件已同步到日历 ✅
+
+💡 提示：
+- 客户拜访需要补充具体地址
+- 项目复盘需要添加会议链接
+</code></pre></div>
+
+<h3 id="626">6.2.6 识别准确率优化</h3>
+<p><strong>提高识别准确率的技巧</strong>：</p>
+<p><strong>技巧1：清晰的截图</strong><br />
+✅ 好的截图：<br />
+- 文字清晰<br />
+- 光线充足<br />
+- 完整内容</p>
+<p>❌ 不好的截图：<br />
+- 模糊不清<br />
+- 光线太暗<br />
+- 内容被截断</p>
+<p><strong>技巧2：结构化的信息</strong><br />
+✅ 容易识别：<br />
+时间：明天下午3点<br />
+地点：会议室A<br />
+事项：讨论项目</p>
+<p>❌ 难以识别：<br />
+明天下午在那个地方讨论那个事</p>
+<p><strong>技巧3：补充说明</strong></p>
+<div class="codehilite"><pre><span></span><code>你：[发送截图]
+这是约明天下午的会议，地点在公司
+
+OpenClaw：收到！我会结合你的说明来识别。
+</code></pre></div>
+
+<p><strong>技巧4：确认和修正</strong></p>
+<div class="codehilite"><pre><span></span><code>OpenClaw：我识别到的信息是：
+时间：明天下午3点
+地点：会议室A
+
+请确认是否正确？
+
+你：时间对了，但地点是会议室B
+
+OpenClaw：好的，已修正为会议室B ✅
+</code></pre></div>
+
+<hr />
+<h2 id="63">6.3 批量日程导入</h2>
+<h3 id="631">6.3.1 为什么需要批量导入</h3>
+<p><strong>常见场景</strong>：</p>
+<ol>
+<li><strong>新学期课程表</strong></li>
+<li>10-20门课程</li>
+<li>每周重复</li>
+<li>
+<p>不同教室</p>
+</li>
+<li>
+<p><strong>项目里程碑</strong></p>
+</li>
+<li>多个关键节点</li>
+<li>不同负责人</li>
+<li>
+<p>各种deadline</p>
+</li>
+<li>
+<p><strong>会议日程</strong></p>
+</li>
+<li>多场会议</li>
+<li>不同时间地点</li>
+<li>不同参与人</li>
+</ol>
+<p><strong>传统做法</strong>：<br />
+- 一个一个手动创建<br />
+- 耗时1-2小时<br />
+- 容易出错</p>
+<p><strong>OpenClaw做法</strong>：<br />
+- 准备Excel/CSV文件<br />
+- 一键批量导入<br />
+- 5分钟完成</p>
+<h3 id="632-excel">6.3.2 Excel日程导入</h3>
+<p><strong>步骤1：准备Excel文件</strong></p>
+<p>创建一个Excel文件（<code>课程表.xlsx</code>）：</p>
+<table>
+<thead>
+<tr>
+<th>标题</th>
+<th>日期</th>
+<th>开始时间</th>
+<th>结束时间</th>
+<th>地点</th>
+<th>备注</th>
+<th>重复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>高等数学</td>
+<td>2026-02-10</td>
+<td>08:00</td>
+<td>09:40</td>
+<td>教学楼A101</td>
+<td>王老师</td>
+<td>每周一</td>
+</tr>
+<tr>
+<td>大学英语</td>
+<td>2026-02-10</td>
+<td>10:00</td>
+<td>11:40</td>
+<td>教学楼B203</td>
+<td>李老师</td>
+<td>每周一</td>
+</tr>
+<tr>
+<td>计算机基础</td>
+<td>2026-02-11</td>
+<td>14:00</td>
+<td>15:40</td>
+<td>实验楼C301</td>
+<td>张老师</td>
+<td>每周二</td>
+</tr>
+<tr>
+<td>体育课</td>
+<td>2026-02-12</td>
+<td>08:00</td>
+<td>09:40</td>
+<td>体育馆</td>
+<td>刘老师</td>
+<td>每周三</td>
+</tr>
+</tbody>
+</table>
+<p><strong>步骤2：OpenClaw导入</strong></p>
+<div class="codehilite"><pre><span></span><code>你：帮我导入这个课程表到日历
+[上传 课程表.xlsx]
+
+OpenClaw：正在读取Excel文件...
+
+[读取完成]
+
+OpenClaw：已识别到4门课程！
+
+正在创建日历事件...
+
+✅ 高等数学（每周一 08:00-09:40）
+✅ 大学英语（每周一 10:00-11:40）
+✅ 计算机基础（每周二 14:00-15:40）
+✅ 体育课（每周三 08:00-09:40）
+
+已创建本学期所有课程（共16周，64个事件）
+
+提醒设置：
+- 每节课提前15分钟提醒
+
+已同步到Mac和iPhone日历 ✅
+</code></pre></div>
+
+<h3 id="633-csv">6.3.3 CSV格式处理</h3>
+<p><strong>CSV文件示例</strong>（<code>项目里程碑.csv</code>）：</p>
+<div class="codehilite"><pre><span></span><code>标题,日期,时间,地点,负责人,优先级
+需求评审,2026-02-15,14:00-16:00,会议室A,张三,高
+设计评审,2026-02-20,10:00-12:00,会议室B,李四,高
+开发完成,2026-03-01,全天,无,王五,高
+测试完成,2026-03-10,全天,无,赵六,中
+上线发布,2026-03-15,09:00-18:00,机房,张三,高
+```text
+**OpenClaw导入**：
+</code></pre></div>
+
+<p>你：帮我导入项目里程碑<br />
+[上传 项目里程碑.csv]</p>
+<p>OpenClaw：正在读取CSV文件...</p>
+<p>[读取完成]</p>
+<p>OpenClaw：已识别到5个里程碑！</p>
+<p>📅 需求评审<br />
+- 时间：2026-02-15 14:00-16:00<br />
+- 负责人：张三<br />
+- 优先级：高<br />
+✅ 已创建</p>
+<p>📅 设计评审<br />
+- 时间：2026-02-20 10:00-12:00<br />
+- 负责人：李四<br />
+- 优先级：高<br />
+✅ 已创建</p>
+<p>📅 开发完成<br />
+- 时间：2026-03-01 全天<br />
+- 负责人：王五<br />
+- 优先级：高<br />
+✅ 已创建</p>
+<p>📅 测试完成<br />
+- 时间：2026-03-10 全天<br />
+- 负责人：赵六<br />
+- 优先级：中<br />
+✅ 已创建</p>
+<p>📅 上线发布<br />
+- 时间：2026-03-15 09:00-18:00<br />
+- 负责人：张三<br />
+- 优先级：高<br />
+✅ 已创建</p>
+<p>所有里程碑已同步到日历 ✅</p>
+<p>提醒设置：<br />
+- 高优先级：提前1周、3天、1天<br />
+- 中优先级：提前3天、1天</p>
+<div class="codehilite"><pre><span></span><code>### 6.3.4 批量创建事件
+
+**场景**：你需要创建一系列会议。
+
+**OpenClaw操作**：
+</code></pre></div>
+
+<p>你：帮我创建以下会议：</p>
+<ol>
+<li>每周一10:00，团队周会，会议室A，1小时</li>
+<li>每周三14:00，技术分享，会议室B，2小时</li>
+<li>每周五16:00，项目复盘，线上会议，1小时</li>
+</ol>
+<p>从下周开始，持续12周</p>
+<p>OpenClaw：正在批量创建会议...</p>
+<p>[创建中...]</p>
+<p>OpenClaw：已完成批量创建！</p>
+<p>📊 创建统计：<br />
+- 团队周会：12次<br />
+- 技术分享：12次<br />
+- 项目复盘：12次<br />
+- 总计：36个事件</p>
+<p>时间范围：<br />
+- 开始：2026-02-17<br />
+- 结束：2026-05-09</p>
+<p>提醒设置：<br />
+- 所有会议提前15分钟提醒</p>
+<p>已同步到Mac和iPhone日历 ✅</p>
+<p>💡 提示：可以在日历中单独修改某次会议</p>
+<div class="codehilite"><pre><span></span><code>### 6.3.5 数据验证和错误处理
+
+**OpenClaw的智能验证**：
+
+**验证1：时间冲突检测**
+</code></pre></div>
+
+<p>OpenClaw：⚠️ 检测到时间冲突！</p>
+<p>冲突事件：<br />
+- 2026-02-15 14:00 需求评审（会议室A）<br />
+- 2026-02-15 14:30 客户拜访（客户公司）</p>
+<p>建议：<br />
+1. 调整需求评审到15:00<br />
+2. 调整客户拜访到16:00<br />
+3. 取消其中一个</p>
+<p>请选择处理方式：</p>
+<div class="codehilite"><pre><span></span><code>**验证2：日期格式错误**
+</code></pre></div>
+
+<p>OpenClaw：⚠️ 发现日期格式错误！</p>
+<p>错误行：<br />
+- 第3行：日期"2026/02/30"无效（2月没有30日）<br />
+- 第5行：时间"25:00"无效（超过24小时）</p>
+<p>已自动修正：<br />
+- 第3行：改为"2026-03-01"<br />
+- 第5行：改为"23:00"</p>
+<p>请确认是否正确？</p>
+<div class="codehilite"><pre><span></span><code>**验证3：必填字段缺失**
+</code></pre></div>
+
+<p>OpenClaw：⚠️ 发现必填字段缺失！</p>
+<p>缺失信息：<br />
+- 第2行：缺少"标题"<br />
+- 第4行：缺少"日期"</p>
+<p>建议：<br />
+1. 补充缺失信息<br />
+2. 跳过这些行<br />
+3. 使用默认值</p>
+<p>请选择处理方式：</p>
+<div class="codehilite"><pre><span></span><code>---
+
+## 6.4 提醒设置技巧
+
+### 6.4.1 提醒类型和时机
+
+**提醒类型**：
+
+1. **时间提醒**
+   - 提前X分钟/小时/天
+   - 准时提醒
+   - 延迟提醒
+
+2. **位置提醒**
+   - 到达某地时提醒
+   - 离开某地时提醒
+
+3. **重复提醒**
+   - 每天/每周/每月
+   - 自定义周期
+
+**提醒时机选择**：
+
+不同类型的事件需要不同的提醒策略，如表 6-1 所示。
+
+**表 6-1 不同事件类型的推荐提醒时机**
+
+| 事件类型 | 推荐提醒时机 | 理由 |
+|---------|-------------|------|
+| 重要会议 | 提前1天、1小时、15分钟 | 充分准备 |
+| 普通会议 | 提前1小时、15分钟 | 及时赶到 |
+| 项目deadline | 提前1周、3天、1天 | 避免拖延 |
+| 日常任务 | 提前30分钟 | 不打断工作 |
+| 约会 | 提前2小时、30分钟 | 预留准备时间 |
+| 课程 | 提前15分钟 | 准时到达 |
+
+### 6.4.2 多级提醒设置
+
+**场景**：重要项目deadline。
+
+**OpenClaw操作**：
+</code></pre></div>
+
+<p>你：帮我设置项目deadline的提醒：<br />
+2026年3月15日，产品上线</p>
+<p>OpenClaw：好的，我来设置多级提醒！</p>
+<p>📅 事件：产品上线<br />
+⏰ 日期：2026-03-15</p>
+<p>提醒设置：</p>
+<p>🔔 第1级提醒（提前2周）<br />
+- 时间：2026-03-01 09:00<br />
+- 内容：距离产品上线还有2周，开始最后冲刺<br />
+- 行动：检查进度，确认资源</p>
+<p>🔔 第2级提醒（提前1周）<br />
+- 时间：2026-03-08 09:00<br />
+- 内容：距离产品上线还有1周，进入倒计时<br />
+- 行动：完成测试，准备上线方案</p>
+<p>🔔 第3级提醒（提前3天）<br />
+- 时间：2026-03-12 09:00<br />
+- 内容：距离产品上线还有3天，最后检查<br />
+- 行动：确认上线流程，准备回滚方案</p>
+<p>🔔 第4级提醒（提前1天）<br />
+- 时间：2026-03-14 09:00<br />
+- 内容：明天产品上线，做好准备<br />
+- 行动：团队动员，确认值班安排</p>
+<p>🔔 第5级提醒（当天早上）<br />
+- 时间：2026-03-15 08:00<br />
+- 内容：今天产品上线，加油！<br />
+- 行动：最后检查，准备上线</p>
+<p>已设置5级提醒 ✅</p>
+<div class="codehilite"><pre><span></span><code>### 6.4.3 智能提醒策略
+
+**OpenClaw的智能提醒**：
+
+**策略1：根据事件重要性**
+</code></pre></div>
+
+<p>你：帮我创建一个重要会议：<br />
+明天下午3点，董事会会议</p>
+<p>OpenClaw：检测到"董事会会议"，<br />
+这是重要会议，建议设置：</p>
+<p>🔔 提前1天提醒（准备材料）<br />
+🔔 提前2小时提醒（检查准备）<br />
+🔔 提前30分钟提醒（前往会议室）<br />
+🔔 提前10分钟提醒（最后确认）</p>
+<p>是否采用此提醒方案？</p>
+<div class="codehilite"><pre><span></span><code>**策略2：根据地点距离**
+</code></pre></div>
+
+<p>你：帮我创建日历：<br />
+明天下午2点，在客户公司开会</p>
+<p>OpenClaw：检测到需要外出，<br />
+根据地点距离（约30分钟车程），建议：</p>
+<p>🔔 提前2小时提醒（准备出发）<br />
+🔔 提前1小时提醒（确认路线）<br />
+🔔 提前30分钟提醒（立即出发）</p>
+<p>已自动计算路程时间 ✅</p>
+<div class="codehilite"><pre><span></span><code>**策略3：根据准备需求**
+</code></pre></div>
+
+<p>你：帮我创建日历：<br />
+下周一上午10点，产品演示</p>
+<p>OpenClaw：检测到需要准备演示，建议：</p>
+<p>🔔 提前3天提醒（准备演示材料）<br />
+🔔 提前1天提醒（演练演示流程）<br />
+🔔 提前2小时提醒（检查设备）<br />
+🔔 提前30分钟提醒（前往会议室）</p>
+<p>准备清单：<br />
+✓ 演示PPT<br />
+✓ 产品Demo<br />
+✓ 备用方案<br />
+✓ 投影设备</p>
+<p>已创建提醒和清单 ✅</p>
+<div class="codehilite"><pre><span></span><code>### 6.4.4 与其他工具集成
+
+**集成1：飞书提醒**
+</code></pre></div>
+
+<p>你：把日历提醒同步到飞书</p>
+<p>OpenClaw：已配置飞书提醒！</p>
+<p>提醒方式：<br />
+- 日历提醒（Mac/iPhone）<br />
+- 飞书消息提醒<br />
+- 飞书日历同步</p>
+<p>示例：<br />
+当"明天下午3点会议"提前1小时时：<br />
+1. Mac通知中心弹窗 ✅<br />
+2. iPhone锁屏通知 ✅<br />
+3. 飞书消息提醒 ✅</p>
+<p>已同步到飞书 ✅</p>
+<div class="codehilite"><pre><span></span><code>**集成2：企业微信提醒**
+</code></pre></div>
+
+<p>你：把重要会议提醒发到企业微信</p>
+<p>OpenClaw：已配置企业微信提醒！</p>
+<p>提醒规则：<br />
+- 标记为"重要"的会议<br />
+- 提前1天、1小时发送企业微信消息</p>
+<p>消息格式：<br />
+📅 重要会议提醒<br />
+标题：[会议名称]<br />
+时间：[会议时间]<br />
+地点：[会议地点]<br />
+准备：[准备事项]</p>
+<p>已配置完成 ✅</p>
+<div class="codehilite"><pre><span></span><code>**集成3：邮件提醒**
+</code></pre></div>
+
+<p>你：把项目deadline发邮件提醒我</p>
+<p>OpenClaw：已配置邮件提醒！</p>
+<p>提醒规则：<br />
+- 所有deadline事件<br />
+- 提前1周、3天、1天发送邮件</p>
+<p>邮件内容：<br />
+主题：[项目名称] Deadline提醒<br />
+内容：<br />
+- 截止时间<br />
+- 剩余天数<br />
+- 完成进度<br />
+- 行动建议</p>
+<p>已配置完成 ✅</p>
+<div class="codehilite"><pre><span></span><code>### 6.4.5 提醒管理技巧
+
+**技巧1：避免提醒疲劳**
+</code></pre></div>
+
+<p>❌ 不好的做法：<br />
+- 所有事件都设置多个提醒<br />
+- 提醒时间过于密集<br />
+- 提醒内容千篇一律</p>
+<p>✅ 好的做法：<br />
+- 重要事件多提醒，普通事件少提醒<br />
+- 提醒时间合理分散<br />
+- 提醒内容个性化</p>
+<div class="codehilite"><pre><span></span><code>**技巧2：提醒内容优化**
+</code></pre></div>
+
+<p>❌ 普通提醒：<br />
+"会议提醒：15分钟后开会"</p>
+<p>✅ 优化提醒：<br />
+"📅 产品评审会议<br />
+⏰ 15分钟后（14:45）<br />
+📍 会议室A（3楼）<br />
+👤 参会人：产品团队<br />
+📝 记得带：产品方案、数据报告"</p>
+<div class="codehilite"><pre><span></span><code>**技巧3：提醒优先级**
+</code></pre></div>
+
+<p>🔴 高优先级（立即处理）<br />
+- 重要会议（提前10分钟）<br />
+- 紧急任务（当天）<br />
+- 客户约会（提前30分钟）</p>
+<p>🟡 中优先级（尽快处理）<br />
+- 普通会议（提前15分钟）<br />
+- 常规任务（提前1天）<br />
+- 团队活动（提前2小时）</p>
+<p>🟢 低优先级（有空处理）<br />
+- 学习计划（提前1天）<br />
+- 个人事项（提前30分钟）<br />
+- 兴趣活动（提前2小时）</p>
+<div class="codehilite"><pre><span></span><code>**技巧4：提醒时间优化**
+</code></pre></div>
+
+<p>根据个人习惯调整：</p>
+<p>早起型（7:00起床）：<br />
+- 早上提醒：08:00<br />
+- 中午提醒：12:00<br />
+- 晚上提醒：19:00</p>
+<p>晚睡型（9:00起床）：<br />
+- 早上提醒：10:00<br />
+- 中午提醒：14:00<br />
+- 晚上提醒：21:00</p>
+<p>工作日 vs 周末：<br />
+- 工作日：提前1小时<br />
+- 周末：提前2小时（更放松）<br />
+```</p>
+<hr />
+<h2 id="_2">📝 本章小结</h2>
+<p>本章学习了OpenClaw的日程与任务管理功能：</p>
+<h3 id="_3">核心功能</h3>
+<ol>
+<li><strong>日历自动创建</strong></li>
+<li>文本识别创建</li>
+<li>复杂日程处理</li>
+<li>周期性事件设置</li>
+<li>
+<p>日历模板使用</p>
+</li>
+<li>
+<p><strong>微信截图识别</strong></p>
+</li>
+<li>OCR文字识别</li>
+<li>智能信息提取</li>
+<li>批量事件创建</li>
+<li>
+<p>识别准确率优化</p>
+</li>
+<li>
+<p><strong>批量日程导入</strong></p>
+</li>
+<li>Excel文件导入</li>
+<li>CSV格式处理</li>
+<li>数据验证</li>
+<li>
+<p>错误处理</p>
+</li>
+<li>
+<p><strong>提醒设置技巧</strong></p>
+</li>
+<li>多级提醒</li>
+<li>智能提醒策略</li>
+<li>工具集成</li>
+<li>提醒管理优化</li>
+</ol>
+<h3 id="_4">实战技巧</h3>
+<ul>
+<li>✅ 统一命名规范</li>
+<li>✅ 合理设置提醒</li>
+<li>✅ 添加详细信息</li>
+<li>✅ 使用颜色分类</li>
+<li>✅ 避免提醒疲劳</li>
+<li>✅ 优化提醒内容</li>
+</ul>
+<h3 id="_5">下一步</h3>
+<ul>
+<li>学习第7章：自动化工作流</li>
+<li>掌握定时任务设置</li>
+<li>实现网站监控</li>
+<li>构建自动化系统</li>
+</ul>
+<hr />
+<h2 id="_6">🎯 实战练习</h2>
+<h3 id="1">练习1：创建本周日程</h3>
+<ol>
+<li>列出本周所有安排</li>
+<li>使用 OpenClaw创建日历事件</li>
+<li>设置合理的提醒</li>
+<li>在手机上查看</li>
+</ol>
+<h3 id="2">练习2：微信截图识别</h3>
+<ol>
+<li>找一条微信约会消息</li>
+<li>截图发给OpenClaw</li>
+<li>让它创建日历事件</li>
+<li>检查识别准确性</li>
+</ol>
+<h3 id="3">练习3：批量导入课程表</h3>
+<ol>
+<li>准备一个Excel课程表</li>
+<li>使用 OpenClaw批量导入</li>
+<li>检查所有事件</li>
+<li>调整提醒设置</li>
+</ol>
+<hr />
+<h2 id="_7">💡 常见问题</h2>
+<p><strong>Q1：日历事件创建失败？</strong><br />
+A：检查Mac日历权限，确保OpenClaw有访问权限。</p>
+<p><strong>Q2：截图识别不准确？</strong><br />
+A：确保截图清晰，文字完整，必要时手动补充信息。</p>
+<p><strong>Q3：批量导入出错？</strong><br />
+A：检查Excel格式，确保日期时间格式正确。</p>
+<p><strong>Q4：提醒没有收到？</strong><br />
+A：检查通知设置，确保Mac和iPhone通知权限已开启。</p>
+<p><strong>Q5：如何删除批量创建的事件？</strong><br />
+A：在日历中选择事件，批量删除，或让OpenClaw帮你删除。</p>
+<hr />
+<p><strong>下一章预告</strong>：第7章将学习自动化工作流，包括定时任务设置、网站监控实战、日报自动推送等高级功能。</p>
+        </div>
+    </div>
+</body>
+</html>
