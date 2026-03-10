@@ -7,17 +7,17 @@ interface Tutorial {
   title: string;
   description: string;
   readTime: string;
-  slug?: string;
+  url: string;
 }
 
 const tutorials: Tutorial[] = [
-  { tag: '入门', tagIcon: Layers, title: 'OpenClaw是什么', description: '认识开源、自托管的AI Agent系统', readTime: '5 min', slug: '01-openclaw-intro' },
-  { tag: '架构', tagIcon: Layers, title: '整体架构', description: 'Gateway-Node-Channel三层架构详解', readTime: '8 min', slug: '05-architecture' },
-  { tag: '部署', tagIcon: Globe, title: '部署方式总览', description: '本地/Docker/云厂商一键部署对比', readTime: '6 min', slug: '10-deployment' },
-  { tag: '集成', tagIcon: Globe, title: '国际平台接入', description: 'Telegram/Discord/WhatsApp/Slack配置指南', readTime: '20 min', slug: '16-intl-channels' },
-  { tag: '集成', tagIcon: Globe, title: '国内平台接入', description: 'QQ/飞书/钉钉/企业微信配置指南', readTime: '20 min', slug: '17-cn-channels' },
-  { tag: '进阶', tagIcon: Code, title: 'Skills工作原理', description: '三层优先级与加载机制详解', readTime: '8 min', slug: '19-skills原理' },
-  { tag: '运维', tagIcon: Shield, title: 'Skills安全', description: '安全模型与模型配置指南', readTime: '15 min', slug: '23-skills-security' },
+  { tag: '入门', tagIcon: Layers, title: 'OpenClaw是什么', description: '认识开源、自托管的AI Agent系统', readTime: '5 min', url: '/source/tutorial/01-openclaw-intro.html' },
+  { tag: '架构', tagIcon: Layers, title: '整体架构', description: 'Gateway-Node-Channel三层架构详解', readTime: '8 min', url: '/source/tutorial/05-architecture.html' },
+  { tag: '部署', tagIcon: Globe, title: '部署方式总览', description: '本地/Docker/云厂商一键部署对比', readTime: '6 min', url: '/source/tutorial/10-deployment.html' },
+  { tag: '集成', tagIcon: Globe, title: '国际平台接入', description: 'Telegram/Discord/WhatsApp/Slack配置指南', readTime: '20 min', url: '/source/tutorial/16-intl-channels.html' },
+  { tag: '集成', tagIcon: Globe, title: '国内平台接入', description: 'QQ/飞书/钉钉/企业微信配置指南', readTime: '20 min', url: '/source/tutorial/17-cn-channels.html' },
+  { tag: '进阶', tagIcon: Code, title: 'Skills工作原理', description: '三层优先级与加载机制详解', readTime: '8 min', url: '/source/tutorial/19-skills.html' },
+  { tag: '运维', tagIcon: Shield, title: 'Skills安全', description: '安全模型与模型配置指南', readTime: '15 min', url: '/source/tutorial/23-skills-security.html' },
 ];
 
 const TutorialPreview = () => {
@@ -61,16 +61,13 @@ const TutorialPreview = () => {
           </div>
 
           {/* More Button */}
-          <button
-            onClick={() => {
-              window.history.pushState({}, '', '/lobster/tutorial');
-              window.dispatchEvent(new PopStateEvent('popstate'));
-            }}
+          <a
+            href="/source/tutorial/index.html"
             className="mt-6 md:mt-0 flex items-center gap-2 px-6 py-3 bg-lobster-orange rounded-full text-white hover:bg-lobster-orange/80 transition-all"
           >
             <span>查看全部28章</span>
             <ChevronRight className="w-4 h-4" />
-          </button>
+          </a>
         </div>
       </div>
 
@@ -81,9 +78,10 @@ const TutorialPreview = () => {
             const TagIcon = tutorial.tagIcon;
 
             return (
-              <div
+              <a
                 key={tutorial.title}
-                className={`group transition-all duration-600 ${
+                href={tutorial.url}
+                className={`group transition-all duration-600 block ${
                   isVisible
                     ? 'opacity-100 translate-y-0'
                     : 'opacity-0 translate-y-8'
@@ -113,19 +111,13 @@ const TutorialPreview = () => {
 
                   {/* Read More */}
                   <div className="mt-4 pt-4 border-t border-white/10">
-                    <button
-                      onClick={() => {
-                        window.history.pushState({}, '', '/lobster/tutorial');
-                        window.dispatchEvent(new PopStateEvent('popstate'));
-                      }}
-                      className="flex items-center gap-2 text-sm text-lobster-orange hover:gap-3 transition-all cursor-pointer"
-                    >
+                    <span className="flex items-center gap-2 text-sm text-lobster-orange group-hover:gap-3 transition-all">
                       阅读教程
                       <ArrowRight className="w-4 h-4" />
-                    </button>
+                    </span>
                   </div>
                 </div>
-              </div>
+              </a>
             );
           })}
         </div>

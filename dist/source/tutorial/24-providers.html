@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模型提供商总览 - OpenClaw教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e7;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 0 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 40px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #a1a1aa;
+        }
+
+        .breadcrumb a {
+            color: #fb923c;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        h1::before {
+            content: '第24章';
+            display: inline-block;
+            background: linear-gradient(135deg, #fb923c, #f97316);
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 8px;
+            font-size: 0.4em;
+            vertical-align: middle;
+            margin-right: 16px;
+        }
+
+        .subtitle {
+            color: #a1a1aa;
+            font-size: 1.1em;
+        }
+
+        .content {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        h2 {
+            font-size: 1.6em;
+            color: #fff;
+            margin: 40px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #fb923c;
+        }
+
+        h3 {
+            font-size: 1.3em;
+            color: #fb923c;
+            margin: 30px 0 15px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: #d4d4d8;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(251, 146, 60, 0.15), rgba(249, 115, 22, 0.1));
+            border-left: 4px solid #fb923c;
+            padding: 20px 24px;
+            margin: 24px 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .highlight p {
+            margin-bottom: 0;
+            color: #fff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        th {
+            background: linear-gradient(135deg, #fb923c, #f97316);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        tr:hover td {
+            background: rgba(255,255,255,0.03);
+        }
+
+        td {
+            color: #a1a1aa;
+            font-size: 0.95em;
+        }
+
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin: 8px 0;
+            color: #d4d4d8;
+        }
+
+        code {
+            background: rgba(251, 146, 60, 0.15);
+            color: #fb923c;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #0f0f23;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e4e4e7;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(251, 146, 60, 0.1), rgba(249, 115, 22, 0.05));
+            border: 1px solid rgba(251, 146, 60, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #fb923c;
+        }
+
+        .stat-label {
+            color: #a1a1aa;
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #e4e4e7;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav a:hover {
+            background: rgba(251, 146, 60, 0.2);
+            border-color: #fb923c;
+            color: #fb923c;
+        }
+
+        .nav a.prev {
+            margin-right: auto;
+        }
+
+        .nav a.next {
+            margin-left: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #71717a;
+            font-size: 0.9em;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(251, 146, 60, 0.2);
+            color: #fb923c;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 16px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+        }
+
+        .info-label {
+            color: #a1a1aa;
+        }
+
+        .info-value {
+            color: #fb923c;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="breadcrumb">
+                <a href="/">首页</a>
+                <span>/</span>
+                <a href="/tutorial">教程</a>
+                <span>/</span>
+                <span>模型提供商总览</span>
+            </div>
+            <h1>模型提供商总览</h1>
+            <p class="subtitle">Anthropic/OpenAI/Google</p>
+        </header>
+
+        <div class="content">
+            <p>Q7：Anthropic封杀了OAuth，我该怎么用Claude？</p>
+<p>使用Anthropic API Key（按量付费）。在 Anthropic Console 创建API Key，然后在OpenClaw中配置</p>
+<p>ANTHROPIC_API_KEY 环境变量。不要尝试通过OAuth连接Claude Pro/Max订阅账户，会被封号。</p>
+<p>Q8：OpenClaw创始人加入OpenAI后，项目还会继续吗？</p>
+<p>会。Peter Steinberger加入OpenAI后，OpenClaw正在转为开源基金会运营。OpenAI已承诺赞助项目但不干预</p>
+<p>开发方向。截至2026年3月，项目仍然保持近乎每日更新的节奏，有1,075+贡献者。项目的长期可持续性是有保</p>
+<p>障的。</p>
+<p>Q9：ClawHub上的Skill安全吗？</p>
+<p>不能盲目信任。ClawHub的13,729个Skill中，经社区审计约20%存在问题（垃圾/重复/恶意）。ClawHavoc事件</p>
+<p>中，超800个恶意Skill试图窃取用户凭证。建议：只安装starred数量多的Skill、安装前审查源代码、使用</p>
+<p>awesome-openclaw-skills精选列表（已过滤问题Skill）。</p>
+<p>Q10：能接入微信吗？</p>
+<p>可以，但不是直接接入个人微信。通过openclaw-china插件的企业微信（自建应用）方案可以间接接入个人微</p>
+<p>信。钉钉和QQ Bot的接入最简单。飞书是国内最主流的接入渠道之一，OpenClaw和飞书官方都提供了丰富的</p>
+<p>集成文档。</p>
+<p>Q11：OpenClaw和Claude Code可以一起用吗？</p>
+<p>可以，而且是推荐用法。社区开发了openclaw-claude-code-skill，通过MCP协议桥接两者。OpenClaw负责消</p>
+<p>息平台接入和生活自动化，Claude Code负责编程任务。两者组合是2026年最完整的AI工作流。</p>
+<p>Q12：本地模型效果怎么样？</p>
+<p>取决于硬件和模型选择。32GB RAM可以跑Qwen3-Coder:32B或Devstral-24B，在代码生成和简单Agent任务上</p>
+<p>表现不错。但跟云端的Claude Sonnet或GPT-5.4比仍有差距，尤其是复杂的多步骤推理任务。适合隐私敏感场</p>
+<p>景和实验用途。</p>
+<p>B 命令速查表</p>
+<p>Command Cheat Sheet</p>
+<p>安装与更新</p>
+<p>命令 说明</p>
+<p>npm install -g openclaw@latest 全局安装OpenClaw</p>
+<p>openclaw onboard /-install-daemon 初始化配置 + 安装守护进程</p>
+<p>openclaw update /-channel stable 更新到最新稳定版</p>
+<p>openclaw update /-channel beta 更新到Beta版（尝鲜）</p>
+<p>openclaw doctor 诊断检查，排查常见问题</p>
+<p>openclaw /-version 查看当前版本</p>
+<p>日常使用</p>
+<p>命令 说明</p>
+<p>openclaw gateway /-port 18789 /-verbose 启动Gateway（详细日志模式）</p>
+<p>openclaw gateway restart 重启Gateway（改配置后必须执</p>
+<p>行）</p>
+<p>openclaw agent /-message "xxx" 直接发送消息给Agent</p>
+<p>openclaw devices pair 设备配对（新设备首次连接）</p>
+<p>openclaw models list 列出已配置的模型</p>
+<p>openclaw models status /-probe 测试模型连通性</p>
+<p>openclaw config set agents.defaults.model.primary 设置主力模型</p>
+<p>provider/model</p>
+        </div>
+
+        <nav class="nav">
+            <a href="23-skills-security.html" class="prev">← Skills安全</a>
+            <a href="25-intl-models.html" class="next">国际模型配置 →</a>
+        </nav>
+    </div>
+
+    <footer>
+        <p>© 2026 泥巴猪的实验田 · OpenClaw 完整教程</p>
+    </footer>
+</body>
+</html>

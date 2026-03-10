@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>整体架构 - OpenClaw教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e7;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 0 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 40px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #a1a1aa;
+        }
+
+        .breadcrumb a {
+            color: #fb923c;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        h1::before {
+            content: '第5章';
+            display: inline-block;
+            background: linear-gradient(135deg, #fb923c, #f97316);
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 8px;
+            font-size: 0.4em;
+            vertical-align: middle;
+            margin-right: 16px;
+        }
+
+        .subtitle {
+            color: #a1a1aa;
+            font-size: 1.1em;
+        }
+
+        .content {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        h2 {
+            font-size: 1.6em;
+            color: #fff;
+            margin: 40px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #fb923c;
+        }
+
+        h3 {
+            font-size: 1.3em;
+            color: #fb923c;
+            margin: 30px 0 15px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: #d4d4d8;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(251, 146, 60, 0.15), rgba(249, 115, 22, 0.1));
+            border-left: 4px solid #fb923c;
+            padding: 20px 24px;
+            margin: 24px 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .highlight p {
+            margin-bottom: 0;
+            color: #fff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        th {
+            background: linear-gradient(135deg, #fb923c, #f97316);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        tr:hover td {
+            background: rgba(255,255,255,0.03);
+        }
+
+        td {
+            color: #a1a1aa;
+            font-size: 0.95em;
+        }
+
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin: 8px 0;
+            color: #d4d4d8;
+        }
+
+        code {
+            background: rgba(251, 146, 60, 0.15);
+            color: #fb923c;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #0f0f23;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e4e4e7;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(251, 146, 60, 0.1), rgba(249, 115, 22, 0.05));
+            border: 1px solid rgba(251, 146, 60, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #fb923c;
+        }
+
+        .stat-label {
+            color: #a1a1aa;
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #e4e4e7;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav a:hover {
+            background: rgba(251, 146, 60, 0.2);
+            border-color: #fb923c;
+            color: #fb923c;
+        }
+
+        .nav a.prev {
+            margin-right: auto;
+        }
+
+        .nav a.next {
+            margin-left: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #71717a;
+            font-size: 0.9em;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(251, 146, 60, 0.2);
+            color: #fb923c;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 16px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+        }
+
+        .info-label {
+            color: #a1a1aa;
+        }
+
+        .info-value {
+            color: #fb923c;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="breadcrumb">
+                <a href="/">首页</a>
+                <span>/</span>
+                <a href="/tutorial">教程</a>
+                <span>/</span>
+                <span>整体架构</span>
+            </div>
+            <h1>整体架构</h1>
+            <p class="subtitle">Gateway-Node-Channel三层架构</p>
+        </header>
+
+        <div class="content">
+            <p>07 Agent 工作区</p>
+<p>Agent Workspace</p>
+<p>每个 Agent 在文件系统中有一个独立的工作区目录，所有配置、记忆、技能都以纯文本文件的形式存</p>
+<p>在。</p>
+<p>目录结构</p>
+<p>workspace/</p>
+<p>├── AGENTS.md # Agent 定义（身份、⾏为规则）</p>
+<p>├── SOUL.md # 灵魂/⼈格指令（不可变内核）</p>
+<p>├── USER.md # ⽤户信息与偏好</p>
+<p>├── MEMORY.md # ⻓期记忆存储</p>
+<p>├── HEARTBEAT.md # ⼼跳配置（定时任务）</p>
+<p>├── memory/ # ⽇志⽬录</p>
+<p>│ └── YYYY-MM-DD.md # 每⽇ append-only ⽇志</p>
+<p>├── skills/ # 本地技能⽬录</p>
+<p>└── sessions.json # 会话存储</p>
+<p>核心文件说明</p>
+<p>文件 用途 加载时机</p>
+<p>AGENTS.md Agent 的身份定义、行为边界、回复风格。相当于 system prompt 的文 每次 Session 启动</p>
+<p>件化版本 时</p>
+<p>SOUL.md 不可变的人格内核。定义 Agent「是谁」，不应被后续对话修改 每次 Session 启动</p>
+<p>时</p>
+<p>USER.md 关于用户的结构化信息：称呼、偏好、关系 Main session 启动</p>
+<p>时</p>
+<p>MEMORY.md 长期记忆，Agent 在对话中主动写入的持久化事实和决策 仅 main session</p>
+<p>HEARTBEAT.md 定义定时任务和主动行为（如每30分钟检查一次任务状态） Gateway 启动时</p>
+<p>memory/ Daily Logs 目录，按日期自动创建，append-only 读取今日+昨日日志</p>
+<p>skills/ 工作区级技能，优先级最高（高于全局和内置技能） Session 启动时扫</p>
+<p>描</p>
+<p>sessions.json 会话元数据存储，记录各 session 的状态和历史 按需读取</p>
+<p>核心建议</p>
+<p>所有配置文件都是纯 Markdown 或 JSON。你可以直接用文本编辑器修改它们，不需要任何专用工具。这是</p>
+<p>OpenClaw 哲学的体现：一切皆文本。</p>
+<p>08 Session 与用户识别</p>
+<p>Sessions & Authentication</p>
+<p>OpenClaw 通过 DM 配对、白名单和群组规则三层机制识别用户身份，并在 Session 层面隔离不同来</p>
+<p>源的上下文。</p>
+<p>DM Pairing Policy</p>
+<p>默认认证策略</p>
+<p>当一个未知发送者通过任意渠道向你的 Agent 发送私聊消息时：</p>
+<p>1 生成配对码</p>
+<p>Agent 回复一个一次性配对码（6位数字）</p>
+<p>2 等待验证</p>
+<p>消息不会被处理，Agent 进入等待状态。所有后续消息也会被挂起</p>
+<p>3 主人批准</p>
+<p>你在已配对的渠道中输入配对码批准该用户，或者直接拒绝</p>
+<p>注意</p>
+<p>DM Pairing 是防止陌生人滥用的关键机制。关闭它意味着任何知道你 WhatsApp/Telegram 号码的人都可以无</p>
+<p>限制地使用你的 Agent（和你的 API 额度）。</p>
+<p>白名单机制</p>
+<p>allowFrom</p>
+<p>在 Agent 配置中， allowFrom 字段可以预先授权特定用户，跳过配对流程：</p>
+<p># AGENTS.md 中的配置示例</p>
+<p>allowFrom:</p>
+<p>- telegram:123456789</p>
+<p>- whatsapp:+8613800138000</p>
+<p>- discord:user#1234</p>
+<p>白名单中的用户发消息时直接进入对话，无需配对。</p>
+<p>群组规则</p>
+<p>requireMention</p>
+<p>在群聊场景下，Agent 默认使用 requireMention 策略：</p>
+        </div>
+
+        <nav class="nav">
+            <a href="04-why-popular.html" class="prev">← 为什么这么火</a>
+            <a href="06-memory.html" class="next">记忆系统 →</a>
+        </nav>
+    </div>
+
+    <footer>
+        <p>© 2026 泥巴猪的实验田 · OpenClaw 完整教程</p>
+    </footer>
+</body>
+</html>
