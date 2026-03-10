@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Clock, ArrowRight, BookOpen, Layers, MessageSquare, Code, Shield, Rocket, Database, Globe, Cpu } from 'lucide-react';
+import { Clock, ArrowRight, Layers, Code, Shield, Rocket, Database, Globe, Cpu } from 'lucide-react';
 
 interface Tutorial {
   tag: string;
@@ -11,14 +11,6 @@ interface Tutorial {
 }
 
 const tutorials: Tutorial[] = [
-  {
-    tag: '入门',
-    tagIcon: BookOpen,
-    title: '5 分钟安装 Openclaw',
-    description: '一行命令完成安装，快速启动你的第一个 AI 代理',
-    readTime: '5 min',
-    slug: '5分钟安装openclaw',
-  },
   {
     tag: '入门',
     tagIcon: Rocket,
@@ -37,11 +29,11 @@ const tutorials: Tutorial[] = [
   },
   {
     tag: '集成',
-    tagIcon: MessageSquare,
-    title: '连接 Telegram 机器人',
-    description: '配置 BotFather，获取 Token，让 AI 助手响应你的消息',
-    readTime: '10 min',
-    slug: '连接telegram机器人',
+    tagIcon: Globe,
+    title: '国际平台接入',
+    description: 'Telegram/Discord/WhatsApp/Slack 配置指南',
+    readTime: '20 min',
+    slug: 'chapters/16-国际平台接入',
   },
   {
     tag: '集成',

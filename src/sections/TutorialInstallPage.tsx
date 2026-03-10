@@ -10,20 +10,7 @@ interface TutorialItem {
 }
 
 const tutorials: TutorialItem[] = [
-  // 原有基础教程
-  {
-    slug: '5分钟安装openclaw',
-    title: '5 分钟安装 OpenClaw',
-    description: '5 分钟快速部署你的个人 AI 助手',
-    readTime: '5 min',
-  },
-  {
-    slug: '连接telegram机器人',
-    title: '连接 Telegram 机器人',
-    description: '配置 Telegram BotFather，获取 Token',
-    readTime: '10 min',
-  },
-  // OpenClaw 橙皮书章节
+  // 教程章节
   {
     slug: 'chapters/01-openclaw是什么',
     title: '01. OpenClaw 是什么',
