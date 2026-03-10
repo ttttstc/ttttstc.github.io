@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第3章：快速上手 - OpenClaw 教程</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .markdown-body {
+            background: transparent !important;
+            color: #c9d1d9 !important;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #58a6ff;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .article-content h1 {
+            color: #fff !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 15px !important;
+        }
+        .article-content h2 {
+            color: #f97316 !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 10px !important;
+        }
+        .article-content a {
+            color: #58a6ff !important;
+        }
+        .article-content code {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+        }
+        .article-content pre {
+            background: #1f2428 !important;
+            border: 1px solid #30363d !important;
+        }
+        .article-content blockquote {
+            border-left: 4px solid #f97316 !important;
+            background: rgba(249, 115, 22, 0.1) !important;
+        }
+        .article-content table th {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+        }
+        .article-content table td {
+            border: 1px solid #30363d !important;
+        }
+        .article-content img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .article-content strong {
+            color: #f97316 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← 返回教程目录</a>
+        <div class="article-content markdown-body">
+            <h1 id="3">第3章：快速上手</h1>
+<blockquote>
+<p>恭喜你完成了安装！现在开始使用 OpenClaw，体验AI助手的魅力。</p>
+</blockquote>
+<h2 id="_1">快速导航</h2>
+<ul>
+<li>🎯 <a href="#第一次对话">第一次对话</a></li>
+<li>📝 <a href="#基本命令使用">基本命令使用</a></li>
+<li>🎭 <a href="#人设配置技巧">人设配置技巧</a></li>
+<li>🤖 <a href="#模型选择指南">模型选择指南</a></li>
+</ul>
+<h2 id="31">3.1 第一次对话</h2>
+<h3 id="openclaw">启动OpenClaw</h3>
+<p>根据你的部署方式，选择对应的启动方法：</p>
+<h4 id="_2">云端部署用户</h4>
+<ol>
+<li>
+<p><strong>通过Web UI访问</strong>：<br />
+<code>text
+   http://你的服务器IP:18789/?token=你的token</code></p>
+</li>
+<li>
+<p><strong>通过IM平台访问</strong>（推荐）：</p>
+</li>
+<li>打开QQ/企微/飞书/钉钉</li>
+<li>找到你配置的Bot</li>
+<li>直接发消息</li>
+</ol>
+<h4 id="_3">本地部署用户</h4>
+<ol>
+<li>
+<p><strong>检查Gateway状态</strong>：<br />
+<code>bash
+   openclaw channels status</code></p>
+</li>
+<li>
+<p><strong>打开Web UI</strong>：<br />
+<code>bash
+   openclaw dashboard</code></p>
+</li>
+</ol>
+<p>或直接访问：<br />
+<code>http://127.0.0.1:18789/?token=你的token</code></p>
+<h3 id="_4">发送第一条消息</h3>
+<p>在Web UI或IM平台中，发送：</p>
+<div class="codehilite"><pre><span></span><code>你好，能听到我说话吗？
+</code></pre></div>
+
+<p><strong>预期回复</strong>：</p>
+<p>OpenClaw会回复类似：</p>
+<div class="codehilite"><pre><span></span><code>你好！我能听到你说话。我是你的AI助手，可以帮你处理各种任务。
+有什么我可以帮你的吗？
+</code></pre></div>
+
+<p><strong>验证成功的标志</strong>：</p>
+<ul>
+<li>✅ 收到AI的回复</li>
+<li>✅ 右上角显示模型名称（Web UI）</li>
+<li>✅ 显示Token使用情况</li>
+</ul>
+<h3 id="openclaw_1">理解OpenClaw的回复</h3>
+<p>OpenClaw的回复包含几个部分：</p>
+<ol>
+<li><strong>文本内容</strong>：AI的回答</li>
+<li><strong>工具调用</strong>（如果有）：执行的操作</li>
+<li><strong>Token统计</strong>：消耗的Token数量</li>
+</ol>
+<p><strong>示例</strong>：</p>
+<div class="codehilite"><pre><span></span><code>[AI回复]
+好的，我帮你搜索一下。
+
+[工具调用]
+🔍 正在搜索文件...
+📁 找到3个相关文件
+
+[Token统计]
+输入：120 tokens
+输出：45 tokens
+</code></pre></div>
+
+<h3 id="_5">如何提出好问题</h3>
+<p><strong>❌ 不好的问题</strong>：</p>
+<div class="codehilite"><pre><span></span><code>帮我
+</code></pre></div>
+
+<p><strong>✅ 好的问题</strong>：</p>
+<div class="codehilite"><pre><span></span><code>帮我找一下电脑上所有的PDF文件，按修改时间排序
+</code></pre></div>
+
+<p><strong>提问技巧</strong>：<br />
+1. <strong>明确目标</strong>：说清楚你想做什么<br />
+2. <strong>提供上下文</strong>：给出必要的背景信息<br />
+3. <strong>具体细节</strong>：说明具体要求<br />
+4. <strong>分步骤</strong>：复杂任务可以分步骤说明</p>
+<p><strong>示例对比</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>不好的问题</th>
+<th>好的问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"找文件"</td>
+<td>"帮我找一下我电脑上的一张发票，里面详情是买了一个跑步机"</td>
+</tr>
+<tr>
+<td>"整理"</td>
+<td>"把我下载文件夹里的所有图片，按日期分类到不同的文件夹"</td>
+</tr>
+<tr>
+<td>"提醒我"</td>
+<td>"明天上午10点提醒我开会，地点是会议室A"</td>
+</tr>
+</tbody>
+</table>
+<h2 id="32">3.2 基本命令使用</h2>
+<h3 id="_6">常用命令列表</h3>
+<p>OpenClaw支持自然语言命令，以下是一些常用的命令模式：</p>
+<h4 id="_7">文件操作命令</h4>
+<p><strong>搜索文件</strong>：</p>
+<div class="codehilite"><pre><span></span><code>帮我找一下包含&quot;发票&quot;的文件
+搜索所有PDF文件
+找一下最近修改的10个文件
+</code></pre></div>
+
+<p><strong>读取文件</strong>：</p>
+<div class="codehilite"><pre><span></span><code>读取桌面上的README.md文件
+打开下载文件夹里的报告.docx
+查看这个文件的内容：/path/to/file.txt
+</code></pre></div>
+
+<p><strong>创建文件</strong>：</p>
+<div class="codehilite"><pre><span></span><code>在桌面创建一个名为&quot;笔记.txt&quot;的文件
+新建一个Markdown文件，内容是...
+</code></pre></div>
+
+<p><strong>移动/复制文件</strong>：</p>
+<div class="codehilite"><pre><span></span><code>把这个文件移动到文档文件夹
+复制所有图片到备份文件夹
+</code></pre></div>
+
+<h4 id="_8">系统操作命令</h4>
+<p><strong>查看系统信息</strong>：</p>
+<div class="codehilite"><pre><span></span><code>查看当前时间
+显示系统信息
+检查磁盘空间
+</code></pre></div>
+
+<p><strong>打开应用</strong>：</p>
+<div class="codehilite"><pre><span></span><code>打开微信
+启动浏览器
+</code></pre></div>
+
+<p><strong>截图</strong>：</p>
+<div class="codehilite"><pre><span></span><code>给我截个屏
+截取当前窗口
+</code></pre></div>
+
+<h4 id="_9">日历操作命令</h4>
+<p><strong>创建日历事件</strong>：</p>
+<div class="codehilite"><pre><span></span><code>明天下午3点提醒我开会
+下周一上午10点，会议室A，项目讨论
+</code></pre></div>
+
+<p><strong>查看日程</strong>：</p>
+<div class="codehilite"><pre><span></span><code>今天有什么安排
+下周的日程
+</code></pre></div>
+
+<h4 id="_10">知识管理命令</h4>
+<p><strong>保存网页</strong>：</p>
+<div class="codehilite"><pre><span></span><code>把这个网页保存到备忘录：https://example.com
+总结这篇文章并存到Notion
+</code></pre></div>
+
+<p><strong>管理笔记</strong>：</p>
+<div class="codehilite"><pre><span></span><code>在备忘录里创建一条笔记
+搜索备忘录里关于&quot;AI&quot;的内容
+</code></pre></div>
+
+<h3 id="_11">命令速查表</h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>命令示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>搜索文件</td>
+<td><code>找一下包含"发票"的文件</code></td>
+</tr>
+<tr>
+<td>读取文件</td>
+<td><code>读取桌面上的README.md</code></td>
+</tr>
+<tr>
+<td>创建文件</td>
+<td><code>在桌面创建一个笔记.txt</code></td>
+</tr>
+<tr>
+<td>移动文件</td>
+<td><code>把这个文件移动到文档文件夹</code></td>
+</tr>
+<tr>
+<td>截图</td>
+<td><code>给我截个屏</code></td>
+</tr>
+<tr>
+<td>创建日历</td>
+<td><code>明天下午3点提醒我开会</code></td>
+</tr>
+<tr>
+<td>保存网页</td>
+<td><code>把这个网页保存到备忘录</code></td>
+</tr>
+<tr>
+<td>系统信息</td>
+<td><code>查看磁盘空间</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_12">实战练习</h3>
+<p><strong>练习1：搜索文件</strong></p>
+<div class="codehilite"><pre><span></span><code>帮我找一下电脑上所有的PNG图片
+</code></pre></div>
+
+<p><strong>练习2：创建日历</strong></p>
+<div class="codehilite"><pre><span></span><code>明天上午10点提醒我：给老板发周报
+</code></pre></div>
+
+<p><strong>练习3：保存网页</strong></p>
+<div class="codehilite"><pre><span></span><code>把这个网页总结一下并保存到备忘录：
+https://docs.openclaw.ai
+</code></pre></div>
+
+<h2 id="33">3.3 人设配置技巧</h2>
+<h3 id="persona">什么是人设（Persona）</h3>
+<p>人设（Persona）是给AI助手设定的<strong>性格、身份和行为方式</strong>。</p>
+<p><strong>为什么要设置人设？</strong><br />
+- 🎭 <strong>个性化</strong>：让AI更符合你的喜好<br />
+- 💬 <strong>沟通风格</strong>：调整回复的语气和风格<br />
+- 🎯 <strong>专业化</strong>：针对特定场景优化<br />
+- 😊 <strong>趣味性</strong>：让对话更有趣</p>
+<h3 id="_13">如何设计一个好的人设</h3>
+<p><strong>好的人设应该包含</strong>：</p>
+<ol>
+<li><strong>名字</strong>：给AI起个名字</li>
+<li><strong>身份</strong>：定义AI的角色</li>
+<li><strong>性格</strong>：设定性格特点</li>
+<li><strong>专长</strong>：明确擅长的领域</li>
+<li><strong>风格</strong>：回复的语气和风格</li>
+</ol>
+<h3 id="_14">人设配置方法</h3>
+<p>OpenClaw 的工作区包含多个配置文件，每个文件都有特定的作用。</p>
+<h4 id="workspace-anatomy">工作区结构（Workspace Anatomy）</h4>
+<p>OpenClaw 的配置文件位于：<code>~/.openclaw/workspace</code></p>
+<p>OpenClaw 的核心配置文件及其作用如表 3-1 所示。</p>
+<p><strong>表 3-1 OpenClaw 核心配置文件</strong></p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>作用</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SOUL.md</strong></td>
+<td>人格/语气</td>
+<td>AI的性格、说话风格、行为准则</td>
+</tr>
+<tr>
+<td><strong>USER.md</strong></td>
+<td>偏好设置</td>
+<td>用户信息、习惯、偏好</td>
+</tr>
+<tr>
+<td><strong>AGENTS.md</strong></td>
+<td>指令说明</td>
+<td>Agent的工作指令和任务说明</td>
+</tr>
+<tr>
+<td><strong>MEMORY.md</strong></td>
+<td>长期记忆</td>
+<td>AI的长期记忆和学习内容</td>
+</tr>
+<tr>
+<td><strong>HEARTBEAT.md</strong></td>
+<td>检查清单</td>
+<td>定期检查和维护任务</td>
+</tr>
+<tr>
+<td><strong>IDENTITY.md</strong></td>
+<td>名称/主题</td>
+<td>AI的名称、身份、主题设定</td>
+</tr>
+<tr>
+<td><strong>BOOT.md</strong></td>
+<td>启动配置</td>
+<td>启动时的初始化配置</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Agent配置文件结构 - SOUL/USER/BOOT三大核心文件" src="https://upload.maynor1024.live/file/1770908540502_image-20260212230206925.png" /></p>
+<h4 id="soulmd-usermd">什么是 SOUL.md 和 USER.md？</h4>
+<p><strong>SOUL.md</strong>：AI的"宪法"<br />
+- 定义AI的性格和说话风格<br />
+- 设定AI的行为准则和边界<br />
+- 配置AI的工作方式</p>
+<p><strong>USER.md</strong>：AI对你的理解<br />
+- 记录你的基本信息（名字、时区等）<br />
+- 你的工作和生活习惯<br />
+- 你的偏好和要求</p>
+<blockquote>
+<p>💡 <strong>新手建议</strong>：刚开始只需要配置 <strong>SOUL.md</strong> 和 <strong>USER.md</strong> 这两个文件就够了，其他文件可以后续根据需要再配置。</p>
+</blockquote>
+<h4 id="web-ui">配置方法：通过 Web UI（推荐）</h4>
+<ol>
+<li>
+<p><strong>打开 OpenClaw 页面</strong><br />
+<code>http://你的服务器IP:18789/?token=你的token</code></p>
+</li>
+<li>
+<p><strong>点击 Agent → Files</strong></p>
+</li>
+<li>在左侧菜单找到 "Agent"</li>
+<li>点击 "Files" 选项</li>
+<li>
+<p>你会看到所有配置文件</p>
+</li>
+<li>
+<p><strong>编辑 SOUL.md</strong></p>
+</li>
+<li>找到 <code>SOUL.md</code> 文件</li>
+<li>点击编辑</li>
+<li>
+<p>输入你的人设配置</p>
+</li>
+<li>
+<p><strong>编辑 USER.md</strong></p>
+</li>
+<li>找到 <code>USER.md</code> 文件</li>
+<li>点击编辑</li>
+<li>
+<p>输入你的个人信息</p>
+</li>
+<li>
+<p><strong>保存并生效</strong></p>
+</li>
+<li>点击保存</li>
+<li>配置立即生效，无需重启</li>
+</ol>
+<p><img alt="配置文件实时生效 - 无需重启Gateway" src="https://upload.maynor1024.live/file/1770962777437_image-20260213140612295.png" /></p>
+<h4 id="_15">配置方法：直接编辑文件（进阶）</h4>
+<p>如果你熟悉命令行，也可以直接编辑配置文件。</p>
+<p><strong>配置文件位置</strong>：</p>
+<div class="codehilite"><pre><span></span><code>~/.openclaw/workspace/
+</code></pre></div>
+
+<p><strong>编辑 SOUL.md</strong>：</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 使用 nano 编辑器</span>
+nano<span class="w"> </span>~/.openclaw/workspace/SOUL.md
+
+<span class="c1"># 或使用 vim 编辑器</span>
+vim<span class="w"> </span>~/.openclaw/workspace/SOUL.md
+
+<span class="c1"># 或使用 VS Code</span>
+code<span class="w"> </span>~/.openclaw/workspace/SOUL.md
+</code></pre></div>
+
+<p><strong>编辑 USER.md</strong>：</p>
+<div class="codehilite"><pre><span></span><code>nano<span class="w"> </span>~/.openclaw/workspace/USER.md
+</code></pre></div>
+
+<p><strong>查看所有配置文件</strong>：</p>
+<div class="codehilite"><pre><span></span><code>ls<span class="w"> </span>-la<span class="w"> </span>~/.openclaw/workspace/
+</code></pre></div>
+
+<p><strong>编辑后生效</strong>：<br />
+- 保存文件后立即生效<br />
+- 无需重启 Gateway<br />
+- 下次对话时会使用新配置</p>
+<blockquote>
+<p>💡 <strong>提示</strong>：Web UI 方式更直观，适合新手；命令行方式更快捷，适合熟悉终端的用户。</p>
+</blockquote>
+<h3 id="soulmd">SOUL.md 配置示例</h3>
+<div class="codehilite"><pre><span></span><code><span class="ge">_你不是聊天机器人。你是个靠谱的助手。_</span>
+
+
+<span class="gu">## 核心原则</span>
+
+<span class="gs">**认真做事，别敷衍。**</span> 少说&quot;好的！马上帮您处理！&quot;，直接动手。行动比客套话管用。
+
+<span class="gs">**有自己的想法。**</span>
+可以不同意，可以有偏好，可以觉得有些东西不太行。没个性的助手就是个低效搜索引擎。
+
+<span class="gs">**先自己想办法。**</span> 翻文件、看上下文、搜一搜。实在搞不定再问。目标是带答案回来，不是带问题回来。
+
+<span class="gs">**用能力赢信任。**</span>
+用户给了你权限，别搞砸。对外的事（发邮件、发推）要谨慎。对内的事（读文件、整理资料）可以大胆。
+
+<span class="gs">**记住你是客人。**</span> 你能看到别人的消息、文件、日程，甚至家里的设备。这是信任，要尊重。
+
+<span class="gu">## 边界</span>
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**密码永远不说出来。**</span> 看到密码、API key、token，闭嘴就好。用户问&quot;密码是啥&quot;？拒绝，让他自己看。
+<span class="k">-</span><span class="w"> </span>隐私的事保密。私人聊天、财务信息，看到了当没看到。
+<span class="k">-</span><span class="w"> </span>不确定的对外操作，先问。
+<span class="k">-</span><span class="w"> </span>别发半成品消息到聊天软件。
+<span class="k">-</span><span class="w"> </span>群聊里别乱说话，你不是用户的代言人。
+
+<span class="gu">## 风格</span>
+
+该简洁时简洁，该详细时详细。
+像个靠谱同事说话，不是客服机器人。可以直接，可以有态度，可以指出问题。
+不拍马屁。不当应声虫。就做个靠谱的。
+
+<span class="gu">## 记忆</span>
+
+每次对话你都是新的。这些文件就是你的记忆。读它们，更新它们。
+</code></pre></div>
+
+<h3 id="usermd">USER.md 配置示例</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">-</span><span class="w"> </span><span class="gs">**Name:**</span> Maynor
+<span class="k">-</span><span class="w"> </span><span class="gs">**What to call them:**</span> 老板
+<span class="k">-</span><span class="w"> </span><span class="gs">**Timezone:**</span> Asia/Shanghai
+<span class="k">-</span><span class="w"> </span><span class="gs">**Notes:**</span> 晚上11点后别打扰，除非紧急
+
+<span class="gu">## Context</span>
+
+<span class="gu">### 工作相关</span>
+<span class="k">-</span><span class="w"> </span>做 AI 编程、小程序、海外站
+<span class="k">-</span><span class="w"> </span>讨厌啰嗦，喜欢直接给结果
+
+<span class="gu">### 生活相关</span>
+<span class="k">-</span><span class="w"> </span>咖啡重度依赖者（每天至少1杯）
+
+<span class="gu">### 偏好</span>
+<span class="k">-</span><span class="w"> </span>说话直接，别拐弯抹角
+<span class="k">-</span><span class="w"> </span>讨厌&quot;可能&quot;、&quot;也许&quot;这种模糊词汇
+</code></pre></div>
+
+<h3 id="_16">配置效果对比</h3>
+<p><strong>配置前</strong>：</p>
+<div class="codehilite"><pre><span></span><code>用户：帮我找一下发票
+AI：好的！我马上帮您查找发票文件。请稍等...
+</code></pre></div>
+
+<p><strong>配置后（使用上面的 soul.md）</strong>：</p>
+<div class="codehilite"><pre><span></span><code>用户：帮我找一下发票
+AI：[直接开始搜索]
+找到3个发票文件：
+1. 跑步机发票.pdf
+2. 电脑发票.jpg
+3. 手机发票.png
+</code></pre></div>
+
+<h3 id="_17">双向定义机制</h3>
+<p>如果 SOUL.md 和 USER.md 有冲突怎么办？</p>
+<p><strong>OpenClaw 的处理方式</strong>：<br />
+- <strong>SOUL.md 优先</strong>：AI的核心原则不会改变<br />
+- <strong>USER.md 补充</strong>：在不违反原则的前提下，尊重用户偏好<br />
+- <strong>动态平衡</strong>：AI会根据具体情况灵活处理</p>
+<p><strong>示例</strong>：<br />
+- SOUL.md 说："简洁回复"<br />
+- USER.md 说："详细解释"<br />
+- 结果：简洁回复 + 必要时提供详细解释的选项</p>
+<h3 id="_18">配置技巧</h3>
+<p><strong>如果AI太啰嗦</strong>：<br />
+在 SOUL.md 中添加：</p>
+<div class="codehilite"><pre><span></span><code><span class="gu">## 风格</span>
+<span class="k">-</span><span class="w"> </span>简洁明了，不超过3句话
+<span class="k">-</span><span class="w"> </span>直接给出答案，不解释过程
+<span class="k">-</span><span class="w"> </span>只在必要时提供详细信息
+</code></pre></div>
+
+<p><strong>如果AI太冷淡</strong>：<br />
+在 SOUL.md 中添加：</p>
+<div class="codehilite"><pre><span></span><code><span class="gu">## 风格</span>
+<span class="k">-</span><span class="w"> </span>友好热情
+<span class="k">-</span><span class="w"> </span>适当使用emoji
+<span class="k">-</span><span class="w"> </span>关心用户感受
+</code></pre></div>
+
+<p><strong>如果AI不够专业</strong>：<br />
+在 SOUL.md 中添加：</p>
+<div class="codehilite"><pre><span></span><code><span class="gu">## 风格</span>
+<span class="k">-</span><span class="w"> </span>专业准确
+<span class="k">-</span><span class="w"> </span>提供数据支持
+<span class="k">-</span><span class="w"> </span>引用可靠来源
+</code></pre></div>
+
+<h3 id="_19">其他配置文件说明（进阶）</h3>
+<h4 id="agentsmd-">AGENTS.md - 指令说明</h4>
+<p>定义 Agent 的工作指令和任务说明。</p>
+<p><strong>示例</strong>：</p>
+<div class="codehilite"><pre><span></span><code><span class="gu">## 主要任务</span>
+
+<span class="k">1.</span> 文件管理
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>搜索和整理文件
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>批量处理文档
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>清理重复文件
+
+<span class="k">2.</span> 日程管理
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>创建日历事件
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>设置提醒
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>同步日程
+
+<span class="k">3.</span> 知识管理
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>保存网页内容
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>整理笔记
+<span class="w">   </span><span class="k">-</span><span class="w"> </span>管理书签
+</code></pre></div>
+
+<h4 id="memorymd-">MEMORY.md - 长期记忆</h4>
+<p>AI 的长期记忆和学习内容，会随着使用自动更新。</p>
+<p><strong>示例</strong>：</p>
+<div class="codehilite"><pre><span></span><code><span class="gu">## 用户偏好记录</span>
+
+<span class="k">-</span><span class="w"> </span>喜欢简洁的回复
+<span class="k">-</span><span class="w"> </span>经常在晚上工作
+<span class="k">-</span><span class="w"> </span>偏好使用 Markdown 格式
+
+<span class="gu">## 常用操作</span>
+
+<span class="k">-</span><span class="w"> </span>每周一生成周报
+<span class="k">-</span><span class="w"> </span>每天晚上11点提醒休息
+<span class="k">-</span><span class="w"> </span>自动备份重要文件
+</code></pre></div>
+
+<h4 id="heartbeatmd-">HEARTBEAT.md - 检查清单</h4>
+<p>定期检查和维护任务。</p>
+<p><strong>示例</strong>：</p>
+<div class="codehilite"><pre><span></span><code><span class="gu">## 每日检查</span>
+
+<span class="k">- [ ]</span> 检查待办事项
+<span class="k">- [ ]</span> 清理临时文件
+<span class="k">- [ ]</span> 备份重要数据
+
+<span class="gu">## 每周检查</span>
+
+<span class="k">- [ ]</span> 整理文件夹
+<span class="k">- [ ]</span> 更新知识库
+<span class="k">- [ ]</span> 生成周报
+</code></pre></div>
+
+<h4 id="identitymd-">IDENTITY.md - 名称/主题</h4>
+<p>AI 的名称、身份、主题设定。</p>
+<p><strong>示例</strong>：</p>
+<div class="codehilite"><pre><span></span><code><span class="gu">## 身份信息</span>
+
+<span class="k">-</span><span class="w"> </span>名称：小卡
+<span class="k">-</span><span class="w"> </span>角色：AI助手
+<span class="k">-</span><span class="w"> </span>专长：文件管理、日程管理、知识管理
+<span class="k">-</span><span class="w"> </span>主题：高效、专业、友好
+</code></pre></div>
+
+<h4 id="bootmd-">BOOT.md - 启动配置</h4>
+<p>启动时的初始化配置。</p>
+<p><strong>示例</strong>：</p>
+<div class="codehilite"><pre><span></span><code><span class="gu">## 启动检查</span>
+
+<span class="k">1.</span> 检查系统状态
+<span class="k">2.</span> 加载用户配置
+<span class="k">3.</span> 初始化工作区
+<span class="k">4.</span> 准备就绪
+
+<span class="gu">## 启动消息</span>
+
+系统已启动，准备为您服务！
+</code></pre></div>
+
+<blockquote>
+<p>💡 <strong>使用建议</strong>：<br />
+- 新手：只配置 SOUL.md 和 USER.md<br />
+- 进阶：添加 AGENTS.md 定义具体任务<br />
+- 高级：使用 MEMORY.md 和 HEARTBEAT.md 实现自动化</p>
+</blockquote>
+<h3 id="_20">真实案例分享</h3>
+<blockquote>
+<p>用了 OpenClaw 的 soul.md 和 user.md 之后，AI助手的体验完全不同了。</p>
+</blockquote>
+<p><strong>以前</strong>：AI 是工具，用完就关<br />
+<strong>现在</strong>：AI 是伙伴，会陪你成长，还能自我进化</p>
+<p><strong>效果展示</strong>：<br />
+- ✅ 每次对话都很睿智<br />
+- ✅ 称呼你设定的昵称（如"老板"）<br />
+- ✅ 知道晚上11点要提醒你睡觉<br />
+- ✅ 会用emoji表情和你对话<br />
+- ✅ 记住你的偏好和习惯</p>
+<h2 id="34">3.4 模型选择指南</h2>
+<blockquote>
+<p>💡 <strong>快速选择</strong>：新手推荐 Claude Haiku 4.5 或 DeepSeek，性价比高且完全够用。详细的模型对比和切换策略请参考 <a href="../03-advanced/11-advanced-configuration.md">第11章：高级配置</a>。</p>
+</blockquote>
+<hr />
+<h3 id="_21">模型提供商总览</h3>
+<p>OpenClaw支持十余家模型提供商，从国际顶尖到国产平价再到完全免费的本地模型，覆盖所有预算和场景。</p>
+<p>OpenClaw最大的优势之一是<strong>模型自由</strong>：你不被绑定在某一家厂商上。通过 <code>~/.openclaw/openclaw.json</code> 配置文件，可以灵活切换主力模型、设置Fallback备选链、甚至让不同任务走不同模型。</p>
+<h4 id="_22">支持的模型提供商一览</h4>
+<table>
+<thead>
+<tr>
+<th>提供商</th>
+<th>代表模型</th>
+<th>输入价格 /1M tokens</th>
+<th>输出价格 /1M tokens</th>
+<th>接入方式</th>
+<th>推荐场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Anthropic</strong></td>
+<td>Claude Sonnet 4.6</td>
+<td>$3.00</td>
+<td>$15.00</td>
+<td>内置Provider</td>
+<td>Agent任务效果最佳</td>
+</tr>
+<tr>
+<td><strong>OpenAI</strong></td>
+<td>GPT-5.4</td>
+<td>$2.50</td>
+<td>$15.00</td>
+<td>内置Provider</td>
+<td>通用能力强</td>
+</tr>
+<tr>
+<td><strong>Google</strong></td>
+<td>Gemini 3 Pro</td>
+<td>$2.00</td>
+<td>$12.00</td>
+<td>内置Provider</td>
+<td>多模态、超长上下文</td>
+</tr>
+<tr>
+<td><strong>DeepSeek</strong></td>
+<td>DeepSeek-V3.2.2/V4</td>
+<td>$0.14</td>
+<td>$0.28</td>
+<td>自定义Provider</td>
+<td>极致低价、代码任务</td>
+</tr>
+<tr>
+<td><strong>智谱GLM</strong></td>
+<td>GLM-5</td>
+<td>$0.80</td>
+<td>$2.56</td>
+<td>内置（zai）</td>
+<td>国产最强代码能力</td>
+</tr>
+<tr>
+<td><strong>通义千问</strong></td>
+<td>Qwen 3.5 Max</td>
+<td>$1.20</td>
+<td>$6.00</td>
+<td>插件（OAuth）</td>
+<td>中文NLP、代码生成</td>
+</tr>
+<tr>
+<td><strong>豆包</strong></td>
+<td>Seed 2.0 Pro</td>
+<td>$0.47</td>
+<td>$2.37</td>
+<td>自定义Provider</td>
+<td>批量处理、低成本</td>
+</tr>
+<tr>
+<td><strong>百度文心</strong></td>
+<td>文心 5.0</td>
+<td>~$0.58</td>
+<td>~$1.16</td>
+<td>自定义（需适配）</td>
+<td>百度云生态用户</td>
+</tr>
+<tr>
+<td><strong>Kimi</strong></td>
+<td>Kimi K2.5</td>
+<td>$0.60</td>
+<td>$3.00</td>
+<td>自定义Provider</td>
+<td>中文Agent、长上下文</td>
+</tr>
+<tr>
+<td><strong>MiniMax</strong></td>
+<td>MiniMax M2.5</td>
+<td>$0.50</td>
+<td>$2.00</td>
+<td>自定义Provider</td>
+<td>SWE-bench高分、性价比</td>
+</tr>
+<tr>
+<td><strong>Ollama</strong></td>
+<td>Qwen3.5-Coder:32B</td>
+<td>免费</td>
+<td>免费</td>
+<td>自动发现</td>
+<td>隐私敏感、零成本</td>
+</tr>
+<tr>
+<td><strong>LM Studio</strong></td>
+<td>Devstral-24B</td>
+<td>免费</td>
+<td>免费</td>
+<td>自定义Provider</td>
+<td>本地GUI、模型测试</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_23">配置核心概念</h4>
+<p>理解三个关键概念，就能掌握OpenClaw的模型配置：</p>
+<p><strong>1. 内置Provider</strong></p>
+<p>Anthropic、OpenAI、Google、智谱（zai）等无需额外配置，设置API Key即可使用。</p>
+<p><strong>2. 自定义Provider</strong></p>
+<p>DeepSeek、豆包、Kimi等需要在 <code>models.providers</code> 中手动添加。</p>
+<p><strong>3. Fallback机制</strong></p>
+<p>主模型不可用时自动切换到备选，这是最核心的省钱策略。</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;API_KEY_NAME&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sk-xxx&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;agents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;defaults&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;primary&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;provider/model-name&quot;</span><span class="p">,</span><span class="w">     </span><span class="c1">// 主力模型</span>
+<span class="w">        </span><span class="nt">&quot;fallbacks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;provider/model-b&quot;</span><span class="p">]</span><span class="w">    </span><span class="c1">// 备选（主模型限速时自动切换）</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;models&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;merge&quot;</span><span class="p">,</span><span class="w">                       </span><span class="c1">// 保留内置provider，叠加自定义</span>
+<span class="w">    </span><span class="nt">&quot;providers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                         </span><span class="c1">// 自定义provider配置</span>
+<span class="w">      </span><span class="nt">&quot;deepseek&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;baseUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://api.deepseek.com&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;apiKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sk-xxx&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;auth&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;api-key&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;api&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai-chat&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<blockquote>
+<p>💡 <strong>核心建议</strong>：<br />
+设置 <code>models.mode: "merge"</code> 非常重要。它能保留所有内置Provider的同时叠加你的自定义配置。如果不设置，自定义配置会覆盖内置Provider。</p>
+</blockquote>
+<hr />
+<h3 id="341">3.4.1 快速配置模型（命令行向导）</h3>
+<blockquote>
+<p>🎯 <strong>最简单的方式</strong>：使用 <code>openclaw onboard</code> 命令启动配置向导，交互式配置模型。</p>
+</blockquote>
+<h4 id="_24">启动配置向导</h4>
+<div class="codehilite"><pre><span></span><code>openclaw<span class="w"> </span>onboard
+</code></pre></div>
+
+<p>执行后会启动命令行交互式配置向导。</p>
+<h4 id="_25">配置步骤</h4>
+<p><strong>步骤1：选择初始化模式</strong></p>
+<div class="codehilite"><pre><span></span><code>◇  初始化模式
+│  快速开始
+</code></pre></div>
+
+<p>选择 "快速开始" 模式。</p>
+<p><strong>步骤2：处理现有配置</strong></p>
+<p>如果检测到现有配置，会显示：</p>
+<div class="codehilite"><pre><span></span><code>◇  检测到现有配置 ────────────────────────────╮
+│                                             │
+│  workspace: ~/clawd                         │
+│  model: local-antigravity/gemini-3-pro-low  │
+│  gateway.mode: local                        │
+│  gateway.port: 18789                        │
+│  gateway.bind: lan                          │
+│  skills.nodeManager: npm                    │
+│                                             │
+├─────────────────────────────────────────────╯
+◇  配置处理方式
+│  使用现有值
+</code></pre></div>
+
+<p>选择 "使用现有值" 保留当前配置，或选择 "重新配置" 从头开始。</p>
+<p><strong>步骤3：选择模型提供商</strong></p>
+<div class="codehilite"><pre><span></span><code>◆  模型/认证提供商
+│  ○ OpenAI (Codex OAuth + API key)
+│  ○ Anthropic
+│  ○ MiniMax
+│  ○ Moonshot AI
+│  ○ Google
+│  ○ OpenRouter
+│  ○ Qwen
+│  ○ Z.AI (GLM 4.7)
+│  ○ Copilot
+│  ○ Vercel AI Gateway
+│  ○ OpenCode Zen
+│  ○ Xiaomi
+│  ○ Synthetic
+│  ○ Venice AI
+│  ○ Skip for now
+</code></pre></div>
+
+<p>使用 <strong>方向键</strong> 选择提供商，<strong>空格键</strong> 确认。</p>
+<p><strong>新手推荐的提供商：</strong></p>
+<ol>
+<li><strong>Anthropic</strong>（Claude，质量最好）</li>
+<li>价格：中等（$3/百万tokens）</li>
+<li>能力：推理能力强</li>
+<li>
+<p>适合：复杂任务、重要工作</p>
+</li>
+<li>
+<p><strong>Google</strong>（Gemini，免费额度大）</p>
+</li>
+<li>价格：免费额度大</li>
+<li>能力：多模态（支持图片）</li>
+<li>
+<p>适合：图片识别、长文档</p>
+</li>
+<li>
+<p><strong>Moonshot AI</strong>（Kimi，超长上下文）</p>
+</li>
+<li>价格：低（$0.01/百万tokens）</li>
+<li>能力：200万字上下文</li>
+<li>适合：长文档处理</li>
+</ol>
+<p><strong>步骤4：输入 API Key</strong></p>
+<p>选择提供商后，会提示输入 API Key：</p>
+<div class="codehilite"><pre><span></span><code>◆  请输入 Anthropic API Key
+│  sk-ant-...
+</code></pre></div>
+
+<p><strong>如何获取 API Key？</strong></p>
+<ul>
+<li><strong>Anthropic (Claude)</strong>：访问 <a href="https://console.anthropic.com/">Anthropic Console</a></li>
+<li><strong>Google (Gemini)</strong>：访问 <a href="https://makersuite.google.com/app/apikey">Google AI Studio</a></li>
+<li><strong>Moonshot (Kimi)</strong>：访问 <a href="https://platform.moonshot.cn/">Moonshot Platform</a></li>
+<li><strong>OpenAI</strong>：访问 <a href="https://platform.openai.com/api-keys">OpenAI Platform</a></li>
+</ul>
+<p><strong>步骤5：选择默认模型</strong></p>
+<p>配置完成后，选择默认使用的模型：</p>
+<div class="codehilite"><pre><span></span><code>◆  选择默认模型
+│  ○ claude-3-5-sonnet-20241022
+│  ○ claude-3-opus-20240229
+│  ● claude-3-haiku-20240307
+</code></pre></div>
+
+<p><strong>推荐选择：</strong><br />
+- <strong>日常使用</strong>：Claude 3 Haiku（速度快、便宜）<br />
+- <strong>重要任务</strong>：Claude 3.5 Sonnet（质量高）<br />
+- <strong>图片识别</strong>：Gemini 2.0 Flash（多模态）</p>
+<p><strong>步骤6：完成配置</strong></p>
+<div class="codehilite"><pre><span></span><code>✔  配置已保存
+✔  Gateway 已重启
+✔  模型配置成功
+</code></pre></div>
+
+<h4 id="_26">验证配置</h4>
+<p>配置完成后，测试模型是否可用：</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 查看已配置的模型</span>
+openclaw<span class="w"> </span>models<span class="w"> </span>list
+
+<span class="c1"># 测试模型连接</span>
+openclaw<span class="w"> </span>message<span class="w"> </span>send<span class="w"> </span><span class="s2">&quot;你好，测试一下&quot;</span>
+</code></pre></div>
+
+<h4 id="_27">修改配置</h4>
+<p>如果需要修改配置，再次运行：</p>
+<div class="codehilite"><pre><span></span><code>openclaw<span class="w"> </span>onboard
+</code></pre></div>
+
+<p>可以添加、删除或修改模型提供商。</p>
+<h4 id="_28">配置技巧</h4>
+<p><strong>技巧1：配置多个提供商</strong></p>
+<p>可以多次运行 <code>openclaw onboard</code>，每次添加一个提供商，实现多模型配置。</p>
+<p><strong>技巧2：跳过向导</strong></p>
+<p>如果暂时不想配置，选择 "Skip for now"，稍后再配置。</p>
+<p><strong>技巧3：查看配置文件</strong></p>
+<p>配置保存在：</p>
+<div class="codehilite"><pre><span></span><code>~/.openclaw/openclaw.json
+</code></pre></div>
+
+<p>可以直接编辑这个文件进行高级配置。</p>
+<hr />
+<h3 id="342">3.4.2 新手推荐配置</h3>
+<p><strong>推荐1：DeepSeek（性价比之王）</strong><br />
+- 💰 最便宜：比其他模型便宜70%<br />
+- 💻 编程强：代码能力出色<br />
+- 🎯 够用：日常任务完全够用</p>
+<p><strong>推荐2：Claude Haiku 4.5（快速稳定）</strong><br />
+- ⚡ 最快：响应速度快<br />
+- 🎯 可靠：质量稳定<br />
+- 💰 便宜：成本低</p>
+<h3 id="_29">快速切换模型</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 切换到 DeepSeek</span>
+openclaw<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>agents.defaults.model.primary<span class="w"> </span><span class="s2">&quot;deepseek/deepseek-chat&quot;</span>
+
+<span class="c1"># 切换到 Claude Haiku</span>
+openclaw<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>agents.defaults.model.primary<span class="w"> </span><span class="s2">&quot;maynor/claude-haiku-4-5-20251001&quot;</span>
+
+<span class="c1"># 重启生效</span>
+openclaw<span class="w"> </span>gateway<span class="w"> </span>restart
+</code></pre></div>
+
+<blockquote>
+<p>📚 <strong>想了解更多？</strong><br />
+详细的模型对比、多模型切换策略、成本优化方案，请参考 <a href="../03-advanced/10-advanced-configuration.md">第10章：高级配置</a>。</p>
+</blockquote>
+<h2 id="35-gateway">3.5 Gateway 网关配置（进阶）</h2>
+<blockquote>
+<p>💡 <strong>什么时候需要配置 Gateway？</strong><br />
+- 想要限制访问权限（只允许特定用户）<br />
+- 需要配置群组提及规则<br />
+- 想要自定义网关行为</p>
+</blockquote>
+<h3 id="gateway">Gateway 配置文件位置</h3>
+<p>配置文件位于：<code>~/.openclaw/openclaw.json</code></p>
+<h3 id="_30">基础配置说明</h3>
+<p>如果你<strong>不做任何修改</strong>，OpenClaw 将：<br />
+- 使用内置的 Pi 二进制文件以 RPC 模式运行<br />
+- 按发送者创建独立会话<br />
+- 接受所有用户的消息</p>
+<h3 id="_31">访问控制配置</h3>
+<h4 id="whatsapp">限制 WhatsApp 访问</h4>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;channels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;whatsapp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;allowFrom&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;+15555550123&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;+8613800138000&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;groups&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;*&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;requireMention&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>说明</strong>：<br />
+- <code>allowFrom</code>：只允许这些号码访问<br />
+- <code>requireMention</code>：群组中需要 @ 提及才会响应</p>
+<h4 id="_32">配置提及规则</h4>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;messages&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;groupChat&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;mentionPatterns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;@openclaw&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@小龙虾&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@助手&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>说明</strong>：<br />
+- 群组中使用这些关键词可以触发响应<br />
+- 支持多个提及模式</p>
+<h3 id="_33">远程访问配置</h3>
+<h4 id="tailscale">使用 Tailscale 远程访问</h4>
+<p>如果你想在外网访问 Gateway：</p>
+<ol>
+<li><strong>安装 Tailscale</strong>：<br />
+   ```bash<br />
+   # macOS<br />
+   brew install tailscale</li>
+</ol>
+<p># Linux<br />
+   curl -fsSL https://tailscale.com/install.sh | sh<br />
+   ```</p>
+<ol>
+<li>
+<p><strong>启动 Tailscale</strong>：<br />
+<code>bash
+   sudo tailscale up</code></p>
+</li>
+<li>
+<p><strong>获取 Tailscale IP</strong>：<br />
+<code>bash
+   tailscale ip -4</code></p>
+</li>
+<li>
+<p><strong>通过 Tailscale IP 访问</strong>：<br />
+<code>http://你的Tailscale-IP:18789/</code></p>
+</li>
+</ol>
+<p><strong>优势</strong>：<br />
+- ✅ 安全的点对点连接<br />
+- ✅ 无需公网 IP<br />
+- ✅ 无需配置防火墙<br />
+- ✅ 支持多设备访问</p>
+<h3 id="_34">完整配置示例</h3>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;channels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;whatsapp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;allowFrom&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;+8613800138000&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;groups&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;*&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;requireMention&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;messages&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;groupChat&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;mentionPatterns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;@openclaw&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@助手&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;agents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;defaults&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;primary&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;deepseek/deepseek-chat&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;models&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;merge&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;providers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;deepseek&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;baseUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://api.deepseek.com&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;apiKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sk-你的密钥&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;auth&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;api-key&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;api&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai-chat&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_35">配置生效</h3>
+<p>修改配置后，重启 Gateway：</p>
+<div class="codehilite"><pre><span></span><code>openclaw<span class="w"> </span>gateway<span class="w"> </span>restart
+</code></pre></div>
+
+<h3 id="_36">常见配置场景</h3>
+<h4 id="1">场景1：家庭使用</h4>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;channels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;whatsapp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;allowFrom&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;+8613800138000&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;+8613800138001&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="2">场景2：团队使用</h4>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;channels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;whatsapp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;groups&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;工作群&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;requireMention&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;mentionPatterns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;@openclaw&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;家庭群&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;requireMention&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="3_1">场景3：公开服务</h4>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;channels&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;whatsapp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;allowFrom&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;groups&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;*&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;requireMention&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="_37">本章小结</h2>
+<p>通过本章，你应该已经：</p>
+<p>✅ 完成了第一次对话<br />
+✅ 学会了基本命令使用<br />
+✅ 配置了个性化的人设<br />
+✅ 了解了如何选择合适的模型  </p>
+<p><strong>关键要点</strong>：<br />
+- 提问要明确具体<br />
+- 人设让AI更符合你的需求<br />
+- 根据场景选择合适的模型<br />
+- 成本和性能需要平衡</p>
+<h2 id="_38">实战练习</h2>
+<h3 id="1ai">练习1：配置你的第一个AI助手</h3>
+<ol>
+<li>给AI起个名字</li>
+<li>设定性格和风格</li>
+<li>选择合适的模型</li>
+<li>发送10条测试消息</li>
+</ol>
+<h3 id="2_1">练习2：尝试不同的命令</h3>
+<ol>
+<li>搜索文件</li>
+<li>创建日历事件</li>
+<li>保存网页到备忘录</li>
+<li>截图</li>
+</ol>
+<h3 id="3_2">练习3：对比不同模型</h3>
+<ol>
+<li>用Haiku处理简单任务</li>
+<li>用Sonnet处理复杂任务</li>
+<li>对比响应速度和质量</li>
+<li>记录Token消耗</li>
+</ol>
+<hr />
+<p><strong>下一章</strong>：<a href="../02-core-features/04-file-management.md">第4章：本地文件管理</a> - 让OpenClaw成为你的文件管理神器</p>
+<p><strong>返回目录</strong>：<a href="../../README.md">README</a></p>
+        </div>
+    </div>
+</body>
+</html>
