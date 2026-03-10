@@ -20,7 +20,7 @@ const WorkspacePage = () => {
             实时观察小泥巴的工作状态，看看你的AI助手在做什么
           </p>
           <a
-            href="http://ninini.cc.cd"
+            href="https://ninini.cc.cd"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-lobster-orange hover:underline"
@@ -41,7 +41,7 @@ const WorkspacePage = () => {
                   该网站限制了iframe嵌入，请点击下方按钮在新窗口中打开
                 </p>
                 <a
-                  href="http://ninini.cc.cd"
+                  href="https://ninini.cc.cd"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-lobster-orange text-white rounded-lg hover:bg-lobster-orange/80 transition-colors"
@@ -53,7 +53,7 @@ const WorkspacePage = () => {
             </div>
           ) : (
             <iframe
-              src="http://ninini.cc.cd"
+              src="https://ninini.cc.cd"
               title="小泥巴工作室"
               className="w-full h-full border-0"
               allow="accelerometer; ambient-light-sensor; autoplay; camera; document-domain; encrypted-media; fullscreen; geolocation; gyroscope; layout-shift; magnetometer; microphone; midi; otp-autocomplete; payment; picture-in-picture; private-network-connection; sync-xhr; usb; vr; wake-lock; xr-spatial-tracking"
