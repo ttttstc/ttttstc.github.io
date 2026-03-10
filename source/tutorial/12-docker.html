@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker部署 - OpenClaw教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e7;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 0 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 40px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #a1a1aa;
+        }
+
+        .breadcrumb a {
+            color: #fb923c;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        h1::before {
+            content: '第12章';
+            display: inline-block;
+            background: linear-gradient(135deg, #fb923c, #f97316);
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 8px;
+            font-size: 0.4em;
+            vertical-align: middle;
+            margin-right: 16px;
+        }
+
+        .subtitle {
+            color: #a1a1aa;
+            font-size: 1.1em;
+        }
+
+        .content {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        h2 {
+            font-size: 1.6em;
+            color: #fff;
+            margin: 40px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #fb923c;
+        }
+
+        h3 {
+            font-size: 1.3em;
+            color: #fb923c;
+            margin: 30px 0 15px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: #d4d4d8;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(251, 146, 60, 0.15), rgba(249, 115, 22, 0.1));
+            border-left: 4px solid #fb923c;
+            padding: 20px 24px;
+            margin: 24px 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .highlight p {
+            margin-bottom: 0;
+            color: #fff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        th {
+            background: linear-gradient(135deg, #fb923c, #f97316);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        tr:hover td {
+            background: rgba(255,255,255,0.03);
+        }
+
+        td {
+            color: #a1a1aa;
+            font-size: 0.95em;
+        }
+
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        li {
+            margin: 8px 0;
+            color: #d4d4d8;
+        }
+
+        code {
+            background: rgba(251, 146, 60, 0.15);
+            color: #fb923c;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #0f0f23;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e4e4e7;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(251, 146, 60, 0.1), rgba(249, 115, 22, 0.05));
+            border: 1px solid rgba(251, 146, 60, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #fb923c;
+        }
+
+        .stat-label {
+            color: #a1a1aa;
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #e4e4e7;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav a:hover {
+            background: rgba(251, 146, 60, 0.2);
+            border-color: #fb923c;
+            color: #fb923c;
+        }
+
+        .nav a.prev {
+            margin-right: auto;
+        }
+
+        .nav a.next {
+            margin-left: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #71717a;
+            font-size: 0.9em;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(251, 146, 60, 0.2);
+            color: #fb923c;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 16px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+        }
+
+        .info-label {
+            color: #a1a1aa;
+        }
+
+        .info-value {
+            color: #fb923c;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="breadcrumb">
+                <a href="/">首页</a>
+                <span>/</span>
+                <a href="/tutorial">教程</a>
+                <span>/</span>
+                <span>Docker部署</span>
+            </div>
+            <h1>Docker部署</h1>
+            <p class="subtitle">docker-compose配置</p>
+        </header>
+
+        <div class="content">
+            <h2>16 国际平台接入</h2>
+<p>International Platforms</p>
+<p>本章覆盖六大国际平台的详细接入步骤。每个平台从创建凭证到完成对话的全流程。</p>
+<p>Telegram</p>
+<p>推荐⼊⻔ · 5 分钟 · 零⻔槛</p>
+<p>Telegram 是 OpenClaw 官方推荐的入门渠道。使用 long-polling 模式，bot 主动轮询 Telegram 服务器拉取消</p>
+<p>息，不需要公网 IP、反向代理或端口转发。本地开发、NAT 后面、防火墙内都能正常工作。</p>
+<p>找到 @BotFather</p>
+<p>1</p>
+<p>在 Telegram 搜索 @BotFather ，这是 Telegram 官方的 Bot 管理工具。向它发送 /newbot 命令。</p>
+<p>创建 Bot</p>
+<p>2</p>
+<p>按提示设置 bot 的显示名称和 username（必须以 bot 结尾，如 my_openclaw_bot ）。创建成功后，</p>
+<p>BotFather 会返回一个 Bot Token。</p>
+<p>配置到 OpenClaw</p>
+<p>3</p>
+<p>将 Token 写入 openclaw.yaml ：</p>
+<p>channels:</p>
+<p>telegram:</p>
+<p>enabled: true</p>
+<p>botToken: "YOUR_BOT_TOKEN"</p>
+<p>dmPolicy: pairing # 需配对码才能使⽤</p>
+<p>启动并配对</p>
+<p>4</p>
+<p>重启 Gateway。在 Telegram 中给你的 bot 发送任意消息，Gateway 会返回配对码，输入后即可开始对</p>
+<p>话。</p>
+<p>核心建议</p>
+<p>Telegram 的 Bot API 9.5（2026年3月）新增了 sendMessageDraft 功能。国内用户需要代理访问</p>
+<p>Telegram，但 bot 运行本身不受影响——只要运行 Gateway 的机器能访问 api.telegram.org 即可。</p>
+<p>Discord</p>
+<p>社区场景⾸选 · 15-20 分钟</p>
+<p>Discord 适合社区管理和团队协作场景。需要在 Developer Portal 创建 Application 和 Bot，权限设置步骤稍多</p>
+<p>但文档齐全。</p>
+<p>1 创建 Application</p>
+<p>前往 discord.com/developers/applications ，点击 New Application，填写应用名称。</p>
+<p>2 获取 Bot Token</p>
+<p>进入 Bot 页面，点击 Reset Token，复制生成的 Token。</p>
+<p>3 启用 Privileged Intents</p>
+<p>在 Bot 页面开启两个权限：Message Content Intent 和 Server Members Intent。没有这两个权限 bot</p>
+<p>无法读取消息内容。</p>
+<p>4 邀请 Bot 到服务器</p>
+<p>在 OAuth2 → URL Generator 中勾选 bot scope 和所需权限，生成邀请链接，将 bot 添加到你的</p>
+<p>Discord 服务器。</p>
+<p>5 获取 ID 并配置</p>
+<p>在 Discord 中开启 Developer Mode（设置 → 高级 → 开发者模式），右键复制 Server ID 和你的 User</p>
+<p>ID。将这些信息写入 openclaw.yaml ，启动 Gateway。</p>
+<p>6 DM 配对</p>
+<p>在 Discord 中私聊你的 bot，输入配对码（1 小时有效）完成绑定。</p>
+<p>核心建议</p>
+<p>v2026.3.7 新增了 ACP 持久化频道绑定——Discord 频道和 Telegram 话题的绑定在 Gateway 重启后依然保</p>
+<p>持，不需要重新配对。</p>
+<p>WhatsApp</p>
+<p>⽇常通讯 · 10-15 分钟</p>
+<p>WhatsApp 是 OpenClaw 社区中最受欢迎的渠道。使用 Baileys 库通过 QR 码扫码连接，不需要 WhatsApp</p>
+<p>Business API。</p>
+<p>1 运行交互式向导</p>
+<p>安装 OpenClaw 后运行 openclaw onboard ，选择 WhatsApp 渠道。</p>
+<p>2 扫码配对</p>
+<p>终端会显示 QR 码。打开手机 WhatsApp → 设置 → 已连接设备 → 连接新设备，扫描 QR 码。</p>
+<p>3 开始使用</p>
+<p>配对完成后即可在 WhatsApp 中与 bot 对话。</p>
+<p>注意</p>
+<p>建议使用独立号码运行 WhatsApp，不要用主号。Gateway 运行时建议用 Node 而非 Bun（Bun 在 WhatsApp</p>
+<p>场景下不稳定）。Session 凭证要当密码管理，session 过期需要重新扫码。</p>
+<p>Slack</p>
+<p>企业/团队场景 · 25-40 分钟</p>
+<p>Slack 适合企业和团队内部使用。需要在 Slack API 平台创建 App 并配置多项权限。默认使用 Socket Mode</p>
+<p>（WebSocket），不需要公网 URL。</p>
+<p>1 创建 Slack App</p>
+<p>前往 api.slack.com/apps ，点击 Create New App → From scratch，选择目标 Workspace。</p>
+<p>2 启用 Socket Mode</p>
+<p>在 Socket Mode 页面启用，生成 App-Level Token（以 xapp- 开头），scope 选择</p>
+<p>connections:write 。</p>
+<p>3 配置 Bot Token Scopes</p>
+<p>在 OAuth & Permissions 中添加权限： chat:write 、channels:history 、channels:read 、</p>
+<p>im:write 、 im:history 、im:read 、users:read 、reactions:read 、reactions:write 、</p>
+<p>files:write 。</p>
+<p>4 安装并配置</p>
+<p>将 App 安装到 Workspace，获取 Bot User OAuth Token（以 xoxb- 开头）。将 Token 写入</p>
+<p>openclaw.yaml ，启动 Gateway。</p>
+<p>注意</p>
+<p>OpenClaw 可以在你的机器上执行真实命令，存在 prompt injection 风险。在 Slack 等多人环境中，建议不要</p>
+<p>在主力机器上运行 Gateway，使用 VM 或专用服务器。</p>
+<p>Signal</p>
+<p>端到端加密 · 20-30 分钟</p>
+<p>Signal 提供端到端加密通讯。OpenClaw 通过 Signal-CLI 工具连接 Signal 网络。</p>
+        </div>
+
+        <nav class="nav">
+            <a href="11-local-install.html" class="prev">← 本地安装</a>
+            <a href="13-cloud.html" class="next">国内云厂商一键部署 →</a>
+        </nav>
+    </div>
+
+    <footer>
+        <p>© 2026 泥巴猪的实验田 · OpenClaw 完整教程</p>
+    </footer>
+</body>
+</html>
