@@ -1,36 +1,47 @@
 <!doctype html>
 <html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>404 - 小泥巴的进化历程</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>泥巴猪的实验田</title>
     <script>
-      // GitHub Pages SPA 路由处理
+      // GitHub Pages SPA 路由处理 - 直接加载首页不重定向
       (function() {
         var path = location.pathname;
         var search = location.search;
 
-        // 如果访问的是 SPA 路由（非根路径），重定向到 index.html
-        // 让 JavaScript 处理路由
-        // 但排除静态资源路径（/source/, /assets/）
-        if (path !== '/' &&
-            !path.startsWith('/source/') &&
-            !path.startsWith('/assets/') &&
-            !path.endsWith('.html') &&
-            !path.endsWith('.js') &&
-            !path.endsWith('.css') &&
-            !path.endsWith('.png') &&
-            !path.endsWith('.jpg') &&
-            !path.endsWith('.gif') &&
-            !path.endsWith('.svg') &&
-            !path.endsWith('.md')) {
+        // 排除静态资源路径
+        var isStaticResource = path.startsWith('/source/') ||
+                              path.startsWith('/assets/') ||
+                              path.endsWith('.html') ||
+                              path.endsWith('.js') ||
+                              path.endsWith('.css') ||
+                              path.endsWith('.png') ||
+                              path.endsWith('.jpg') ||
+                              path.endsWith('.gif') ||
+                              path.endsWith('.svg') ||
+                              path.endsWith('.md');
+
+        if (!isStaticResource && path !== '/') {
+          // 保存原始路径到 sessionStorage
           sessionStorage.redirect = path + search;
-          location.href = '/' + search;
         }
       })();
     </script>
+    <script type="module" crossorigin src="./assets/index.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index.css">
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // SPA 路由恢复
+      (function() {
+        var redirect = sessionStorage.getItem('redirect');
+        if (redirect) {
+          sessionStorage.removeItem('redirect');
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
   </body>
 </html>
