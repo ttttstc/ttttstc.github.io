@@ -4,77 +4,209 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第13章 高级自动化工作流（多Skills组合/知识图谱） - OpenClaw 教程</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: #0d1117;
             color: #c9d1d9;
-            padding: 20px;
+            height: 100vh;
+            overflow: hidden;
         }
         .container {
-            max-width: 900px;
-            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Fullscreen mode */
+        body.fullscreen .toolbar {
+            display: none;
+        }
+        body.fullscreen .content-wrapper {
+            height: 100vh;
+            padding: 0;
+        }
+        body.fullscreen .exit-fullscreen {
+            display: flex;
+        }
+
+        .toolbar {
+            padding: 16px 24px;
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .toolbar-title {
+            font-size: 1rem;
+            color: #fff;
+            font-weight: 500;
+        }
+        .fullscreen-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(249, 115, 22, 0.2);
+            border: 1px solid rgba(249, 115, 22, 0.4);
+            color: #f97316;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        .fullscreen-btn:hover {
+            background: #f97316;
+            color: white;
+        }
+        .exit-fullscreen {
+            display: none;
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 1000;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(249, 115, 22, 0.9);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .exit-fullscreen:hover {
+            background: #ea580c;
+        }
+        .content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
         }
         .markdown-body {
+            max-width: 900px;
+            margin: 0 auto;
+            background: transparent;
+            color: #c9d1d9;
+        }
+        .markdown-body h1 {
+            color: #fff !important;
+            font-size: 2rem !important;
+            border-bottom: 1px solid #30363d !important;
+            padding-bottom: 15px !important;
+            margin-bottom: 30px !important;
+        }
+        .markdown-body h2 {
+            color: #f97316 !important;
+            font-size: 1.5rem !important;
+            margin-top: 40px !important;
+            margin-bottom: 20px !important;
+            padding-bottom: 10px !important;
+            border-bottom: 1px solid #30363d !important;
+        }
+        .markdown-body h3 {
+            color: #e6edf3 !important;
+            font-size: 1.25rem !important;
+            margin-top: 30px !important;
+            margin-bottom: 15px !important;
+        }
+        .markdown-body a {
+            color: #58a6ff !important;
+        }
+        .markdown-body code {
+            background: #1f2428 !important;
+            color: #f97316 !important;
+            padding: 2px 6px !important;
+            border-radius: 4px !important;
+        }
+        .markdown-body pre {
+            background: #1f2428 !important;
+            border: 1px solid #30363d !important;
+            border-radius: 8px !important;
+            padding: 16px !important;
+            overflow-x: auto !important;
+        }
+        .markdown-body pre code {
             background: transparent !important;
             color: #c9d1d9 !important;
         }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #58a6ff;
-            text-decoration: none;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        .article-content h1 {
-            color: #fff !important;
-            border-bottom: 1px solid #30363d !important;
-            padding-bottom: 15px !important;
-        }
-        .article-content h2 {
-            color: #f97316 !important;
-            border-bottom: 1px solid #30363d !important;
-            padding-bottom: 10px !important;
-        }
-        .article-content a {
-            color: #58a6ff !important;
-        }
-        .article-content code {
-            background: #1f2428 !important;
-            color: #f97316 !important;
-        }
-        .article-content pre {
-            background: #1f2428 !important;
-            border: 1px solid #30363d !important;
-        }
-        .article-content blockquote {
+        .markdown-body blockquote {
             border-left: 4px solid #f97316 !important;
             background: rgba(249, 115, 22, 0.1) !important;
+            padding: 15px 20px !important;
+            margin: 20px 0 !important;
         }
-        .article-content table th {
+        .markdown-body table {
+            border-collapse: collapse !important;
+            width: 100% !important;
+            margin: 20px 0 !important;
+        }
+        .markdown-body th {
             background: #1f2428 !important;
-            color: #f97316 !important;
-        }
-        .article-content table td {
             border: 1px solid #30363d !important;
-        }
-        .article-content img {
-            max-width: 100%;
-            border-radius: 8px;
-        }
-        .article-content strong {
+            padding: 12px 15px !important;
             color: #f97316 !important;
+            font-weight: 600 !important;
+            text-align: left !important;
+        }
+        .markdown-body td {
+            border: 1px solid #30363d !important;
+            padding: 10px 15px !important;
+        }
+        .markdown-body tr:hover td {
+            background: rgba(249, 115, 22, 0.05) !important;
+        }
+        .markdown-body img {
+            max-width: 100% !important;
+            border-radius: 8px !important;
+            margin: 20px 0 !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+        }
+        .markdown-body strong {
+            color: #f97316 !important;
+        }
+        .markdown-body p {
+            margin: 15px 0 !important;
+            line-height: 1.7 !important;
+        }
+        .markdown-body ul, .markdown-body ol {
+            padding-left: 25px !important;
+            margin: 15px 0 !important;
+        }
+        .markdown-body li {
+            margin: 8px 0 !important;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back-link">← 返回教程目录</a>
-        <div class="article-content markdown-body">
-            <h1 id="13-skills">第13章 高级自动化工作流（多Skills组合/知识图谱）</h1>
+        <div class="toolbar">
+            <span class="toolbar-title">第13章 高级自动化工作流（多Skills组合/知识图谱）</span>
+            <button class="fullscreen-btn" onclick="toggleFullscreen()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                </svg>
+                全屏
+            </button>
+        </div>
+        <button class="exit-fullscreen" onclick="toggleFullscreen()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>
+            </svg>
+            退出全屏
+        </button>
+        <div class="content-wrapper">
+            <div class="markdown-body">
+                <h1 id="13-skills">第13章 高级自动化工作流（多Skills组合/知识图谱）</h1>
 <blockquote>
 <p>💡 <strong>本章目标</strong>：学习高级自动化工作流、多Skills组合应用、个人知识图谱构建和效率优化策略，让你成为真正的超级个体。</p>
 </blockquote>
@@ -2723,7 +2855,29 @@ OpenCode开发<br />
 - ✅ Coding Agent工作流</p>
 <p><strong>下一章预告</strong>：第13章将学习创意应用探索，包括AI绘画工作流、视频脚本生成、多语言翻译、数据分析自动化和多Agent头脑风暴。</p>
 <p><strong>返回目录</strong>：<a href="../../README.md">README</a></p>
+            </div>
         </div>
     </div>
+    <script>
+        function toggleFullscreen() {
+            const body = document.body;
+            if (body.classList.contains('fullscreen')) {
+                body.classList.remove('fullscreen');
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            } else {
+                body.classList.add('fullscreen');
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                }
+            }
+        }
+        document.addEventListener('fullscreenchange', function() {
+            if (!document.fullscreenElement) {
+                document.body.classList.remove('fullscreen');
+            }
+        });
+    </script>
 </body>
 </html>
