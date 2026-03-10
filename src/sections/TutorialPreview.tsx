@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Clock, ArrowRight, Layers, Code, Shield, Rocket, Database, Globe, Cpu } from 'lucide-react';
+import { Clock, ArrowRight, Layers, Globe, Code, Shield, ChevronRight } from 'lucide-react';
 
 interface Tutorial {
   tag: string;
@@ -11,77 +11,18 @@ interface Tutorial {
 }
 
 const tutorials: Tutorial[] = [
-  {
-    tag: '入门',
-    tagIcon: Rocket,
-    title: 'OpenClaw 是什么',
-    description: '认识开源、自托管的 AI Agent 系统',
-    readTime: '5 min',
-    slug: 'chapters/01-openclaw是什么',
-  },
-  {
-    tag: '架构',
-    tagIcon: Layers,
-    title: '整体架构解析',
-    description: 'Gateway-Node-Channel 三层架构详解',
-    readTime: '8 min',
-    slug: 'chapters/05-整体架构',
-  },
-  {
-    tag: '集成',
-    tagIcon: Globe,
-    title: '国际平台接入',
-    description: 'Telegram/Discord/WhatsApp/Slack 配置指南',
-    readTime: '20 min',
-    slug: 'chapters/16-国际平台接入',
-  },
-  {
-    tag: '集成',
-    tagIcon: Globe,
-    title: '国际平台接入',
-    description: 'Telegram/Discord/WhatsApp/Slack 配置指南',
-    readTime: '20 min',
-    slug: 'chapters/16-国际平台接入',
-  },
-  {
-    tag: '集成',
-    tagIcon: Database,
-    title: '国内平台接入',
-    description: 'QQ/飞书/钉钉/企业微信配置指南',
-    readTime: '20 min',
-    slug: 'chapters/17-国内平台接入',
-  },
-  {
-    tag: '进阶',
-    tagIcon: Code,
-    title: '开发自定义技能',
-    description: '学习技能开发框架，扩展 AI 助手的能力边界',
-    readTime: '20 min',
-    slug: 'chapters/22-自建skill指南',
-  },
-  {
-    tag: '运维',
-    tagIcon: Shield,
-    title: '生产环境安全配置',
-    description: '沙箱隔离、权限控制、审计日志，构建安全的 AI 环境',
-    readTime: '15 min',
-    slug: 'chapters/23-skills安全与模型配置',
-  },
-  {
-    tag: '模型',
-    tagIcon: Cpu,
-    title: '模型配置指南',
-    description: '国际/国产/本地模型配置全攻略',
-    readTime: '15 min',
-    slug: 'chapters/23-skills安全与模型配置',
-  },
+  { tag: '入门', tagIcon: Layers, title: 'OpenClaw是什么', description: '认识开源、自托管的AI Agent系统', readTime: '5 min', slug: '01-openclaw-intro' },
+  { tag: '架构', tagIcon: Layers, title: '整体架构', description: 'Gateway-Node-Channel三层架构详解', readTime: '8 min', slug: '05-architecture' },
+  { tag: '部署', tagIcon: Globe, title: '部署方式总览', description: '本地/Docker/云厂商一键部署对比', readTime: '6 min', slug: '10-deployment' },
+  { tag: '集成', tagIcon: Globe, title: '国际平台接入', description: 'Telegram/Discord/WhatsApp/Slack配置指南', readTime: '20 min', slug: '16-intl-channels' },
+  { tag: '集成', tagIcon: Globe, title: '国内平台接入', description: 'QQ/飞书/钉钉/企业微信配置指南', readTime: '20 min', slug: '17-cn-channels' },
+  { tag: '进阶', tagIcon: Code, title: 'Skills工作原理', description: '三层优先级与加载机制详解', readTime: '8 min', slug: '19-skills原理' },
+  { tag: '运维', tagIcon: Shield, title: 'Skills安全', description: '安全模型与模型配置指南', readTime: '15 min', slug: '23-skills-security' },
 ];
 
 const TutorialPreview = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [scrollPosition, setScrollPosition] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -100,21 +41,6 @@ const TutorialPreview = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleScroll = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 400;
-      const newPosition = direction === 'left' 
-        ? Math.max(0, scrollPosition - scrollAmount)
-        : scrollPosition + scrollAmount;
-      
-      scrollContainerRef.current.scrollTo({
-        left: newPosition,
-        behavior: 'smooth',
-      });
-      setScrollPosition(newPosition);
-    }
-  };
-
   return (
     <section
       id="tutorials"
@@ -130,108 +56,78 @@ const TutorialPreview = () => {
               搭建教程
             </h2>
             <p className="text-white/60 text-lg max-w-xl">
-              保姆级教程，从零开始搭建你的 AI 助手
+              28章完整教程，从零开始搭建你的AI助手
             </p>
           </div>
 
-          {/* Navigation Arrows */}
-          <div className="flex gap-3 mt-6 md:mt-0">
-            <button
-              onClick={() => handleScroll('left')}
-              className="w-10 h-10 rounded-full bg-lobster-muted border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-white/30 transition-all"
-            >
-              <ArrowRight className="w-5 h-5 rotate-180" />
-            </button>
-            <button
-              onClick={() => handleScroll('right')}
-              className="w-10 h-10 rounded-full bg-lobster-muted border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-white/30 transition-all"
-            >
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </div>
+          {/* More Button */}
+          <button
+            onClick={() => {
+              window.history.pushState({}, '', '/lobster/tutorial');
+              window.dispatchEvent(new PopStateEvent('popstate'));
+            }}
+            className="mt-6 md:mt-0 flex items-center gap-2 px-6 py-3 bg-lobster-orange rounded-full text-white hover:bg-lobster-orange/80 transition-all"
+          >
+            <span>查看全部28章</span>
+            <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
 
-      {/* Horizontal Scroll Container */}
-      <div
-        ref={scrollContainerRef}
-        className="flex gap-6 overflow-x-auto pb-4 px-4 sm:px-6 lg:px-8 scrollbar-hide"
-        style={{
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-        }}
-      >
-        {/* Spacer for container alignment */}
-        <div className="flex-shrink-0 w-0 lg:w-[calc((100vw-80rem)/2)]" />
+      {/* Tutorial Cards Grid */}
+      <div className="container-custom">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {tutorials.map((tutorial, index) => {
+            const TagIcon = tutorial.tagIcon;
 
-        {tutorials.map((tutorial, index) => {
-          const TagIcon = tutorial.tagIcon;
-          
-          return (
-            <div
-              key={tutorial.title}
-              className={`flex-shrink-0 w-[340px] group transition-all duration-600 ${
-                isVisible
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-8'
-              }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
-            >
-              <div className="card-dark h-full flex flex-col">
-                {/* Tag */}
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-lobster-orange bg-lobster-orange/10 rounded-full">
-                    <TagIcon className="w-3 h-3" />
-                    {tutorial.tag}
-                  </span>
-                  <span className="flex items-center gap-1 text-xs text-white/40">
-                    <Clock className="w-3 h-3" />
-                    {tutorial.readTime}
-                  </span>
-                </div>
+            return (
+              <div
+                key={tutorial.title}
+                className={`group transition-all duration-600 ${
+                  isVisible
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-8'
+                }`}
+                style={{ transitionDelay: `${index * 100}ms` }}
+              >
+                <div className="card-dark h-full flex flex-col">
+                  {/* Tag */}
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-lobster-orange bg-lobster-orange/10 rounded-full">
+                      <TagIcon className="w-3 h-3" />
+                      {tutorial.tag}
+                    </span>
+                    <span className="flex items-center gap-1 text-xs text-white/40">
+                      <Clock className="w-3 h-3" />
+                      {tutorial.readTime}
+                    </span>
+                  </div>
 
-                {/* Content */}
-                <h3 className="text-xl font-semibold text-white mb-3 group-hover:text-lobster-orange transition-colors">
-                  {tutorial.title}
-                </h3>
-                <p className="text-white/60 text-sm leading-relaxed flex-1">
-                  {tutorial.description}
-                </p>
+                  {/* Content */}
+                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-lobster-orange transition-colors">
+                    {tutorial.title}
+                  </h3>
+                  <p className="text-white/60 text-sm leading-relaxed flex-1">
+                    {tutorial.description}
+                  </p>
 
-                {/* Read More */}
-                <div className="mt-6 pt-4 border-t border-white/10">
-                  <button
-                    onClick={() => {
-                      // 跳转到教程页面
-                      window.history.pushState({}, '', '/lobster/tutorial');
-                      window.dispatchEvent(new PopStateEvent('popstate'));
-                    }}
-                    className="flex items-center gap-2 text-sm text-lobster-orange hover:gap-3 transition-all cursor-pointer"
-                  >
-                    阅读教程
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                  {/* Read More */}
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    <button
+                      onClick={() => {
+                        window.history.pushState({}, '', '/lobster/tutorial');
+                        window.dispatchEvent(new PopStateEvent('popstate'));
+                      }}
+                      className="flex items-center gap-2 text-sm text-lobster-orange hover:gap-3 transition-all cursor-pointer"
+                    >
+                      阅读教程
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-
-        {/* Spacer for container alignment */}
-        <div className="flex-shrink-0 w-4 lg:w-[calc((100vw-80rem)/2)]" />
-      </div>
-
-      {/* Progress Indicator */}
-      <div className="container-custom mt-8">
-        <div className="flex justify-center gap-2">
-          {tutorials.map((_, index) => (
-            <div
-              key={index}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === 0 ? 'bg-lobster-orange w-6' : 'bg-white/20'
-              }`}
-            />
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

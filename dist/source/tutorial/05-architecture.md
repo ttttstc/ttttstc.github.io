@@ -1,0 +1,127 @@
+---
+title: 整体架构
+description: OpenClaw完整教程 - 整体架构
+---
+
+# 整体架构
+
+## 07 Agent 工作区
+
+Agent Workspace
+
+每个 Agent 在文件系统中有一个独立的工作区目录，所有配置、记忆、技能都以纯文本文件的形式存
+
+在。
+
+目录结构
+
+workspace/
+
+├── AGENTS.md # Agent 定义（身份、⾏为规则）
+
+├── SOUL.md # 灵魂/⼈格指令（不可变内核）
+
+├── USER.md # ⽤户信息与偏好
+
+├── MEMORY.md # ⻓期记忆存储
+
+├── HEARTBEAT.md # ⼼跳配置（定时任务）
+
+├── memory/ # ⽇志⽬录
+
+│ └── YYYY-MM-DD.md # 每⽇ append-only ⽇志
+
+├── skills/ # 本地技能⽬录
+
+└── sessions.json # 会话存储
+
+核心文件说明
+
+文件 用途 加载时机
+
+AGENTS.md Agent 的身份定义、行为边界、回复风格。相当于 system prompt 的文 每次 Session 启动
+
+件化版本 时
+
+SOUL.md 不可变的人格内核。定义 Agent「是谁」，不应被后续对话修改 每次 Session 启动
+
+时
+
+USER.md 关于用户的结构化信息：称呼、偏好、关系 Main session 启动
+
+时
+
+MEMORY.md 长期记忆，Agent 在对话中主动写入的持久化事实和决策 仅 main session
+
+HEARTBEAT.md 定义定时任务和主动行为（如每30分钟检查一次任务状态） Gateway 启动时
+
+memory/ Daily Logs 目录，按日期自动创建，append-only 读取今日+昨日日志
+
+skills/ 工作区级技能，优先级最高（高于全局和内置技能） Session 启动时扫
+
+描
+
+sessions.json 会话元数据存储，记录各 session 的状态和历史 按需读取
+
+核心建议
+
+所有配置文件都是纯 Markdown 或 JSON。你可以直接用文本编辑器修改它们，不需要任何专用工具。这是
+
+OpenClaw 哲学的体现：一切皆文本。
+
+## 08 Session 与用户识别
+
+Sessions & Authentication
+
+OpenClaw 通过 DM 配对、白名单和群组规则三层机制识别用户身份，并在 Session 层面隔离不同来
+
+源的上下文。
+
+DM Pairing Policy
+
+默认认证策略
+
+当一个未知发送者通过任意渠道向你的 Agent 发送私聊消息时：
+
+1 生成配对码
+
+Agent 回复一个一次性配对码（6位数字）
+
+2 等待验证
+
+消息不会被处理，Agent 进入等待状态。所有后续消息也会被挂起
+
+3 主人批准
+
+你在已配对的渠道中输入配对码批准该用户，或者直接拒绝
+
+注意
+
+DM Pairing 是防止陌生人滥用的关键机制。关闭它意味着任何知道你 WhatsApp/Telegram 号码的人都可以无
+
+限制地使用你的 Agent（和你的 API 额度）。
+
+白名单机制
+
+allowFrom
+
+在 Agent 配置中， allowFrom 字段可以预先授权特定用户，跳过配对流程：
+
+# AGENTS.md 中的配置示例
+
+allowFrom:
+
+- telegram:123456789
+
+- whatsapp:+8613800138000
+
+- discord:user#1234
+
+白名单中的用户发消息时直接进入对话，无需配对。
+
+群组规则
+
+requireMention
+
+在群聊场景下，Agent 默认使用 requireMention 策略：
+
