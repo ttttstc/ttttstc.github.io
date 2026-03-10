@@ -1,41 +1,6 @@
-import { useState, useEffect } from 'react';
-import { Sparkles, Monitor, ExternalLink, AlertCircle } from 'lucide-react';
+import { Sparkles, Monitor, ExternalLink } from 'lucide-react';
 
 const WorkspacePage = () => {
-  const [iframeError, setIframeError] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  // 检测 iframe 是否被阻止嵌入
-  useEffect(() => {
-    const checkIframe = () => {
-      const iframe = document.querySelector('iframe[title="小泥巴工作室"]') as HTMLIFrameElement;
-      if (iframe) {
-        // 检查 iframe 是否为空或加载失败
-        try {
-          // 如果 iframe 内容为空或者无法访问，认为被阻止
-          const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-          if (!iframeDoc || iframeDoc.body.innerHTML === '' || iframeDoc.body.innerText === '') {
-            // 给一点时间让 iframe 加载
-            setTimeout(() => {
-              const recheckIframe = document.querySelector('iframe[title="小泥巴工作室"]') as HTMLIFrameElement;
-              const recheckDoc = recheckIframe?.contentDocument || recheckIframe?.contentWindow?.document;
-              if (!recheckDoc || recheckDoc.body.innerHTML === '' || recheckDoc.body.innerText === '') {
-                setIframeError(true);
-              }
-            }, 2000);
-          }
-        } catch (e) {
-          // 跨域阻止 - iframe 被阻止嵌入
-          setIframeError(true);
-        }
-        setLoading(false);
-      }
-    };
-
-    // 延迟检查，确保 iframe 已渲染
-    setTimeout(checkIframe, 100);
-  }, []);
-
   return (
     <div className="min-h-screen bg-lobster-dark text-white pt-24 pb-16">
       <div className="container-custom">
@@ -62,68 +27,15 @@ const WorkspacePage = () => {
           </a>
         </div>
 
-        {/* iframe embed - with fallback message */}
-        <div className="bg-white/5 rounded-2xl border border-white/10 overflow-hidden relative" style={{ height: 'calc(100vh - 220px)', minHeight: '1100px' }}>
-          {iframeError ? (
-            <div className="absolute inset-0 flex items-center justify-center bg-lobster-dark">
-              <div className="text-center max-w-md p-8">
-                <AlertCircle className="w-16 h-16 text-lobster-orange mx-auto mb-6" />
-                <h3 className="text-xl font-semibold text-white mb-4">无法嵌入展示</h3>
-                <p className="text-white/60 mb-6">
-                  该网站限制了iframe嵌入，请点击下方按钮在新窗口中打开
-                </p>
-                <a
-                  href="https://ninini.cc.cd"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-lobster-orange text-white rounded-lg hover:bg-lobster-orange/80 transition-colors"
-                >
-                  <ExternalLink className="w-5 h-5" />
-                  <span>在新窗口打开工作室</span>
-                </a>
-              </div>
-            </div>
-          ) : (
-            <>
-              {loading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-lobster-dark/80 z-10">
-                  <div className="text-center">
-                    <div className="w-8 h-8 border-2 border-lobster-orange border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-white/60">加载中...</p>
-                  </div>
-                </div>
-              )}
-              <iframe
-                src="https://ninini.cc.cd"
-                title="小泥巴工作室"
-                className="w-full h-full border-0"
-                allow="accelerometer; ambient-light-sensor; autoplay; camera; document-domain; encrypted-media; fullscreen; geolocation; gyroscope; layout-shift; magnetometer; microphone; midi; otp-autocomplete; payment; picture-in-picture; private-network-connection; sync-xhr; usb; vr; wake-lock; xr-spatial-tracking"
-                sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
-                onLoad={() => {
-                  setLoading(false);
-                  // 尝试检测是否真的加载成功
-                  setTimeout(() => {
-                    const iframe = document.querySelector('iframe[title="小泥巴工作室"]') as HTMLIFrameElement;
-                    if (iframe) {
-                      try {
-                        const doc = iframe.contentDocument || iframe.contentWindow?.document;
-                        if (!doc || doc.body.innerText.trim() === '') {
-                          setIframeError(true);
-                        }
-                      } catch (e) {
-                        // 跨域阻止
-                        setIframeError(true);
-                      }
-                    }
-                  }, 1500);
-                }}
-                onError={() => {
-                  setIframeError(true);
-                  setLoading(false);
-                }}
-              />
-            </>
-          )}
+        {/* iframe embed */}
+        <div className="bg-white/5 rounded-2xl border border-white/10 overflow-hidden" style={{ height: 'calc(100vh - 220px)', minHeight: '1100px' }}>
+          <iframe
+            src="https://ninini.cc.cd"
+            title="小泥巴工作室"
+            className="w-full h-full border-0"
+            allow="accelerometer; ambient-light-sensor; autoplay; camera; document-domain; encrypted-media; fullscreen; geolocation; gyroscope; layout-shift; magnetometer; microphone; midi; otp-autocomplete; payment; picture-in-picture; private-network-connection; sync-xhr; usb; vr; wake-lock; xr-spatial-tracking"
+            sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+          />
         </div>
 
         {/* Status info */}
