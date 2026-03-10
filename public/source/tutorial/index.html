@@ -3,194 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenClaw完整教程 - 泥巴猪的实验田</title>
+    <title>教程目录 - OpenClaw橙皮书</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #e4e4e7;
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 60px 20px;
         }
-        .container { max-width: 900px; margin: 0 auto; }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
         h1 {
-            font-size: 2.5em; color: #fff; text-align: center; margin-bottom: 16px;
+            color: #fff;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
         }
-        .subtitle { color: #a1a1aa; text-align: center; margin-bottom: 40px; font-size: 1.1em; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
+        h1 span {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            color: #71717a;
+            font-size: 1.1rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .chapter-link {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
-            padding: 24px;
-            transition: all 0.3s;
             text-decoration: none;
-            display: block;
+            transition: all 0.3s ease;
         }
-        .card:hover {
-            background: rgba(251, 146, 60, 0.1);
-            border-color: #fb923c;
-            transform: translateY(-4px);
+        .chapter-link:hover {
+            background: rgba(249, 115, 22, 0.1);
+            border-color: rgba(249, 115, 22, 0.3);
+            transform: translateY(-2px);
         }
-        .card h3 { color: #fff; font-size: 1.1em; margin-bottom: 8px; }
-        .card p { color: #a1a1aa; font-size: 0.9em; }
-        .card .num {
-            display: inline-block;
-            background: rgba(251, 146, 60, 0.2);
-            color: #fb923c;
-            padding: 2px 10px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            margin-bottom: 12px;
+        .num {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            border-radius: 10px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .title {
+            color: #e4e4e7;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>OpenClaw 完整教程</h1>
-        <p class="subtitle">从入门到精通，28章完整教程体系</p>
+        <div class="header">
+            <h1>OpenClaw <span>橙皮书</span></h1>
+            <p class="subtitle">28章完整教程，从入门到精通</p>
+        </div>
         <div class="grid">
-            <a href="01-openclaw-intro.html" class="card">
-                <span class="num">第1章</span>
-                <h3>OpenClaw是什么</h3>
-                <p>认识开源、自托管的AI Agent系统</p>
-            </a>
-            <a href="02-history.html" class="card">
-                <span class="num">第2章</span>
-                <h3>发展简史</h3>
-                <p>从0到27.9万Stars的传奇增长历程</p>
-            </a>
-            <a href="03-creator.html" class="card">
-                <span class="num">第3章</span>
-                <h3>创始人故事</h3>
-                <p>Peter Steinberger的故事</p>
-            </a>
-            <a href="04-why-popular.html" class="card">
-                <span class="num">第4章</span>
-                <h3>为什么这么火</h3>
-                <p>增长数据与养虾文化现象</p>
-            </a>
-            <a href="05-architecture.html" class="card">
-                <span class="num">第5章</span>
-                <h3>整体架构</h3>
-                <p>Gateway-Node-Channel三层架构</p>
-            </a>
-            <a href="06-memory.html" class="card">
-                <span class="num">第6章</span>
-                <h3>记忆系统</h3>
-                <p>四层记忆架构详解</p>
-            </a>
-            <a href="07-workspace.html" class="card">
-                <span class="num">第7章</span>
-                <h3>Agent工作区</h3>
-                <p>文件系统目录结构</p>
-            </a>
-            <a href="08-sessions.html" class="card">
-                <span class="num">第8章</span>
-                <h3>Session与用户识别</h3>
-                <p>DM配对与隔离机制</p>
-            </a>
-            <a href="09-philosophy.html" class="card">
-                <span class="num">第9章</span>
-                <h3>设计哲学</h3>
-                <p>Unix哲学与极简设计</p>
-            </a>
-            <a href="10-deployment.html" class="card">
-                <span class="num">第10章</span>
-                <h3>部署方式总览</h3>
-                <p>本地/Docker/云厂商对比</p>
-            </a>
-            <a href="11-local-install.html" class="card">
-                <span class="num">第11章</span>
-                <h3>本地安装</h3>
-                <p>npm/pnpm安装指南</p>
-            </a>
-            <a href="12-docker.html" class="card">
-                <span class="num">第12章</span>
-                <h3>Docker部署</h3>
-                <p>docker-compose配置</p>
-            </a>
-            <a href="13-cloud.html" class="card">
-                <span class="num">第13章</span>
-                <h3>国内云厂商一键部署</h3>
-                <p>阿里云/腾讯云/百度云</p>
-            </a>
-            <a href="14-config.html" class="card">
-                <span class="num">第14章</span>
-                <h3>首次配置</h3>
-                <p>Gateway认证与API Key</p>
-            </a>
-            <a href="15-channels.html" class="card">
-                <span class="num">第15章</span>
-                <h3>渠道概览</h3>
-                <p>20+消息平台一览</p>
-            </a>
-            <a href="16-intl-channels.html" class="card">
-                <span class="num">第16章</span>
-                <h3>国际平台接入</h3>
-                <p>Telegram/Discord/WhatsApp</p>
-            </a>
-            <a href="17-cn-channels.html" class="card">
-                <span class="num">第17章</span>
-                <h3>国内平台接入</h3>
-                <p>QQ/飞书/钉钉/企微</p>
-            </a>
-            <a href="18-remote.html" class="card">
-                <span class="num">第18章</span>
-                <h3>远程访问</h3>
-                <p>Tailscale/SSH/Web UI</p>
-            </a>
-            <a href="19-skills.html" class="card">
-                <span class="num">第19章</span>
-                <h3>Skills工作原理</h3>
-                <p>三层优先级与加载机制</p>
-            </a>
-            <a href="20-clawhub.html" class="card">
-                <span class="num">第20章</span>
-                <h3>ClawHub技能市场</h3>
-                <p>13729个Skills分析</p>
-            </a>
-            <a href="21-top-skills.html" class="card">
-                <span class="num">第21章</span>
-                <h3>热门Skills推荐</h3>
-                <p>Top10必装技能</p>
-            </a>
-            <a href="22-create-skill.html" class="card">
-                <span class="num">第22章</span>
-                <h3>自建Skill指南</h3>
-                <p>开发自定义技能</p>
-            </a>
-            <a href="23-skills-security.html" class="card">
-                <span class="num">第23章</span>
-                <h3>Skills安全</h3>
-                <p>安全模型与配置</p>
-            </a>
-            <a href="24-providers.html" class="card">
-                <span class="num">第24章</span>
-                <h3>模型提供商总览</h3>
-                <p>Anthropic/OpenAI/Google</p>
-            </a>
-            <a href="25-intl-models.html" class="card">
-                <span class="num">第25章</span>
-                <h3>国际模型配置</h3>
-                <p>Claude/GPT/Gemini</p>
-            </a>
-            <a href="26-cn-models.html" class="card">
-                <span class="num">第26章</span>
-                <h3>国产模型配置</h3>
-                <p>通义/DeepSeek/豆包</p>
-            </a>
-            <a href="27-local-models.html" class="card">
-                <span class="num">第27章</span>
-                <h3>本地模型</h3>
-                <p>Ollama部署</p>
-            </a>
-            <a href="28-security-model.html" class="card">
-                <span class="num">第28章</span>
-                <h3>安全模型</h3>
-                <p>安全架构与最佳实践</p>
-            </a>
+            <a href="01-OpenClaw是什么.html" class="chapter-link">
+            <span class="num">1</span>
+            <span class="title">OpenClaw是什么</span>
+        </a>
+<a href="02-发展简史.html" class="chapter-link">
+            <span class="num">2</span>
+            <span class="title">发展简史</span>
+        </a>
+<a href="03-创始人故事.html" class="chapter-link">
+            <span class="num">3</span>
+            <span class="title">创始人故事</span>
+        </a>
+<a href="04-为什么这么火.html" class="chapter-link">
+            <span class="num">4</span>
+            <span class="title">为什么这么火</span>
+        </a>
+<a href="05-整体架构.html" class="chapter-link">
+            <span class="num">5</span>
+            <span class="title">整体架构</span>
+        </a>
+<a href="06-记忆系统.html" class="chapter-link">
+            <span class="num">6</span>
+            <span class="title">记忆系统</span>
+        </a>
+<a href="07-Agent工作区.html" class="chapter-link">
+            <span class="num">7</span>
+            <span class="title">Agent工作区</span>
+        </a>
+<a href="08-Session与用户识别.html" class="chapter-link">
+            <span class="num">8</span>
+            <span class="title">Session与用户识别</span>
+        </a>
+<a href="09-设计哲学.html" class="chapter-link">
+            <span class="num">9</span>
+            <span class="title">设计哲学</span>
+        </a>
+<a href="10-部署方式总览.html" class="chapter-link">
+            <span class="num">10</span>
+            <span class="title">部署方式总览</span>
+        </a>
+<a href="11-本地安装.html" class="chapter-link">
+            <span class="num">11</span>
+            <span class="title">本地安装</span>
+        </a>
+<a href="12-Docker部署.html" class="chapter-link">
+            <span class="num">12</span>
+            <span class="title">Docker部署</span>
+        </a>
+<a href="13-国内云厂商一键部署.html" class="chapter-link">
+            <span class="num">13</span>
+            <span class="title">国内云厂商一键部署</span>
+        </a>
+<a href="14-首次配置.html" class="chapter-link">
+            <span class="num">14</span>
+            <span class="title">首次配置</span>
+        </a>
+<a href="15-渠道概览.html" class="chapter-link">
+            <span class="num">15</span>
+            <span class="title">渠道概览</span>
+        </a>
+<a href="16-国际平台接入.html" class="chapter-link">
+            <span class="num">16</span>
+            <span class="title">国际平台接入</span>
+        </a>
+<a href="17-国内平台接入.html" class="chapter-link">
+            <span class="num">17</span>
+            <span class="title">国内平台接入</span>
+        </a>
+<a href="18-远程访问.html" class="chapter-link">
+            <span class="num">18</span>
+            <span class="title">远程访问</span>
+        </a>
+<a href="19-Skills工作原理.html" class="chapter-link">
+            <span class="num">19</span>
+            <span class="title">Skills工作原理</span>
+        </a>
+<a href="20-ClawHub技能市场.html" class="chapter-link">
+            <span class="num">20</span>
+            <span class="title">ClawHub技能市场</span>
+        </a>
+<a href="21-热门Skills推荐.html" class="chapter-link">
+            <span class="num">21</span>
+            <span class="title">热门Skills推荐</span>
+        </a>
+<a href="22-自建Skill指南.html" class="chapter-link">
+            <span class="num">22</span>
+            <span class="title">自建Skill指南</span>
+        </a>
+<a href="23-Skills安全.html" class="chapter-link">
+            <span class="num">23</span>
+            <span class="title">Skills安全</span>
+        </a>
+<a href="24-模型提供商总览.html" class="chapter-link">
+            <span class="num">24</span>
+            <span class="title">模型提供商总览</span>
+        </a>
+<a href="25-国际模型配置.html" class="chapter-link">
+            <span class="num">25</span>
+            <span class="title">国际模型配置</span>
+        </a>
+<a href="26-国产模型配置.html" class="chapter-link">
+            <span class="num">26</span>
+            <span class="title">国产模型配置</span>
+        </a>
+<a href="27-本地模型.html" class="chapter-link">
+            <span class="num">27</span>
+            <span class="title">本地模型</span>
+        </a>
+<a href="28-安全模型.html" class="chapter-link">
+            <span class="num">28</span>
+            <span class="title">安全模型</span>
+        </a>
         </div>
     </div>
 </body>

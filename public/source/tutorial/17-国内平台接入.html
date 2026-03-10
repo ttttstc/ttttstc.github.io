@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>国内平台接入 - OpenClaw教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e7;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(249, 115, 22, 0.3);
+        }
+        .chapter-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .content {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .content h2 {
+            color: #f97316;
+            font-size: 1.5rem;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+        }
+        .content p {
+            margin-bottom: 16px;
+            color: #d4d4d8;
+            font-size: 1rem;
+        }
+        .content li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #d4d4d8;
+        }
+        .content li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #f97316;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .tutorial-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .tutorial-table th {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .tutorial-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: #d4d4d8;
+        }
+        .tutorial-table tr:hover td {
+            background: rgba(249, 115, 22, 0.05);
+        }
+        .tutorial-table tr:last-child td {
+            border-bottom: none;
+        }
+        .highlight {
+            background: rgba(249, 115, 22, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #fb923c;
+        }
+        .code {
+            background: #0f172a;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .nav a:hover {
+            background: #f97316;
+            color: white;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .content { padding: 24px; }
+            .tutorial-table { font-size: 0.85rem; }
+            .tutorial-table th, .tutorial-table td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="chapter-num">第 17 章</span>
+            <h1>国内平台接入</h1>
+        </div>
+        <div class="content">
+            
+
+<p>总注册技能	13,729</p>
+<p>精选技能（awesome列表筛选）	5,494</p>
+<p>被过滤技能（垃圾/重复/恶意）	6,940</p>
+<p>被标记为恶意的	800+（约20%在高峰期）</p>
+<p>安装与搜索</p>
+<p>ClawHub支持向量搜索， 也就是说你可以用自然语言描述需求来搜索Skill， 不必精确匹配名称。</p>
+<p>技能分类Top 10</p>
+<p>编码相关的技能占了绝大多数（前两名合计2,160个） ， 反映出OpenClaw用户中开发者占比极高。 但也意味着这两个分类里重复和低质量Skill最多。</p>
+<p>热门Skills推荐</p>
+<p>Top Skills</p>
+<p>55个内置技能开箱即用， 加上社区精选的必装Top 10。</p>
+<p>必装Top 10</p>
+<p>内置55个技能分类一览</p>
+<p>通讯与社交</p>
+<p>（iMessage） bluebubbles wacli （WhatsApp CLI）</p>
+<p>笔记与知识管理</p>
+<p>开发工具</p>
+<p>媒体处理</p>
+<p>AI与模型</p>
+<p>搜索与浏览</p>
+<p>（Google搜索）</p>
+<p>系统工具</p>
+<p>（邮件CLI）</p>
+<p>智能家居</p>
+<p>（Philips Hue灯光控制）</p>
+<p>生态工具</p>
+<p>（技能商店客户端）</p>
+<p>（技能创建器）</p>
+<p>（MCP桥接）</p>
+<p>自建Skill指南</p>
+<p>Create Your Own Skill</p>
+<p>一个Skill的最小单位就是一个目录加一个 SKILL.md 文件。</p>
+<p>目录结构</p>
+<p>唯一必须的文件是</p>
+<p>， 其他都是可选的。 最简单的Skill只需要一个SKILL.md就能工作。</p>
+<p>SKILL.md格式示例</p>
+<p>安装方式</p>
+<p>分享到ClawHub</p>
+<p>准备Skill</p>
+<p>确保SKILL.md格式正确， 包含清晰的Description和Instructions。</p>
+<p>登录ClawHub</p>
+<p>发布后其他用户可以通过</p>
+<p>扫描， 但不保证完全可靠（见下一节） 。</p>
+<p>安装。 ClawHub会自动进行基础安全</p>
+<p>Skills安全</p>
+<p>Skill Security</p>
+<p>ClawHavoc供应链攻击是OpenClaw历史上最严重的安全事件之一。 每个「养虾人」 都应该了解。</p>
+<p>ClawHavoc供应链攻击</p>
+<p>2026年1月底到2月初， OpenClaw社区遭遇了一场大规模供应链攻击， 被安全研究机构Koi Security命名为</p>
+<p>「ClawHavoc」。</p>
+<p>时间线</p>
+<p>1月27日	首个恶意Skill出现在ClawHub上， 伪装成专业工具</p>
+<p>1月28-30日	攻击者快速上传大量恶意Skill， 利用ClawHub缺乏审查机制的漏洞</p>
+<p>1月31日	攻击全面爆发， 多名用户报告异常行为</p>
+<p>2月1日	Koi Security正式命名该攻击为「ClawHavoc」</p>
+<p>2月上旬	社区展开大规模审计和清理</p>
+<p>攻击规模</p>
+<p>当时ClawHub技能总数	约2,857个</p>
+<p>初步确认恶意Skills	341个（约12%）</p>
+<p>后续扫描发现的恶意Skills	800+（约20%）</p>
+<p>可追溯到同一协调行动的	335个</p>
+<p>受影响设备	135,000+</p>
+<p>攻击手法</p>
+<p>攻击者的手法相当精密：</p>
+<p>上传看似专业的Skill， 名称和描述都很正常（如「advanced-code-review」「smart-scheduler」）</p>
+<p>诱导用户安装后， Skill会建议安装一个「helper agent」 来增强功能</p>
+<p>实际植入的是Atomic macOS Stealer（AMOS） 信息窃取木马</p>
+<p>更危险的是： 攻击专门针对OpenClaw的持久记忆文件（指令</p>
+<p>） ， 篡改Agent的长期行为</p>
+<p>篡改SOUL.md意味着你的Agent被「洗脑」 了。 它的核心行为准则被改写， 可能在后续所有交互中执行恶意操作， 而你完全不知情。</p>
+<p>安全建议</p>
+<p>安装前审查源码</p>
+<p>永远不要盲目安装ClawHub上的Skill。 去GitHub查看源码， 确认SKILL.md中没有可疑的指令。 特别注意任何要求额外安装「helper」 或「agent」 的内容。</p>
+<p>使用SecureClaw扫描</p>
+<p>社区推出了开源安全工具SecureClaw， 可以扫描已安装的Skills检查恶意内容。 虽然不能100%防护， 但能拦住已知的攻击模式。</p>
+<p>优先使用精选列表</p>
+<p>参考awesome-openclaw-skills 项目（31.4K Stars） 的精选列表， 而不是直接在ClawHub上随意搜索。精选列表已经过滤掉了大量垃圾和恶意Skill。</p>
+<p>定期检查SOUL.md和MEMORY.md</p>
+<p>养成习惯， 定期检查这两个文件有没有被异常修改。 如果发现不认识的内容， 立即回滚并排查所有已安装的Skill。</p>
+        </div>
+        <div class="nav">
+            <a href="16-国际平台接入.html">← 上一章</a>
+            <a href="18-远程访问.html">下一章 →</a>
+        </div>
+    </div>
+</body>
+</html>

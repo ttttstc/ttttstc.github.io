@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>本地安装 - OpenClaw教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e7;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(249, 115, 22, 0.3);
+        }
+        .chapter-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .content {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .content h2 {
+            color: #f97316;
+            font-size: 1.5rem;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+        }
+        .content p {
+            margin-bottom: 16px;
+            color: #d4d4d8;
+            font-size: 1rem;
+        }
+        .content li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #d4d4d8;
+        }
+        .content li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #f97316;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .tutorial-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .tutorial-table th {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .tutorial-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: #d4d4d8;
+        }
+        .tutorial-table tr:hover td {
+            background: rgba(249, 115, 22, 0.05);
+        }
+        .tutorial-table tr:last-child td {
+            border-bottom: none;
+        }
+        .highlight {
+            background: rgba(249, 115, 22, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #fb923c;
+        }
+        .code {
+            background: #0f172a;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .nav a:hover {
+            background: #f97316;
+            color: white;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .content { padding: 24px; }
+            .tutorial-table { font-size: 0.85rem; }
+            .tutorial-table th, .tutorial-table td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="chapter-num">第 11 章</span>
+            <h1>本地安装</h1>
+        </div>
+        <div class="content">
+            <p>国内云厂商一键部署</p>
+<p>Cloud Deployment in China</p>
+<p>这是大多数国内用户的首选方案。 所有主流云厂商都已支持 OpenClaw 一键部署， 差异主要在价格策略和 IM 生态集成上。</p>
+<p>阿里云 Alibaba Cloud</p>
+<p>国内社区资源最丰富的平台， 镜像预装， 开箱即用。</p>
+<p>配置	2vCPU + 2GiB 内存 + 40GiB ESSD 系统盘</p>
+<p>系统	Alibaba Cloud Linux 3.2104 LTS 64位， 预装 OpenClaw 镜像价格	限时秒杀 9.9元/月， 包年常规优惠低至 68元/年</p>
+<p>模型	默认内置 qwen3.5-plus； 百炼 Coding Plan Lite 首月 10元（18,000次/月）</p>
+<p>IM 支持	钉钉、 飞书等（通过 openclaw-china 插件）</p>
+<p>一键购买</p>
+<p>进入活动页， 购买预装 OpenClaw 镜像的轻量应用服务器。 镜像版本 OpenClaw 2026.2.26。</p>
+<p>放通端口 + 配置</p>
+<p>在安全组中放通 18789（Gateway） 和 3000（Web UI） 端口， 配置百炼 API Key。</p>
+<p>访问 Web UI</p>
+<p>浏览器访问</p>
+<p>， 进入 OpenClaw 管理界面， 可选集成钉钉/飞书等 IM。</p>
+<p>腾讯云 Tencent Cloud</p>
+<p>四大IM 全面支持， Coding Plan 模型套餐性价比高。</p>
+<p>配置	推荐 2核4G（黄金配置） ， 最低 2核2G 可运行价格	新人包 2核4G 约 17元/月， 一年 99元起</p>
+<p>模型	Coding Plan 首月 7.9元起， 含 HY 2.0 Instruct、 GLM-5、 kimi-k2.5、 MiniMax-M2.5 等 IM 支持	企微、 QQ、 钉钉、 飞书（四大 IM 全覆盖）</p>
+<p>续费	支持「限时同价续费」 活动， 避免续费刺客</p>
+<p>购买 Lighthouse 实例</p>
+<p>在腾讯云轻量应用服务器页面购买实例。</p>
+<p>选择OpenClaw 模板</p>
+<p>应用模板→ AI智能体→ OpenClaw， 一键安装。</p>
+<p>配置模型+ 接入 IM</p>
+<p>购买 Coding Plan 获取模型调用能力， 然后接入企微/QQ/飞书/钉钉。</p>
+<p>百度智能云 Baidu Cloud</p>
+<p>试错成本最低： 0.01元首月体验， 全图形界面操作。</p>
+<p>配置	推荐 2核4G 4M 带宽（轻量应用服务器）</p>
+<p>价格	首月体验 0.01元（每日限量 500 台） ， 常规 70~140元/月模型	千帆平台集成文心系列、 Qwen系列、 DeepSeek系列</p>
+<p>特色	百度搜索/百度百科独有能力； 千帆 7 款官方 Skills 已上线 ClawHub</p>
+<p>购买服务器</p>
+<p>购买轻量应用服务器， 选择OpenClaw 镜像。</p>
+<p>等待自动安装</p>
+<p>系统自动完成环境安装和服务启动。</p>
+<p>配置模型</p>
+<p>页面选择模型， 平台自动完成千帆API Key 创建与配置。</p>
+<p>对接 IM 渠道</p>
+<p>按需接入钉钉、 飞书等消息频道。</p>
+<p>华为云 Huawei Cloud</p>
+<p>企业级安全与合规能力最强， 适合已在华为生态的企业用户。</p>
+<p>配置	Flexus L 实例， 需创建弹性公网 IP + 安全组</p>
+<p>价格	~85~155元/月， 无特别突出的新用户优惠</p>
+<p>模型	需在 MaaS 控制台单独开通 AI 模型</p>
+<p>部署步骤	5步+（创建实例 → EIP → 安全组 → 安装 → 配模型）优势	企业级安全合规、 支持自动扩展、 MaaS 模型丰富</p>
+<p>华为云的部署步骤相对较多， 需要单独配置弹性公网 IP、 安全组、 COC 服务等。 对个人用户不够友好， 但如果你的企业已在华为云生态内， 这是最合规的选择。</p>
+<p>火山引擎 Volcengine</p>
+<p>飞书深度集成， 19.8元/月的服务器+模型组合套餐是目前综合性价比最高的方案。</p>
+<p>配置	推荐 2核4G， 支持云服务器和云手机两种部署方式</p>
+<p>价格	活动价 9.9元/月； 方舟 Coding Plan 组合套餐 19.8元/月（服务器+模型）模型	方舟平台模型丰富， 内置可用</p>
+<p>IM 支持	飞书（深度集成） 、 企微、 钉钉、 QQ</p>
+<p>特色	云手机部署方式独特， 可运行移动端任务</p>
+<p>购买云服务器</p>
+<p>购买云服务器或云手机， 选择OpenClaw 应用模板。</p>
+<p>配置方舟模型</p>
+<p>在火山方舟平台选择模型， 配置Coding Plan。</p>
+<p>接入飞书</p>
+<p>接入飞书/企微/钉钉/QQ。 飞书用户推荐直接使用深度集成方案。</p>
+<p>扣子编程 Coze Code</p>
+<p>零门槛方案： 不需要服务器、 不需要写代码、 不需要配环境。 2 步完成部署。</p>
+<p>配置	无需服务器， 完全在扣子编程平台上运行价格	免费起步（内置积分） ， 用完后按量付费</p>
+<p>模型	内置豆包 2.0 + 火山方舟 Coding Plan 模型， 可自由切换</p>
+<p>特色	模型、 联网搜索、 生图 Skill 全部默认配好； 扣子编程 Skills 可直接加载</p>
+<p>进入扣子编程</p>
+<p>， 点击「一键部署OpenClaw」 或从优秀案例创建副本。</p>
+<p>确认部署</p>
+<p>确认后， 模型/联网/生图全部默认配置好， 部署后持续在线。</p>
+<p>海外平台 International Platforms</p>
+<p>Sealos</p>
+<p>K8s 原生云平台， 支持 7 天免费试用。 通过 Devbox 云开发环境一键部署， 按用量计费。 适合有容器化需求的开发者， 但需要一定的 K8s 知识， 且没有专门针对OpenClaw 的预置模板。</p>
+<p>Zeabur</p>
+<p>模板部署， 已被部署超过 29,000 次。 最大亮点是 AI Hub 内置多模型failover 链： glm-4.7-flash → grok-4-fast</p>
+<p>→ minimax-m2.5 → kimi-k2.5 → qwen-3-235b → gpt-5-mini。 主要面向海外/台湾市场， 必须使用专用服务器（Dedicated Server） 。</p>
+<p>Railway</p>
+<p>真正的一键部署， 全程浏览器操作。 提供$5/月免费额度， 轻度使用可零成本。 多种模板可选（标准/快速启动/All-in-One） ， 部署成功率 96~100%。 海外平台， 国内访问需要科学上网。</p>
+<p>按场景推荐 Recommendations by Scenario</p>
+        </div>
+        <div class="nav">
+            <a href="10-部署方式总览.html">← 上一章</a>
+            <a href="12-Docker部署.html">下一章 →</a>
+        </div>
+    </div>
+</body>
+</html>

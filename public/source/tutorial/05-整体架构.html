@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>整体架构 - OpenClaw教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e7;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(249, 115, 22, 0.3);
+        }
+        .chapter-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .content {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .content h2 {
+            color: #f97316;
+            font-size: 1.5rem;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+        }
+        .content p {
+            margin-bottom: 16px;
+            color: #d4d4d8;
+            font-size: 1rem;
+        }
+        .content li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #d4d4d8;
+        }
+        .content li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #f97316;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .tutorial-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .tutorial-table th {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .tutorial-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: #d4d4d8;
+        }
+        .tutorial-table tr:hover td {
+            background: rgba(249, 115, 22, 0.05);
+        }
+        .tutorial-table tr:last-child td {
+            border-bottom: none;
+        }
+        .highlight {
+            background: rgba(249, 115, 22, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #fb923c;
+        }
+        .code {
+            background: #0f172a;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .nav a:hover {
+            background: #f97316;
+            color: white;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .content { padding: 24px; }
+            .tutorial-table { font-size: 0.85rem; }
+            .tutorial-table th, .tutorial-table td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="chapter-num">第 5 章</span>
+            <h1>整体架构</h1>
+        </div>
+        <div class="content">
+            
+<p>Gateway 作为 24/7 运行的 daemon， 持续监听所有已连接的 Channel。 它不像CLI Agent 那样会话结束就丢失上下文， 而是长驻运行， 积累记忆。</p>
+<p>记忆系统</p>
+<p>Memory System</p>
+<p>记忆是 OpenClaw 区别于普通 Chatbot 的核心能力。 四层记忆从不可变的身份内核到实时对话， 构建完整的上下文连续性。</p>
+<p>四层记忆架构</p>
+<p>→	→	→</p>
+<p>Daily Logs ⽇志系统</p>
+<p>每天的交互记录以append-only 方式写入</p>
+<p>今天和昨天的日志， 为对话提供连续性上下文。</p>
+<p>文件。 Session 开始时， Agent 会自动读取</p>
+<p>Long-term Memory 持久化存储</p>
+<p>是可选的持久化文件， 存储决策记录、 用户偏好和长期事实。 关键规则：</p>
+<p>只在main/private session 中加载（群组隔离session 不会看到）</p>
+<p>Agent 可以主动写入， 但通常在Pre-Compaction 时触发</p>
+<p>格式是纯 Markdown， 人类可直接编辑</p>
+<p>自动记忆保存 Pre-Compaction</p>
+<p>当 Session 接近token 限制时（默认阈值约 4000 tokens） ， OpenClaw 触发一个silent agentic turn：</p>
+<p>检测阈值</p>
+<p>Session token 用量接近上限， 触发Pre-Compaction 流程</p>
+<p>静默保存</p>
+<p>Agent 在后台执行一个隐藏turn， 将重要记忆写入</p>
+<p>和 Daily Log</p>
+<p>压缩上下文</p>
+<p>旧消息被压缩或截断， 释放token 空间。 用户看不到这个过程（返回 NO_REPLY ）</p>
+<p>向量记忆搜索 Semantic Search</p>
+<p>OpenClaw 默认启用向量记忆搜索， 结合两种检索策略：</p>
+<p>Embedding 向量</p>
+<p>将记忆文本转为向量， 计算语义相似度</p>
+<p>模糊搜索、 语义关联（「之前讨论过的那个部署问题」）</p>
+<p>BM25 关键词	传统关键词匹配， TF-IDF 加权	精确匹配（具体的文件名、 命令、 人名）</p>
+<p>底层使用 SQLite-vec 进行向量存储和加速检索。 系统会监听记忆文件的变化， 以debounced 方式自动重建索引。</p>
+<p>搜索工具</p>
+<p>： 语义搜索， 返回约 400 token 的 chunks， 适合回忆模糊的上下文</p>
+<p>： 读取特定记忆文件的全部内容， 适合精确查找</p>
+        </div>
+        <div class="nav">
+            <a href="04-为什么这么火.html">← 上一章</a>
+            <a href="06-记忆系统.html">下一章 →</a>
+        </div>
+    </div>
+</body>
+</html>

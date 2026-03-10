@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>部署方式总览 - OpenClaw教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e7;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(249, 115, 22, 0.3);
+        }
+        .chapter-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .content {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .content h2 {
+            color: #f97316;
+            font-size: 1.5rem;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+        }
+        .content p {
+            margin-bottom: 16px;
+            color: #d4d4d8;
+            font-size: 1rem;
+        }
+        .content li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #d4d4d8;
+        }
+        .content li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #f97316;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .tutorial-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .tutorial-table th {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .tutorial-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: #d4d4d8;
+        }
+        .tutorial-table tr:hover td {
+            background: rgba(249, 115, 22, 0.05);
+        }
+        .tutorial-table tr:last-child td {
+            border-bottom: none;
+        }
+        .highlight {
+            background: rgba(249, 115, 22, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #fb923c;
+        }
+        .code {
+            background: #0f172a;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .nav a:hover {
+            background: #f97316;
+            color: white;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .content { padding: 24px; }
+            .tutorial-table { font-size: 0.85rem; }
+            .tutorial-table th, .tutorial-table td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="chapter-num">第 10 章</span>
+            <h1>部署方式总览</h1>
+        </div>
+        <div class="content">
+            
+<p>Docker 部署</p>
+<p>Docker Deployment</p>
+<p>Docker 部署适合需要环境隔离、 方便迁移、 或在服务器上长期运行的场景。</p>
+<p>docker-compose 快速启动 Quick Start</p>
+<p>OpenClaw 仓库内置了 docker- compose. yml ， 一条命令即可启动：</p>
+<p>镜像变体 Image Variants</p>
+<p>标准镜像	完整功能， 包含所有扩展依赖	一般使用， 功能全</p>
+<p>使用 slim 变体： 在</p>
+<p>中设置环境变量</p>
+<p>。 v2026.3.7 起支持扩展</p>
+<p>依赖预烘焙， 容器镜像可预装扩展依赖， 减少启动时的安装等待。</p>
+<p>挂载目录 Volume Mounts</p>
+<p>Docker 部署需要挂载两个关键目录， 确保数据持久化：</p>
+<p>端口映射 Port Mapping</p>
+<p>OpenClaw Gateway 默认监听 18789 端口（WebSocket） ， Web UI 默认使用 3000 端口。 在中配置端口映射：</p>
+<p>Podman 兼容 Podman Support</p>
+<p>OpenClaw 同样支持 Podman 运行。 Podman 是Docker 的无守护进程替代方案， 命令基本兼容：</p>
+<p>对于需要rootless 容器运行的环境（如企业安全策略要求） ， Podman 是更合适的选择。</p>
+        </div>
+        <div class="nav">
+            <a href="09-设计哲学.html">← 上一章</a>
+            <a href="11-本地安装.html">下一章 →</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创始人故事 - OpenClaw教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e7;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(249, 115, 22, 0.3);
+        }
+        .chapter-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .content {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .content h2 {
+            color: #f97316;
+            font-size: 1.5rem;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+        }
+        .content p {
+            margin-bottom: 16px;
+            color: #d4d4d8;
+            font-size: 1rem;
+        }
+        .content li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #d4d4d8;
+        }
+        .content li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #f97316;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .tutorial-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .tutorial-table th {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .tutorial-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: #d4d4d8;
+        }
+        .tutorial-table tr:hover td {
+            background: rgba(249, 115, 22, 0.05);
+        }
+        .tutorial-table tr:last-child td {
+            border-bottom: none;
+        }
+        .highlight {
+            background: rgba(249, 115, 22, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #fb923c;
+        }
+        .code {
+            background: #0f172a;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .nav a:hover {
+            background: #f97316;
+            color: white;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .content { padding: 24px; }
+            .tutorial-table { font-size: 0.85rem; }
+            .tutorial-table th, .tutorial-table td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="chapter-num">第 3 章</span>
+            <h1>创始人故事</h1>
+        </div>
+        <div class="content">
+            <p>创始人故事</p>
+<p>The Creator</p>
+<p>Peter Steinberger： 从周末项目到全球最火开源项目， 再到加入OpenAI。</p>
+<p>从一个人到一个社区</p>
+<p>Peter Steinberger是一位奥地利开发者， 在iOS和macOS开发圈有很高的知名度。 2025年11月的一个周末， 他写了一个能连接即时通讯平台的AI助手小工具， 取名ClawdBot。</p>
+<p>他大概没有想到， 这个周末项目会在两个月后成为GitHub上增长最快的开源项目。 到2026年3月， 他个人在这个项目上提交了11,684次commit， 贡献者超过1,075人。</p>
+<p>加入OpenAI</p>
+<p>2026年2月14日， Peter宣布加入OpenAI。 Sam Altman亲自发推欢迎， 称他为「genius」。这个决定引发了社区的广泛讨论。 但Peter做了几件事来消除担忧：</p>
+<p>OpenClaw转为开源基金会运营， 保持项目独立</p>
+<p>OpenAI作为赞助商之一（与Vercel、 Blacksmith、 Convex并列） ， 但不控制项目方向</p>
+<p>OpenAI承诺让他继续投入OpenClaw的开发</p>
+<p>关于名字的故事</p>
+<p>ClawdBot这个名字来自对Anthropic Claude的致敬（Claw=爪子） ， 所以选了龙虾作为吉祥物。 Anthropic的商标警告迫使他改名为Moltbot（Molt=龙虾蜕壳） ， 三天后又改为OpenClaw， 强调开源属性。 虽然经历了两次改名， 龙虾的形象始终保留， 也成了整个社区的文化符号。</p>
+<p>为什么这么火</p>
+<p>Why So Popular</p>
+<p>不到5个月从0到27.9万Stars，  OpenClaw的爆火不只是技术层面的事。</p>
+<p>某天单日增长9,000 Stars。 这个数字意味着平均每10秒就有一个开发者点下Star。</p>
+<p>「养虾」 文化现象</p>
+<p>因为吉祥物是龙虾， 中文社区将运行OpenClaw称为「养虾」， 用户自称「养虾人」。「你养龙虾了吗？ 」 成了AI圈的问候语。 这种有趣的文化标签降低了传播门槛， 让一个技术项目有了社交货币的属性。</p>
+<p>2026年3月6日， 深圳腾讯云总部近千人排队体验OpenClaw安装。 3月8日， 深圳龙岗区AI（机器人） 局发布了 OpenClaw使用支持措施的征求意见稿。 一个开源项目能引发地方政府的政策关注， 这在国内并不多见。</p>
+<p>Moltbook： AI Agent的社交网络</p>
+<p>OpenClaw生态中衍生出了一个叫Moltbook的社交平台， 专供AI Agent使用。 截至2026年2月底的数据：</p>
+<p>注册AI Agent	32,912</p>
+<p>子社区	2,364</p>
+<p>帖子	3,130</p>
+<p>评论	22,046</p>
+<p>数千个OpenClaw实例在上面发帖、 评论、 讨论哲学问题。 这可能是AI Agent从「工具」 走向「社会化存在」 的第一个大规模实验场。</p>
+<p>热门玩法</p>
+<p>赚钱型</p>
+<p>在Polymarket上用AI进行预测市场交易， 已有OpenClaw月入数万美元的案例</p>
+<p>ClawWork项目： 「OpenClaw作为你的AI Coworker， 11小时赚$15K」</p>
+<p>生活助手型</p>
+<p>接管邮件、 日历、 消息管理</p>
+<p>浏览网页、 填表、 数据抽取</p>
+<p>文件读写、 Shell命令执行</p>
+<p>社交养成型</p>
+<p>在Moltbook上给Agent设定名字和性格， 观察其「社交行为」</p>
+<p>Agent之间的交互形成了一种「赛博养成」 文化</p>
+<p>企业部署型</p>
+<p>国内用户大量接入飞书、 钉钉、 企业微信、 QQ</p>
+<p>已有专门的openclaw-china插件套件， 支持三步Docker部署</p>
+        </div>
+        <div class="nav">
+            <a href="02-发展简史.html">← 上一章</a>
+            <a href="04-为什么这么火.html">下一章 →</a>
+        </div>
+    </div>
+</body>
+</html>

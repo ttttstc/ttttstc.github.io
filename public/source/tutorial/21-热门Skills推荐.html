@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>热门Skills推荐 - OpenClaw教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e7;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(249, 115, 22, 0.3);
+        }
+        .chapter-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .content {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .content h2 {
+            color: #f97316;
+            font-size: 1.5rem;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+        }
+        .content p {
+            margin-bottom: 16px;
+            color: #d4d4d8;
+            font-size: 1rem;
+        }
+        .content li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #d4d4d8;
+        }
+        .content li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #f97316;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .tutorial-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .tutorial-table th {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .tutorial-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: #d4d4d8;
+        }
+        .tutorial-table tr:hover td {
+            background: rgba(249, 115, 22, 0.05);
+        }
+        .tutorial-table tr:last-child td {
+            border-bottom: none;
+        }
+        .highlight {
+            background: rgba(249, 115, 22, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #fb923c;
+        }
+        .code {
+            background: #0f172a;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .nav a:hover {
+            background: #f97316;
+            color: white;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .content { padding: 24px; }
+            .tutorial-table { font-size: 0.85rem; }
+            .tutorial-table th, .tutorial-table td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="chapter-num">第 21 章</span>
+            <h1>热门Skills推荐</h1>
+        </div>
+        <div class="content">
+            
+<p>豆包 Doubao</p>
+<p>配置方式（自定义Provider）</p>
+<p>Kimi（月之暗面）</p>
+<p>配置方式</p>
+<p>也可通过OpenRouter接入：</p>
+<p>百度文心</p>
+<p>文心5.0于2026年1月22日发布（2.4万亿参数， 原生全模态， 激活参数比<3%） 。</p>
+<p>MiniMax</p>
+<p>MiniMax M2.5（230B参数） 在SWE-Bench上得分80.2%， 代码能力突出。</p>
+<p>MiniMax M2.5	$0.50	$2.00	旗舰， SWE-bench 80.2%</p>
+<p>配置方式</p>
+<p>聚合平台： 一个API Key调多个模型</p>
+<p>硅基流动 SiliconFlow（国内首选）</p>
+<p>国内最大的模型聚合平台， 一个API调用多个开源模型， 延迟低， 有免费额度。</p>
+<p>OpenRouter（国际首选）</p>
+<p>290+模型， OpenClaw内置支持， 但有5.5%平台费。</p>
+<p>one-api / new-api（自建方案）</p>
+<p>开源API管理工具， 自建网关， 统一管理多个API Key， 支持负载均衡和故障转移。 适合团队使用。</p>
+<p>Coding Plan 包月套餐对比 国内⼚商 AI 编程订阅</p>
+<p>2026年， 国内主要AI厂商和云平台纷纷推出了面向AI编程工具（OpenClaw、 Cursor、 Claude Code等） 的 Coding Plan包月套餐。 相比按量付费的API， 包月套餐的优势是成本可预期、 无需管理API Key余额， 尤其适合个人开发者和轻度到中度使用者。</p>
+<p>厂商自营 Coding Plan</p>
+<p>智谱GLM	Lite	~49元	GLM-4.7	MCP联网100次/月</p>
+<p>Pro	~80元	GLM-4.7	速度快40-60%， MCP 1000次/月 Max	~160元	GLM-4.7 + GLM-5	唯一含GLM-5， MCP 4000次/月</p>
+<p>Kimi	Andante	49元	Kimi K2.5	基础档， Token计量 Moderato	99元	Kimi K2.5	中档</p>
+<p>Allegretto	199元	Kimi K2.5	每5小时100-500次请求 MiniMax	Starter	29元	M2.5	无每周限额， 性价比最高</p>
+<p>Standard	49元	M2.5	年付省17%</p>
+<p>Premium	119元	M2.5	重度用户</p>
+<p>云平台聚合 Coding Plan</p>
+<p>云平台方案的最大优势是一个套餐包含多家模型， 可自由切换。</p>
+<p>Coding Plan 选型建议</p>
+        </div>
+        <div class="nav">
+            <a href="20-ClawHub技能市场.html">← 上一章</a>
+            <a href="22-自建Skill指南.html">下一章 →</a>
+        </div>
+    </div>
+</body>
+</html>

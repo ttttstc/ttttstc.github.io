@@ -11,13 +11,13 @@ interface Tutorial {
 }
 
 const tutorials: Tutorial[] = [
-  { tag: '入门', tagIcon: Layers, title: 'OpenClaw是什么', description: '认识开源、自托管的AI Agent系统', readTime: '5 min', url: '/source/tutorial/01-openclaw-intro.html' },
-  { tag: '架构', tagIcon: Layers, title: '整体架构', description: 'Gateway-Node-Channel三层架构详解', readTime: '8 min', url: '/source/tutorial/05-architecture.html' },
-  { tag: '部署', tagIcon: Globe, title: '部署方式总览', description: '本地/Docker/云厂商一键部署对比', readTime: '6 min', url: '/source/tutorial/10-deployment.html' },
-  { tag: '集成', tagIcon: Globe, title: '国际平台接入', description: 'Telegram/Discord/WhatsApp/Slack配置指南', readTime: '20 min', url: '/source/tutorial/16-intl-channels.html' },
-  { tag: '集成', tagIcon: Globe, title: '国内平台接入', description: 'QQ/飞书/钉钉/企业微信配置指南', readTime: '20 min', url: '/source/tutorial/17-cn-channels.html' },
-  { tag: '进阶', tagIcon: Code, title: 'Skills工作原理', description: '三层优先级与加载机制详解', readTime: '8 min', url: '/source/tutorial/19-skills.html' },
-  { tag: '运维', tagIcon: Shield, title: 'Skills安全', description: '安全模型与模型配置指南', readTime: '15 min', url: '/source/tutorial/23-skills-security.html' },
+  { tag: '入门', tagIcon: Layers, title: 'OpenClaw是什么', description: '认识开源、自托管的AI Agent系统', readTime: '5 min', url: '/source/tutorial/01-OpenClaw是什么.html' },
+  { tag: '架构', tagIcon: Layers, title: '整体架构', description: 'Gateway-Node-Channel三层架构详解', readTime: '8 min', url: '/source/tutorial/05-整体架构.html' },
+  { tag: '部署', tagIcon: Globe, title: '部署方式总览', description: '本地/Docker/云厂商一键部署对比', readTime: '6 min', url: '/source/tutorial/10-部署方式总览.html' },
+  { tag: '集成', tagIcon: Globe, title: '国际平台接入', description: 'Telegram/Discord/WhatsApp/Slack配置指南', readTime: '20 min', url: '/source/tutorial/16-国际平台接入.html' },
+  { tag: '集成', tagIcon: Globe, title: '国内平台接入', description: 'QQ/飞书/钉钉/企业微信配置指南', readTime: '20 min', url: '/source/tutorial/17-国内平台接入.html' },
+  { tag: '进阶', tagIcon: Code, title: 'Skills工作原理', description: '三层优先级与加载机制详解', readTime: '8 min', url: '/source/tutorial/19-Skills工作原理.html' },
+  { tag: '运维', tagIcon: Shield, title: 'Skills安全', description: '安全模型与模型配置指南', readTime: '15 min', url: '/source/tutorial/23-Skills安全.html' },
 ];
 
 const TutorialPreview = () => {

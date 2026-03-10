@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>安全模型 - OpenClaw教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e7;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(249, 115, 22, 0.3);
+        }
+        .chapter-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .content {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .content h2 {
+            color: #f97316;
+            font-size: 1.5rem;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+        }
+        .content p {
+            margin-bottom: 16px;
+            color: #d4d4d8;
+            font-size: 1rem;
+        }
+        .content li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #d4d4d8;
+        }
+        .content li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #f97316;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .tutorial-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .tutorial-table th {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .tutorial-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: #d4d4d8;
+        }
+        .tutorial-table tr:hover td {
+            background: rgba(249, 115, 22, 0.05);
+        }
+        .tutorial-table tr:last-child td {
+            border-bottom: none;
+        }
+        .highlight {
+            background: rgba(249, 115, 22, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #fb923c;
+        }
+        .code {
+            background: #0f172a;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .nav a:hover {
+            background: #f97316;
+            color: white;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .content { padding: 24px; }
+            .tutorial-table { font-size: 0.85rem; }
+            .tutorial-table th, .tutorial-table td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="chapter-num">第 28 章</span>
+            <h1>安全模型</h1>
+        </div>
+        <div class="content">
+            
+
+
+
+
+
+
+
+<p>B站、 知乎、 博客园大量部署教程</p>
+<p>openclaw-china 插件</p>
+<p>BytePioneer-AI开发的中国IM适配插件， 三步完成国内平台接入：</p>
+<p>国内教程资源</p>
+<p>B站保姆级教程： 接入微信/飞书/钉钉/QQ（BV1MfFAz6EnR）</p>
+<p>阿里云官方文档： 轻量应用服务器一键部署</p>
+<p>知乎多篇部署指南</p>
+<p>菜鸟教程一键部署指南</p>
+<p>freeCodeCamp完整英文教程</p>
+<p>A 常见问题 FAQ</p>
+<p>Frequently Asked Questions</p>
+<p>Q1： OpenClaw是免费的吗？</p>
+<p>OpenClaw本身是MIT开源免费的。 但运行它需要两项成本： 一是服务器（本地电脑或云服务器） ， 二是AI模型的API费用。 如果你用本地模型（Ollama） ， API费用也可以免费。 总结： 软件免费， 算力不免费。</p>
+<p>Q2： 我需要什么样的技术水平才能用OpenClaw？</p>
+<p>能用命令行安装npm包就够了。 最基础的安装只需要两行命令：	和</p>
+<p>。 如果用阿里云/腾讯云的一键部署方案， 门槛更低。 但如果要接入多个平台、 自定义Skill、 调优配置， 需要一定的技术基础。</p>
+<p>Q3： OpenClaw和ChatGPT有什么区别？</p>
+<p>ChatGPT是「顾问」（你问它答） ， OpenClaw是「员工」（它主动执行任务） 。 OpenClaw可以接入你的消息平台、 管理邮件日历、 操作浏览器、 执行Shell命令， 而且数据完全在你自己手上。 代价是需要自己部署和维护。</p>
+<p>Q4： 安全吗？ 我的数据会泄露吗？</p>
+<p>OpenClaw是自托管的， 数据默认存储在你自己的服务器上， 不经过第三方。 但需要注意三个安全风险： (1) CVE-2026-25253 RCE漏洞（已修复， 务必更新到最新版本） ； (2) ClawHavoc供应链攻击（安装第三方Skill前</p>
+<p>务必审查源代码） ； (3) Gateway如果暴露在公网上需要设置认证（	） 。</p>
+<p>Q5： 一个月大概花多少钱？</p>
+<p>取决于你的使用方式和模型选择。 参考区间： 完全免费（本地模型） → $2-5/月（DeepSeek为主） → $5-15/月</p>
+<p>（GLM-5为主） → $10-30/月（Claude Sonnet为主） 。 最大的成本陷阱是OpenClaw的多轮工具调用会消耗大量 Token， 务必设置消费限额。</p>
+<p>Q6： 可以用国产模型吗？ 效果怎么样？</p>
+<p>完全可以。 DeepSeek-V3（$0.14/M输入） 和GLM-5（$0.80/M输入） 是最受国内用户欢迎的选择。 GLM-5的代码能力接近Claude Opus 4.5水平， DeepSeek-V3则是极致性价比。 效果肯定不如Claude Sonnet（Agent任务公认最强） ， 但对于大部分日常任务已经够用。 推荐用Fallback机制混合搭配。</p>
+<p>使用Anthropic API Key（按量付费） 。 在Anthropic Console 创建API Key， 然后在OpenClaw中配置环境变量。 不要尝试通过OAuth连接Claude Pro/Max订阅账户， 会被封号。</p>
+<p>Q8： OpenClaw创始人加入OpenAI后， 项目还会继续吗？</p>
+<p>会。 Peter Steinberger加入OpenAI后， OpenClaw正在转为开源基金会运营。 OpenAI已承诺赞助项目但不干预开发方向。 截至2026年3月， 项目仍然保持近乎每日更新的节奏， 有1,075+贡献者。 项目的长期可持续性是有保障的。</p>
+<p>Q9： ClawHub上的Skill安全吗？</p>
+<p>不能盲目信任。 ClawHub的13,729个Skill中， 经社区审计约20%存在问题（垃圾/重复/恶意） 。 ClawHavoc事件中， 超800个恶意Skill试图窃取用户凭证。 建议： 只安装starred数量多的Skill、 安装前审查源代码、 使用 awesome-openclaw-skills精选列表（已过滤问题Skill） 。</p>
+<p>Q10： 能接入微信吗？</p>
+<p>可以， 但不是直接接入个人微信。 通过openclaw-china插件的企业微信（自建应用） 方案可以间接接入个人微信。 钉钉和QQ Bot的接入最简单。 飞书是国内最主流的接入渠道之一， OpenClaw和飞书官方都提供了丰富的集成文档。</p>
+<p>Q11： OpenClaw和Claude Code可以一起用吗？</p>
+<p>可以， 而且是推荐用法。 社区开发了openclaw-claude-code-skill， 通过MCP协议桥接两者。 OpenClaw负责消息平台接入和生活自动化， Claude Code负责编程任务。 两者组合是2026年最完整的AI工作流。</p>
+<p>Q12： 本地模型效果怎么样？</p>
+<p>取决于硬件和模型选择。 32GB RAM可以跑Qwen3-Coder:32B或Devstral-24B， 在代码生成和简单Agent任务上表现不错。 但跟云端的Claude Sonnet或GPT-5.4比仍有差距， 尤其是复杂的多步骤推理任务。 适合隐私敏感场景和实验用途。</p>
+<p>B 命令速查表</p>
+<p>Command Cheat Sheet</p>
+<p>安装与更新</p>
+<p>全局安装OpenClaw</p>
+<p>初始化配置 + 安装守护进程</p>
+<p>更新到最新稳定版</p>
+<p>更新到Beta版（尝鲜）</p>
+<p>诊断检查， 排查常见问题</p>
+<p>查看当前版本</p>
+<p>日常使用</p>
+<p>启动Gateway（详细日志模式）</p>
+<p>重启Gateway（改配置后必须执行）</p>
+<p>直接发送消息给Agent</p>
+<p>设备配对（新设备首次连接）</p>
+<p>列出已配置的模型</p>
+<p>测试模型连通性</p>
+<p>设置主力模型</p>
+<p>安装插件/Skill</p>
+<p>启用插件</p>
+<p>列出已安装插件</p>
+<p>安装中国IM插件</p>
+<p>配置中国IM平台（需先安装插件）</p>
+<p>模型认证</p>
+<p>配置智谱GLM</p>
+<p>配置OpenRouter</p>
+<p>通义千问OAuth登录</p>
+<p>聊天命令（在对话中使用）</p>
+<p>会话概览（当前模型、 Token用量）</p>
+<p>清空会话历史， 开始新对话</p>
+<p>调整推理深度（off/minimal/low/medium/high/xhigh）</p>
+<p>控制回复页脚的用量显示</p>
+<p>群消息处理模式</p>
+<p>后台启动OpenClaw容器</p>
+<p>查看实时日志</p>
+<p>更新到最新镜像</p>
+<p>C 资源链接</p>
+<p>Resource Links</p>
+<p>官方资源</p>
+<p>GitHub仓库	github.com/openclaw/openclaw</p>
+<p>官方文档	docs.openclaw.ai</p>
+<p>官网	openclaw.ai</p>
+<p>ClawHub技能市场	clawhub.ai</p>
+<p>Moltbook（Agent社交网络）	moltbook.com</p>
+<p>GitHub Releases	github.com/openclaw/openclaw/releases</p>
+<p>GitHub Discussions	github.com/openclaw/openclaw/discussions</p>
+<p>社区资源</p>
+<p>模型提供商</p>
+<p>Anthropic Claude	console.anthropic.com</p>
+<p>OpenAI	platform.openai.com</p>
+<p>Google AI Studio	aistudio.google.com</p>
+<p>DeepSeek	platform.deepseek.com</p>
+<p>智谱GLM	bigmodel.cn</p>
+<p>通义千问	dashscope.aliyun.com</p>
+<p>月之暗面Kimi	platform.moonshot.cn</p>
+<p>硅基流动	siliconflow.cn</p>
+<p>OpenRouter	openrouter.ai</p>
+<p>火山引擎（豆包）	console.volcengine.com</p>
+<p>本文档在 Claude Code 辅助下整理编写， 基于 OpenClaw 官方文档、 GitHub 仓库及社区资料。内容的准确性与时效性仅供参考， 如有勘误或建议， 欢迎关注公众号「花叔」 反馈交流。</p>
+<p>来源： docs.openclaw.ai · github.com/openclaw/openclaw · clawhub.com · Created by 花叔 · 2026 年 3 月</p>
+<p>AI编程： 从入门到精通</p>
+<p>知识星球 · 花叔的 AI 编程社区</p>
+<p>星主： AI进化论-花生</p>
+<p>自然语言是 AI 时代最好的编程语言。 AppStore 付费 app 总榜第一「小猫补光灯」 作者</p>
+<p>《一本书玩转 DeepSeek》 作者</p>
+<p>加入知识星球 →</p>
+<p>B站： AI进化论-花生 ·	YouTube： AI进化论-花生 ·	公众号： 花叔</p>
+<p>Created by 花叔 · v1. 0 · 2026年3月 后续更新请查看： 飞书文档（持续更新）</p>
+        </div>
+        <div class="nav">
+            <a href="27-本地模型.html">← 上一章</a>
+            
+        </div>
+    </div>
+</body>
+</html>

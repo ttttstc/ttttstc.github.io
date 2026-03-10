@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设计哲学 - OpenClaw教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e7;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(249, 115, 22, 0.3);
+        }
+        .chapter-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .content {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .content h2 {
+            color: #f97316;
+            font-size: 1.5rem;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+        }
+        .content p {
+            margin-bottom: 16px;
+            color: #d4d4d8;
+            font-size: 1rem;
+        }
+        .content li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #d4d4d8;
+        }
+        .content li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #f97316;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .tutorial-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .tutorial-table th {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .tutorial-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: #d4d4d8;
+        }
+        .tutorial-table tr:hover td {
+            background: rgba(249, 115, 22, 0.05);
+        }
+        .tutorial-table tr:last-child td {
+            border-bottom: none;
+        }
+        .highlight {
+            background: rgba(249, 115, 22, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #fb923c;
+        }
+        .code {
+            background: #0f172a;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .nav a:hover {
+            background: #f97316;
+            color: white;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .content { padding: 24px; }
+            .tutorial-table { font-size: 0.85rem; }
+            .tutorial-table th, .tutorial-table td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="chapter-num">第 9 章</span>
+            <h1>设计哲学</h1>
+        </div>
+        <div class="content">
+            <p>部署方式总览</p>
+<p>Deployment Overview</p>
+<p>OpenClaw 支持从本地到云端的多种部署方式。 选择哪种取决于你的技术水平、 预算和使用场景。</p>
+<p>本地安装</p>
+<p>Local Installation</p>
+<p>本地安装适合开发者和想完全掌控数据的用户。 OpenClaw 是 TypeScript 项目， 运行在 Node.js 上。</p>
+<p>系统要求 System Requirements</p>
+<p>Node.js	>= 22（强制要求）</p>
+<p>包管理器	npm / pnpm / bun 均可</p>
+<p>macOS	需要 Xcode Command Line Tools</p>
+<p>Linux	标准构建工具（gcc, make）</p>
+<p>Windows	强烈推荐 WSL2</p>
+<p>方式一： npm 全局安装（推荐）	npm Global Install</p>
+<p>最推荐的安装方式， 两条命令搞定：</p>
+<p>命令会引导你完成初始配置， 包括选择模型、 配置API Key、 设置消息频道等。参数会同时安装守护进程， 让OpenClaw 在后台持续运行。</p>
+<p>方式二： 一键脚本安装 curl Install</p>
+<p>如果你不想手动安装 Node.js， 可以使用官方提供的一键安装脚本：</p>
+<p>脚本会自动检测系统环境、 安装Node.js（如缺失） 并完成 OpenClaw 安装。</p>
+<p>macOS 额外准备 macOS Setup</p>
+<p>macOS 用户在安装前需要确保已安装 Xcode Command Line Tools：</p>
+<p>如果你需要使用 iMessage 频道或Apple Notes 技能， 这些依赖macOS 原生的 AppleScript 能力， 只有在 macOS 上才能运行。</p>
+<p>Windows 用户注意 Windows via WSL2</p>
+<p>安装WSL2 后， 在Ubuntu 终端内按Linux 流程安装即可。</p>
+<p>守护进程 Daemon</p>
+<p>守护进程让OpenClaw 在后台持续运行， 即使关闭终端也不会中断。 不同系统使用不同的进程管理方式：</p>
+<p>macOS	launchd	macOS 原生服务管理， 开机自启</p>
+<p>Linux	systemd	Linux 标准服务管理，	控制</p>
+<p>安装守护进程后， OpenClaw Gateway 会在	持续监听。</p>
+        </div>
+        <div class="nav">
+            <a href="08-Session与用户识别.html">← 上一章</a>
+            <a href="10-部署方式总览.html">下一章 →</a>
+        </div>
+    </div>
+</body>
+</html>
