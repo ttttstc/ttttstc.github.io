@@ -5,9 +5,8 @@ import re
 import json
 import markdown
 from pathlib import Path
-from urllib.parse import quote
 
-# Configure markdown extensions for better rendering
+# Configure markdown extensions
 MD_EXTENSIONS = [
     'extra',
     'codehilite',
@@ -19,30 +18,21 @@ MD_EXTENSIONS = [
 
 # Define article list with Chinese titles
 ARTICLES = [
-    # 基础入门 (Basics)
     ("01-basics-01-introduction.md", "第一章：认识OpenClaw", "基础入门"),
     ("01-basics-02-installation.md", "第二章：安装部署", "基础入门"),
     ("01-basics-03-quick-start.md", "第三章：快速开始", "基础入门"),
-
-    # 核心功能 (Core Features)
     ("02-core-04-file-management.md", "第四章：文件管理", "核心功能"),
     ("02-core-05-knowledge-management.md", "第五章：知识管理", "核心功能"),
     ("02-core-06-schedule-management.md", "第六章：日程管理", "核心功能"),
     ("02-core-07-automation-workflow.md", "第七章：自动化工作流", "核心功能"),
-
-    # 进阶拓展 (Advanced)
     ("03-advanced-08-skills-extension.md", "第八章：Skills扩展", "进阶拓展"),
     ("03-advanced-09-multi-platform-integration.md", "第九章：多平台接入", "进阶拓展"),
     ("03-advanced-10-api-integration.md", "第十章：API集成", "进阶拓展"),
     ("03-advanced-11-advanced-configuration.md", "第十一章：高级配置", "进阶拓展"),
-
-    # 实战案例 (Practical Cases)
     ("04-cases-12-personal-productivity.md", "第十二章：个人效率提升", "实战案例"),
     ("04-cases-13-advanced-automation.md", "第十三章：进阶自动化", "实战案例"),
     ("04-cases-14-creative-applications.md", "第十四章：创意应用", "实战案例"),
     ("04-cases-15-solo-entrepreneur-cases.md", "第十五章：一人企业案例", "实战案例"),
-
-    # 附录 (Appendix)
     ("api-key-config-guide.md", "附录1：API密钥配置指南", "附录"),
     ("config-file-structure.md", "附录2：配置文件结构", "附录"),
     ("search-guide.md", "附录3：搜索指南", "附录"),
@@ -50,19 +40,16 @@ ARTICLES = [
 ]
 
 def markdown_to_html(md_content):
-    """Convert markdown to HTML"""
     md = markdown.Markdown(extensions=MD_EXTENSIONS)
     html = md.convert(md_content)
     return html
 
 def convert_image_paths(html_content):
-    """Convert image paths to proper URLs"""
     html_content = html_content.replace('](docs/images/', '](/source/tutorial/awesome/images/')
     html_content = html_content.replace('](../images/', '](/source/tutorial/awesome/images/')
     return html_content
 
 def extract_title_from_content(md_content):
-    """Extract title from markdown content"""
     match = re.search(r'^#\s+(.+)$', md_content, re.MULTILINE)
     if match:
         return match.group(1).strip()
@@ -77,20 +64,13 @@ for filename, title, category in ARTICLES:
     if md_file.exists():
         with open(md_file, 'r', encoding='utf-8') as f:
             md_content = f.read()
-
-        # Convert to HTML
         html_content = markdown_to_html(md_content)
         html_content = convert_image_paths(html_content)
-
-        # Extract title from content if needed
         if not title or title.startswith('第'):
             content_title = extract_title_from_content(md_content)
             if content_title:
                 title = content_title
-
-        # Generate output filename
         output_filename = filename.replace('.md', '.html')
-
         article_data.append({
             'filename': output_filename,
             'title': title,
@@ -98,7 +78,7 @@ for filename, title, category in ARTICLES:
             'content': html_content
         })
 
-# Group articles by category
+# Group by category
 categories = {}
 for article in article_data:
     cat = article['category']
@@ -117,10 +97,9 @@ for category, articles in categories.items():
         </a>'''
     sidebar_html += '</div>'
 
-# Generate article data as JSON for JavaScript
 articles_json = json.dumps(article_data, ensure_ascii=False)
 
-# Main HTML Template with sidebar + content layout
+# Main HTML Template with fullscreen support
 HTML_TEMPLATE = '''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -133,17 +112,35 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
             padding: 0;
             box-sizing: border-box;
         }}
+        html, body {{
+            height: 100%;
+            overflow: hidden;
+        }}
         body {{
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: #0d1117;
             color: #c9d1d9;
             height: 100vh;
-            overflow: hidden;
         }}
         .layout {{
             display: flex;
-            height: 100vh;
+            height: 100%;
         }}
+
+        /* Fullscreen mode */
+        body.fullscreen .sidebar {{
+            display: none;
+        }}
+        body.fullscreen .content-area {{
+            width: 100%;
+        }}
+        body.fullscreen .fullscreen-btn {{
+            display: flex;
+        }}
+        body.fullscreen .exit-fullscreen-btn {{
+            display: flex;
+        }}
+
         /* Left Sidebar */
         .sidebar {{
             width: 320px;
@@ -209,13 +206,57 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
         /* Right Content */
         .content-area {{
             flex: 1;
-            overflow-y: auto;
+            overflow: hidden;
             background: #0d1117;
+            position: relative;
         }}
         .content-inner {{
-            max-width: 900px;
-            margin: 0 auto;
+            height: 100%;
+            overflow-y: auto;
             padding: 40px 50px;
+        }}
+
+        /* Fullscreen button */
+        .fullscreen-btn {{
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(249, 115, 22, 0.2);
+            border: 1px solid rgba(249, 115, 22, 0.4);
+            color: #f97316;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }}
+        .fullscreen-btn:hover {{
+            background: #f97316;
+            color: white;
+        }}
+        .exit-fullscreen-btn {{
+            display: none;
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 1000;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(249, 115, 22, 0.9);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }}
+        .exit-fullscreen-btn:hover {{
+            background: #ea580c;
         }}
 
         /* Markdown Styles */
@@ -367,6 +408,18 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
             </nav>
         </aside>
         <div class="content-area" id="contentArea">
+            <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                </svg>
+                全屏
+            </button>
+            <button class="exit-fullscreen-btn" id="exitFullscreenBtn" onclick="toggleFullscreen()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>
+                </svg>
+                退出全屏
+            </button>
             <div class="content-inner" id="contentInner">
                 <div class="welcome">
                     <h2>欢迎学习 OpenClaw 完整教程</h2>
@@ -380,18 +433,37 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
     <script>
         const articles = {articles_json};
 
+        function toggleFullscreen() {{
+            const body = document.body;
+            if (body.classList.contains('fullscreen')) {{
+                body.classList.remove('fullscreen');
+                if (document.exitFullscreen) {{
+                    document.exitFullscreen();
+                }}
+            }} else {{
+                body.classList.add('fullscreen');
+                if (document.documentElement.requestFullscreen) {{
+                    document.documentElement.requestFullscreen();
+                }}
+            }}
+        }}
+
+        // Listen for fullscreen changes
+        document.addEventListener('fullscreenchange', function() {{
+            if (!document.fullscreenElement) {{
+                document.body.classList.remove('fullscreen');
+            }}
+        }});
+
         function showArticle(filename) {{
             const article = articles.find(a => a.filename === filename);
             if (!article) return;
 
-            // Update URL without reload
             history.pushState({{filename: filename}}, '', '#' + filename);
 
-            // Render content
             const contentInner = document.getElementById('contentInner');
             contentInner.innerHTML = '<div class="article-content">' + article.content + '</div>';
 
-            // Update active state
             document.querySelectorAll('.article-link').forEach(link => {{
                 link.classList.remove('active');
                 if (link.getAttribute('href') === '#' + filename) {{
@@ -399,18 +471,15 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
                 }}
             }});
 
-            // Scroll to top
             document.getElementById('contentArea').scrollTop = 0;
         }}
 
-        // Handle browser back/forward
         window.addEventListener('popstate', (e) => {{
             if (e.state && e.state.filename) {{
                 showArticle(e.state.filename);
             }}
         }});
 
-        // Check for hash on load
         window.addEventListener('DOMContentLoaded', () => {{
             const hash = window.location.hash.slice(1);
             if (hash) {{
@@ -421,7 +490,6 @@ HTML_TEMPLATE = '''<!DOCTYPE html>
 </body>
 </html>'''
 
-# Generate main index HTML
 html_content = HTML_TEMPLATE.format(
     sidebar=sidebar_html,
     articles_json=articles_json,
@@ -433,95 +501,4 @@ with open(output_file, 'w', encoding='utf-8') as f:
     f.write(html_content)
 
 print(f"Generated: {output_file}")
-
-# Also generate individual HTML pages for each article
-for article in article_data:
-    individual_html = f'''<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{article['title']} - OpenClaw 教程</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css">
-    <style>
-        body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: #0d1117;
-            color: #c9d1d9;
-            padding: 20px;
-        }}
-        .container {{
-            max-width: 900px;
-            margin: 0 auto;
-        }}
-        .markdown-body {{
-            background: transparent !important;
-            color: #c9d1d9 !important;
-        }}
-        .back-link {{
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #58a6ff;
-            text-decoration: none;
-        }}
-        .back-link:hover {{
-            text-decoration: underline;
-        }}
-        .article-content h1 {{
-            color: #fff !important;
-            border-bottom: 1px solid #30363d !important;
-            padding-bottom: 15px !important;
-        }}
-        .article-content h2 {{
-            color: #f97316 !important;
-            border-bottom: 1px solid #30363d !important;
-            padding-bottom: 10px !important;
-        }}
-        .article-content a {{
-            color: #58a6ff !important;
-        }}
-        .article-content code {{
-            background: #1f2428 !important;
-            color: #f97316 !important;
-        }}
-        .article-content pre {{
-            background: #1f2428 !important;
-            border: 1px solid #30363d !important;
-        }}
-        .article-content blockquote {{
-            border-left: 4px solid #f97316 !important;
-            background: rgba(249, 115, 22, 0.1) !important;
-        }}
-        .article-content table th {{
-            background: #1f2428 !important;
-            color: #f97316 !important;
-        }}
-        .article-content table td {{
-            border: 1px solid #30363d !important;
-        }}
-        .article-content img {{
-            max-width: 100%;
-            border-radius: 8px;
-        }}
-        .article-content strong {{
-            color: #f97316 !important;
-        }}
-    </style>
-</head>
-<body>
-    <div class="container">
-        <a href="index.html" class="back-link">← 返回教程目录</a>
-        <div class="article-content markdown-body">
-            {article['content']}
-        </div>
-    </div>
-</body>
-</html>'''
-
-    output_path = f"D:/AI/company/project/ttttstc.github.io/public/source/tutorial/awesome/{article['filename']}"
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(individual_html)
-
-    print(f"Generated: {article['filename']}")
-
-print(f"\\nTotal: {len(article_data) + 1} files generated")
+print(f"Total articles: {len(article_data)}")
