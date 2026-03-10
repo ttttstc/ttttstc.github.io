@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>为什么这么火 - OpenClaw教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e7;
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(249, 115, 22, 0.3);
+        }
+        .chapter-num {
+            display: inline-block;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .content {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .content h2 {
+            color: #f97316;
+            font-size: 1.5rem;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+        }
+        .content p {
+            margin-bottom: 16px;
+            color: #d4d4d8;
+            font-size: 1rem;
+        }
+        .content li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #d4d4d8;
+        }
+        .content li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #f97316;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .tutorial-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .tutorial-table th {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .tutorial-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            color: #d4d4d8;
+        }
+        .tutorial-table tr:hover td {
+            background: rgba(249, 115, 22, 0.05);
+        }
+        .tutorial-table tr:last-child td {
+            border-bottom: none;
+        }
+        .highlight {
+            background: rgba(249, 115, 22, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #fb923c;
+        }
+        .code {
+            background: #0f172a;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .nav a:hover {
+            background: #f97316;
+            color: white;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .content { padding: 24px; }
+            .tutorial-table { font-size: 0.85rem; }
+            .tutorial-table th, .tutorial-table td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="chapter-num">第 4 章</span>
+            <h1>为什么这么火</h1>
+        </div>
+        <div class="content">
+            <p>整体架构</p>
+<p>Architecture Overview</p>
+<p>OpenClaw 采用 Gateway-Node-Channel 三层架构， 以 WebSocket 为通信总线， 将控制平面、 设备执行与消息渠道解耦。</p>
+<p>三层架构 Gateway · Node · Channel</p>
+<p>→	→</p>
+<p>Gateway	中央控制平面， 维护 WebSocket 服务、 管理 Session、 调度 Agent</p>
+<p>默认绑定例</p>
+<p>， 每台主机一个实</p>
+<p>Node	设备端执行节点， 负责本地操作	camera（摄像头） 、 screen recording（录屏） 、</p>
+<p>system.run（系统命令） 等</p>
+<p>Channel	消息渠道接入层， 连接 20+ 即时通讯平台	WhatsApp、 Telegram、 Discord、 Slack、 飞书、 钉钉</p>
+<p>Loopback-First 设计 Security by Default</p>
+<p>Gateway 默认只绑定	（127.0.0.1） ， 所有流量在本地回环。 这意味着：</p>
+<p>不开放任何外网端口， 天然安全</p>
+<p>同一台机器上的 Node 直接通过 WebSocket 连接Gateway</p>
+<p>需要远程访问时， 通过 Tailscale Serve/Funnel 暴露， 不直接暴露端口</p>
+<p>通信流程</p>
+<p>一条消息从用户发出到 Agent 回复， 完整路径如下：</p>
+<p>→	→</p>
+        </div>
+        <div class="nav">
+            <a href="03-创始人故事.html">← 上一章</a>
+            <a href="05-整体架构.html">下一章 →</a>
+        </div>
+    </div>
+</body>
+</html>
