@@ -1,6 +1,9 @@
-import { Sparkles, Monitor, ExternalLink } from 'lucide-react';
+import { useState } from 'react';
+import { Sparkles, Monitor, ExternalLink, AlertCircle } from 'lucide-react';
 
 const WorkspacePage = () => {
+  const [iframeError, setIframeError] = useState(false);
+
   return (
     <div className="min-h-screen bg-lobster-dark text-white pt-24 pb-16">
       <div className="container-custom">
@@ -27,15 +30,51 @@ const WorkspacePage = () => {
           </a>
         </div>
 
-        {/* iframe embed */}
-        <div className="bg-white/5 rounded-2xl border border-white/10 overflow-hidden" style={{ height: 'calc(100vh - 220px)', minHeight: '1100px' }}>
-          <iframe
-            src="http://ninini.cc.cd"
-            title="小泥巴工作室"
-            className="w-full h-full border-0"
-            allow="accelerometer; ambient-light-sensor; autoplay; camera; document-domain; encrypted-media; fullscreen; geolocation; gyroscope; layout-shift; magnetometer; microphone; midi; otp-autocomplete; payment; picture-in-picture; private-network-connection; sync-xhr; usb; vr; wake-lock; xr-spatial-tracking"
-            sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
-          />
+        {/* iframe embed - with fallback message */}
+        <div className="bg-white/5 rounded-2xl border border-white/10 overflow-hidden relative" style={{ height: 'calc(100vh - 220px)', minHeight: '1100px' }}>
+          {iframeError ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-lobster-dark">
+              <div className="text-center max-w-md p-8">
+                <AlertCircle className="w-16 h-16 text-lobster-orange mx-auto mb-6" />
+                <h3 className="text-xl font-semibold text-white mb-4">无法嵌入展示</h3>
+                <p className="text-white/60 mb-6">
+                  该网站限制了iframe嵌入，请点击下方按钮在新窗口中打开
+                </p>
+                <a
+                  href="http://ninini.cc.cd"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-lobster-orange text-white rounded-lg hover:bg-lobster-orange/80 transition-colors"
+                >
+                  <ExternalLink className="w-5 h-5" />
+                  <span>在新窗口打开工作室</span>
+                </a>
+              </div>
+            </div>
+          ) : (
+            <iframe
+              src="http://ninini.cc.cd"
+              title="小泥巴工作室"
+              className="w-full h-full border-0"
+              allow="accelerometer; ambient-light-sensor; autoplay; camera; document-domain; encrypted-media; fullscreen; geolocation; gyroscope; layout-shift; magnetometer; microphone; midi; otp-autocomplete; payment; picture-in-picture; private-network-connection; sync-xhr; usb; vr; wake-lock; xr-spatial-tracking"
+              sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+              onLoad={() => {
+                // Check if iframe loaded successfully by trying to access its content
+                const iframe = document.querySelector('iframe[title="小泥巴工作室"]') as HTMLIFrameElement;
+                if (iframe) {
+                  try {
+                    // If we can't access the iframe content, it might be blocked
+                    if (iframe.contentWindow === null) {
+                      setIframeError(true);
+                    }
+                  } catch (e) {
+                    // Cross-origin blocked - show fallback
+                    setIframeError(true);
+                  }
+                }
+              }}
+            />
+          )}
         </div>
 
         {/* Status info */}
