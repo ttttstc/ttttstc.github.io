@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>泥巴猪的实验田</title>
     <script>
-      // GitHub Pages SPA 路由处理 - 直接加载首页不重定向
+      // GitHub Pages SPA 路由处理
       (function() {
         var path = location.pathname;
-        var search = location.search;
 
         // 排除静态资源路径
         var isStaticResource = path.startsWith('/source/') ||
@@ -24,12 +23,12 @@
 
         if (!isStaticResource && path !== '/') {
           // 保存原始路径到 sessionStorage
-          sessionStorage.redirect = path + search;
+          sessionStorage.redirect = path + location.search;
         }
       })();
     </script>
-    <script type="module" crossorigin src="./assets/index.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index.css">
+    <script type="module" crossorigin src="/assets/index.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index.css">
   </head>
   <body>
     <div id="root"></div>
@@ -39,7 +38,7 @@
         var redirect = sessionStorage.getItem('redirect');
         if (redirect) {
           sessionStorage.removeItem('redirect');
-          history.replaceState(null, null, redirect);
+          history.replaceState(null, '', redirect);
         }
       })();
     </script>
