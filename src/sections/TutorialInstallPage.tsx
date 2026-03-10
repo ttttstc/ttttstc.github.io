@@ -10,6 +10,7 @@ interface TutorialItem {
 }
 
 const tutorials: TutorialItem[] = [
+  // 原有基础教程
   {
     slug: '5分钟安装openclaw',
     title: '5 分钟安装 OpenClaw',
@@ -21,6 +22,145 @@ const tutorials: TutorialItem[] = [
     title: '连接 Telegram 机器人',
     description: '配置 Telegram BotFather，获取 Token',
     readTime: '10 min',
+  },
+  // OpenClaw 橙皮书章节
+  {
+    slug: 'chapters/01-openclaw是什么',
+    title: '01. OpenClaw 是什么',
+    description: '认识 OpenClaw：开源、自托管的 AI Agent 系统',
+    readTime: '5 min',
+  },
+  {
+    slug: 'chapters/02-发展简史',
+    title: '02. 发展简史',
+    description: '从 0 到 27.9 万 Stars 的传奇增长历程',
+    readTime: '5 min',
+  },
+  {
+    slug: 'chapters/03-创始人故事',
+    title: '03. 创始人故事',
+    description: 'Peter Steinberger：从周末项目到全球最火开源项目',
+    readTime: '5 min',
+  },
+  {
+    slug: 'chapters/04-为什么这么火',
+    title: '04. 为什么这么火',
+    description: '增长数据与"养虾"文化现象分析',
+    readTime: '8 min',
+  },
+  {
+    slug: 'chapters/05-整体架构',
+    title: '05. 整体架构',
+    description: 'Gateway-Node-Channel 三层架构解析',
+    readTime: '8 min',
+  },
+  {
+    slug: 'chapters/06-记忆系统',
+    title: '06. 记忆系统',
+    description: '四层记忆架构：SOUL/TOOLS/USER/Session',
+    readTime: '8 min',
+  },
+  {
+    slug: 'chapters/07-agent工作区',
+    title: '07. Agent 工作区',
+    description: '文件系统目录结构与配置详解',
+    readTime: '6 min',
+  },
+  {
+    slug: 'chapters/08-session与用户识别',
+    title: '08. Session 与用户识别',
+    description: 'DM 配对、白名单、群组规则与隔离机制',
+    readTime: '8 min',
+  },
+  {
+    slug: 'chapters/09-设计哲学',
+    title: '09. 设计哲学',
+    description: 'Unix 哲学、极简设计、自我扩展能力',
+    readTime: '10 min',
+  },
+  {
+    slug: 'chapters/10-部署方式总览',
+    title: '10. 部署方式总览',
+    description: '本地/Docker/云厂商一键部署对比',
+    readTime: '6 min',
+  },
+  {
+    slug: 'chapters/11-本地安装',
+    title: '11. 本地安装',
+    description: 'npm/pnpm 安装与守护进程配置',
+    readTime: '8 min',
+  },
+  {
+    slug: 'chapters/12-docker部署',
+    title: '12. Docker 部署',
+    description: 'docker-compose 快速启动与镜像配置',
+    readTime: '10 min',
+  },
+  {
+    slug: 'chapters/13-国内云厂商一键部署',
+    title: '13. 国内云厂商一键部署',
+    description: '阿里云/腾讯云/百度云/火山引擎/扣子编程',
+    readTime: '15 min',
+  },
+  {
+    slug: 'chapters/14-首次配置',
+    title: '14. 首次配置',
+    description: 'Gateway 认证、模型 API Key 配置与更新',
+    readTime: '10 min',
+  },
+  {
+    slug: 'chapters/15-渠道概览',
+    title: '15. 渠道概览',
+    description: '20+ 消息平台一览与新手推荐',
+    readTime: '6 min',
+  },
+  {
+    slug: 'chapters/16-国际平台接入',
+    title: '16. 国际平台接入',
+    description: 'Telegram/Discord/WhatsApp/Slack/Signal/iMessage',
+    readTime: '20 min',
+  },
+  {
+    slug: 'chapters/17-国内平台接入',
+    title: '17. 国内平台接入',
+    description: 'QQ/飞书/钉钉/企业微信/微信个人号',
+    readTime: '20 min',
+  },
+  {
+    slug: 'chapters/18-远程访问',
+    title: '18. 远程访问',
+    description: 'Tailscale/SSH/Web UI 与 macOS 客户端',
+    readTime: '8 min',
+  },
+  {
+    slug: 'chapters/19-skills工作原理',
+    title: '19. Skills 工作原理',
+    description: '三层优先级与加载机制详解',
+    readTime: '8 min',
+  },
+  {
+    slug: 'chapters/20-clawhub技能市场',
+    title: '20. ClawHub 技能市场',
+    description: '13,729 个 Skills 的质量分析与筛选',
+    readTime: '6 min',
+  },
+  {
+    slug: 'chapters/21-热门skills推荐',
+    title: '21. 热门 Skills 推荐',
+    description: '必装 Top 10 技能与内置 55 个技能分类',
+    readTime: '8 min',
+  },
+  {
+    slug: 'chapters/22-自建skill指南',
+    title: '22. 自建 Skill 指南',
+    description: '开发自定义技能的完整教程',
+    readTime: '10 min',
+  },
+  {
+    slug: 'chapters/23-skills安全与模型配置',
+    title: '23. Skills 安全与模型配置',
+    description: '安全模型与国际/国产/本地模型配置指南',
+    readTime: '15 min',
   },
 ];
 

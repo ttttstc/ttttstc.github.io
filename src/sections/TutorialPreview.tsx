@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Clock, ArrowRight, BookOpen, Layers, MessageSquare, Code, Shield } from 'lucide-react';
+import { Clock, ArrowRight, BookOpen, Layers, MessageSquare, Code, Shield, Rocket, Database, Globe, Cpu } from 'lucide-react';
 
 interface Tutorial {
   tag: string;
@@ -7,6 +7,7 @@ interface Tutorial {
   title: string;
   description: string;
   readTime: string;
+  slug?: string;
 }
 
 const tutorials: Tutorial[] = [
@@ -16,6 +17,23 @@ const tutorials: Tutorial[] = [
     title: '5 分钟安装 Openclaw',
     description: '一行命令完成安装，快速启动你的第一个 AI 代理',
     readTime: '5 min',
+    slug: '5分钟安装openclaw',
+  },
+  {
+    tag: '入门',
+    tagIcon: Rocket,
+    title: 'OpenClaw 是什么',
+    description: '认识开源、自托管的 AI Agent 系统',
+    readTime: '5 min',
+    slug: 'chapters/01-openclaw是什么',
+  },
+  {
+    tag: '架构',
+    tagIcon: Layers,
+    title: '整体架构解析',
+    description: 'Gateway-Node-Channel 三层架构详解',
+    readTime: '8 min',
+    slug: 'chapters/05-整体架构',
   },
   {
     tag: '集成',
@@ -23,13 +41,23 @@ const tutorials: Tutorial[] = [
     title: '连接 Telegram 机器人',
     description: '配置 BotFather，获取 Token，让 AI 助手响应你的消息',
     readTime: '10 min',
+    slug: '连接telegram机器人',
   },
   {
     tag: '集成',
-    tagIcon: Layers,
-    title: 'WhatsApp 桥接设置',
-    description: '通过 QR 码扫描连接 WhatsApp，实现消息自动化',
-    readTime: '15 min',
+    tagIcon: Globe,
+    title: '国际平台接入',
+    description: 'Telegram/Discord/WhatsApp/Slack 配置指南',
+    readTime: '20 min',
+    slug: 'chapters/16-国际平台接入',
+  },
+  {
+    tag: '集成',
+    tagIcon: Database,
+    title: '国内平台接入',
+    description: 'QQ/飞书/钉钉/企业微信配置指南',
+    readTime: '20 min',
+    slug: 'chapters/17-国内平台接入',
   },
   {
     tag: '进阶',
@@ -37,6 +65,7 @@ const tutorials: Tutorial[] = [
     title: '开发自定义技能',
     description: '学习技能开发框架，扩展 AI 助手的能力边界',
     readTime: '20 min',
+    slug: 'chapters/22-自建skill指南',
   },
   {
     tag: '运维',
@@ -44,6 +73,15 @@ const tutorials: Tutorial[] = [
     title: '生产环境安全配置',
     description: '沙箱隔离、权限控制、审计日志，构建安全的 AI 环境',
     readTime: '15 min',
+    slug: 'chapters/23-skills安全与模型配置',
+  },
+  {
+    tag: '模型',
+    tagIcon: Cpu,
+    title: '模型配置指南',
+    description: '国际/国产/本地模型配置全攻略',
+    readTime: '15 min',
+    slug: 'chapters/23-skills安全与模型配置',
   },
 ];
 
@@ -172,10 +210,9 @@ const TutorialPreview = () => {
                 <div className="mt-6 pt-4 border-t border-white/10">
                   <button
                     onClick={() => {
-                      if (index === 0) {
-                        window.history.pushState({}, '', '/tutorial');
-                        window.dispatchEvent(new PopStateEvent('popstate'));
-                      }
+                      // 跳转到教程页面
+                      window.history.pushState({}, '', '/lobster/tutorial');
+                      window.dispatchEvent(new PopStateEvent('popstate'));
                     }}
                     className="flex items-center gap-2 text-sm text-lobster-orange hover:gap-3 transition-all cursor-pointer"
                   >
