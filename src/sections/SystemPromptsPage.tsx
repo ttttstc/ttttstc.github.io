@@ -1,17 +1,17 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { Copy, Search, Menu, X, ExternalLink, Home, Sparkle, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
+import { Copy, Search, Menu, X, ExternalLink, Home, Sparkle, ChevronLeft, ChevronRight, ArrowLeft, Grid3X3, Layers, Globe } from 'lucide-react';
 import { systemPrompts, type SystemPrompt } from '../data/systemPrompts';
 
-// 龙虾橙配色
+// 黑橙配色
 const COLORS = {
-  bg: '#F9F8F6', // 米白色
-  bgSecondary: '#FFFFFF',
-  bgTertiary: '#F5F4F2',
-  border: '#E8E6E3',
-  borderHover: '#D4D2CF',
-  text: '#1A1A1A',
-  textSecondary: '#666666',
-  textMuted: '#999999',
+  bg: '#000000',
+  bgSecondary: '#0A0A0A',
+  bgTertiary: '#141414',
+  border: '#262626',
+  borderHover: '#404040',
+  text: '#FAFAFA',
+  textSecondary: '#A1A1A1',
+  textMuted: '#6B6B6B',
   accent: '#FF6B35',
   accentHover: '#FF8C5A',
   accentMuted: '#FF6B3533',
@@ -93,6 +93,321 @@ const AI_TOOLS_SUBCATEGORIES = [
   { id: 'open-source', name: '开源方案', nameEn: 'Open Source', tools: ['Open Source prompts', 'Anthropic', 'Google', 'Emergent'] },
 ];
 
+type ViewMode = 'list' | 'globe' | 'stacked' | 'traditional';
+
+// Three.js 组件 - 3D 视图渲染器
+function ThreeViewRenderer({
+  prompts,
+  viewMode,
+  onSelectPrompt
+}: {
+  prompts: SystemPrompt[];
+  viewMode: 'globe' | 'stacked' | 'traditional';
+  onSelectPrompt: (prompt: SystemPrompt) => void;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rendererRef = useRef<any>(null);
+  const sceneRef = useRef<any>(null);
+  const cameraRef = useRef<any>(null);
+  const cardsRef = useRef<any[]>([]);
+  const controlsRef = useRef<any>(null);
+  const raycasterRef = useRef<any>(null);
+  const mouseRef = useRef<any>({ x: 0, y: 0 });
+  const hoveredCardRef = useRef<any>(null);
+  const animationFrameRef = useRef<number>(0);
+
+  // 配色 - 黑橙主题
+  const colorPalettes = [
+    '#FF6B35', '#FF8C5A', '#F7931E', '#FF5722',
+    '#E64A19', '#FF7043', '#FFAB91', '#FFCCBC',
+    '#FF5722', '#FF6B35', '#FF8A65', '#FFAB91',
+    '#F7931E', '#FFB74D', '#FFE082', '#FFF3E0'
+  ];
+
+  // 初始化 Three.js
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    // 清理旧实例
+    if (rendererRef.current) {
+      rendererRef.current.dispose();
+      containerRef.current.innerHTML = '';
+    }
+
+    const container = containerRef.current;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    // 场景
+    const scene = new (window as any).THREE.Scene();
+    scene.background = new (window as any).THREE.Color(0x000000);
+    sceneRef.current = scene;
+
+    // 相机
+    const camera = new (window as any).THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+    camera.position.z = viewMode === 'globe' ? 5 : viewMode === 'stacked' ? 3 : 4.5;
+    cameraRef.current = camera;
+
+    // 渲染器
+    const renderer = new (window as any).THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+    rendererRef.current = renderer;
+
+    // 控制器
+    const controls = new (window as any).OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.enableZoom = true;
+    controls.minDistance = 2;
+    controls.maxDistance = 10;
+    controls.enablePan = false;
+    controls.autoRotate = viewMode === 'globe';
+    controls.autoRotateSpeed = 0.3;
+    controlsRef.current = controls;
+
+    // 射线检测
+    const raycaster = new (window as any).THREE.Raycaster();
+    raycaster.params.Mesh.threshold = 0.1;
+    raycasterRef.current = raycaster;
+
+    // 创建卡片
+    const cards: any[] = [];
+    const cardGeometry = new (window as any).THREE.PlaneGeometry(0.8, 1.1);
+
+    prompts.forEach((prompt, index) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 160;
+      canvas.height = 220;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return null;
+
+      // 背景 - 深色
+      ctx.fillStyle = '#0A0A0A';
+      ctx.fillRect(0, 0, 160, 220);
+
+      // 橙色边框
+      ctx.strokeStyle = colorPalettes[index % colorPalettes.length];
+      ctx.lineWidth = 2;
+      ctx.strokeRect(4, 4, 152, 212);
+
+      // 标题
+      ctx.fillStyle = '#FAFAFA';
+      ctx.font = 'bold 11px -apple-system, BlinkMacSystemFont, SF Pro Display, sans-serif';
+      ctx.textAlign = 'center';
+
+      const title = prompt.name.length > 18 ? prompt.name.slice(0, 16) + '...' : prompt.name;
+      ctx.fillText(title, 80, 50);
+
+      // 分类标签
+      ctx.fillStyle = colorPalettes[index % colorPalettes.length];
+      ctx.font = '9px -apple-system, BlinkMacSystemFont, SF Pro Display, sans-serif';
+      ctx.fillText(prompt.category, 80, 80);
+
+      // 描述
+      ctx.fillStyle = '#6B6B6B';
+      ctx.font = '9px -apple-system, BlinkMacSystemFont, SF Pro Display, sans-serif';
+      const desc = prompt.description.length > 60 ? prompt.description.slice(0, 58) + '...' : prompt.description;
+      const lines = desc.match(/.{1,28}/g) || [];
+      lines.slice(0, 4).forEach((line: string, i: number) => {
+        ctx.fillText(line, 80, 110 + i * 14);
+      });
+
+      // 底部年份
+      ctx.fillStyle = '#FF6B35';
+      ctx.font = 'bold 10px monospace';
+      ctx.fillText(`#${String(index + 1).padStart(2, '0')}`, 80, 200);
+
+      const texture = new (window as any).THREE.CanvasTexture(canvas);
+      const material = new (window as any).THREE.MeshBasicMaterial({
+        map: texture,
+        side: (window as any).THREE.DoubleSide
+      });
+
+      const card = new (window as any).THREE.Mesh(cardGeometry, material);
+      card.userData = { prompt, index, originalPosition: null };
+      cards.push(card);
+      scene.add(card);
+    });
+
+    cardsRef.current = cards;
+
+    // 定位卡片
+    positionCards(viewMode, cards);
+
+    // 鼠标移动事件
+    const onMouseMove = (event: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      mouseRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseRef.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouseRef.current, camera);
+      const intersects = raycaster.intersectObjects(cards);
+
+      if (intersects.length > 0) {
+        const intersected = intersects[0].object;
+
+        if (hoveredCardRef.current !== intersected) {
+          // 恢复上一个
+          if (hoveredCardRef.current) {
+            (window as any).gsap.to(hoveredCardRef.current.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
+            if (viewMode === 'globe') {
+              resetCardPosition(hoveredCardRef.current);
+            }
+          }
+
+          hoveredCardRef.current = intersected;
+
+          // 悬停效果
+          (window as any).gsap.to(intersected.scale, { x: 1.15, y: 1.15, z: 1.15, duration: 0.3 });
+
+          if (viewMode === 'stacked') {
+            (window as any).gsap.to(intersected.position, {
+              y: intersected.position.y + 0.5,
+              duration: 0.4,
+              ease: "back.out(1.7)"
+            });
+          } else if (viewMode === 'traditional') {
+            (window as any).gsap.to(intersected.position, {
+              y: intersected.position.y + 0.2,
+              duration: 0.3
+            });
+          }
+
+          // 显示提示
+          container.style.cursor = 'pointer';
+        }
+      } else {
+        if (hoveredCardRef.current) {
+          (window as any).gsap.to(hoveredCardRef.current.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
+          if (viewMode === 'globe') {
+            resetCardPosition(hoveredCardRef.current);
+          } else if (viewMode === 'stacked') {
+            const idx = hoveredCardRef.current.userData.index;
+            (window as any).gsap.to(hoveredCardRef.current.position, {
+              y: -idx * 0.008,
+              duration: 0.3
+            });
+          } else if (viewMode === 'traditional') {
+            const idx = hoveredCardRef.current.userData.index;
+            const row = Math.floor(idx / 6);
+            (window as any).gsap.to(hoveredCardRef.current.position, {
+              y: -(row - Math.floor(prompts.length / 6) / 2) * 1.25,
+              duration: 0.3
+            });
+          }
+          hoveredCardRef.current = null;
+        }
+        container.style.cursor = 'default';
+      }
+    };
+
+    // 点击事件
+    const onClick = () => {
+      if (hoveredCardRef.current) {
+        onSelectPrompt(hoveredCardRef.current.userData.prompt);
+      }
+    };
+
+    container.addEventListener('mousemove', onMouseMove);
+    container.addEventListener('click', onClick);
+
+    // 动画循环
+    const animate = () => {
+      animationFrameRef.current = requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    // 清理
+    return () => {
+      cancelAnimationFrame(animationFrameRef.current);
+      container.removeEventListener('mousemove', onMouseMove);
+      container.removeEventListener('click', onClick);
+      if (rendererRef.current) {
+        rendererRef.current.dispose();
+        container.innerHTML = '';
+      }
+    };
+  }, [viewMode, prompts.length]);
+
+  // 定位卡片
+  const positionCards = (mode: 'globe' | 'stacked' | 'traditional', cards: any[]) => {
+    const count = cards.length;
+
+    if (mode === 'globe') {
+      const radius = 1.8;
+      cards.forEach((card, i) => {
+        const phi = Math.acos(1 - 2 * (i + 0.5) / count);
+        const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+        const x = radius * Math.sin(phi) * Math.cos(theta);
+        const y = radius * Math.sin(phi) * Math.sin(theta);
+        const z = radius * Math.cos(phi);
+
+        const normal = new (window as any).THREE.Vector3(x, y, z).normalize();
+        const quaternion = new (window as any).THREE.Quaternion();
+        quaternion.setFromUnitVectors(new (window as any).THREE.Vector3(0, 0, 1), normal);
+
+        (window as any).gsap.to(card.position, { x, y, z, duration: 1.2, ease: "power3.inOut" });
+        (window as any).gsap.to(card.quaternion, {
+          x: quaternion.x, y: quaternion.y, z: quaternion.z, w: quaternion.w,
+          duration: 1.2, ease: "power3.inOut"
+        });
+        card.userData.originalPosition = { x, y, z };
+      });
+    } else if (mode === 'stacked') {
+      cards.forEach((card, i) => {
+        const z = -i * 0.01;
+        const y = -i * 0.006;
+        (window as any).gsap.to(card.position, { x: 0, y, z, duration: 1.2, ease: "power3.inOut" });
+        (window as any).gsap.to(card.quaternion, { x: 0, y: 0, z: 0, w: 1, duration: 1.2 });
+      });
+    } else if (mode === 'traditional') {
+      const cols = 6;
+      cards.forEach((card, i) => {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        const x = (col - 2.5) * 0.95;
+        const y = -(row - Math.floor(count / cols) / 2) * 1.25;
+        (window as any).gsap.to(card.position, { x, y, z: 0, duration: 1.2, ease: "power3.inOut" });
+        (window as any).gsap.to(card.quaternion, { x: 0, y: 0, z: 0, w: 1, duration: 1.2 });
+      });
+    }
+  };
+
+  // 重置球体视图中的卡片位置
+  const resetCardPosition = (card: any) => {
+    if (!card.userData.originalPosition) return;
+    const orig = card.userData.originalPosition;
+    (window as any).gsap.to(card.position, { x: orig.x, y: orig.y, z: orig.z, duration: 0.3 });
+  };
+
+  // 窗口大小变化
+  useEffect(() => {
+    const handleResize = () => {
+      if (!containerRef.current || !rendererRef.current || !cameraRef.current) return;
+      const width = containerRef.current.clientWidth;
+      const height = containerRef.current.clientHeight;
+      cameraRef.current.aspect = width / height;
+      cameraRef.current.updateProjectionMatrix();
+      rendererRef.current.setSize(width, height);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="w-full h-full"
+      style={{ background: '#000000' }}
+    />
+  );
+}
+
 export default function SystemPromptsPage() {
   const [currentView, setCurrentView] = useState<'menu' | 'category'>('menu');
   const [selectedMainCategory, setSelectedMainCategory] = useState<string | null>(null);
@@ -105,6 +420,7 @@ export default function SystemPromptsPage() {
   const [copied, setCopied] = useState(false);
   const [categorySlideIndex, setCategorySlideIndex] = useState(0);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const categoryListRef = useRef<HTMLDivElement>(null);
 
   // 获取所有分类
@@ -120,7 +436,6 @@ export default function SystemPromptsPage() {
 
     // 按主分类过滤
     if (selectedMainCategory === 'ai-tools') {
-      // 智能工具：支持二级分类
       if (selectedSubCategory !== 'all') {
         const subCat = AI_TOOLS_SUBCATEGORIES.find(s => s.id === selectedSubCategory);
         if (subCat) {
@@ -237,6 +552,14 @@ export default function SystemPromptsPage() {
     setSelectedPrompt(null);
   };
 
+  // 视图切换
+  const handleViewModeChange = (mode: ViewMode) => {
+    setViewMode(mode);
+    if (mode !== 'list') {
+      setSelectedPrompt(null);
+    }
+  };
+
   // 渲染一级分类菜单
   const renderMainMenu = () => (
     <div style={{ backgroundColor: COLORS.bg }} className="min-h-screen">
@@ -249,7 +572,7 @@ export default function SystemPromptsPage() {
           <a
             href="/"
             style={{ color: COLORS.textSecondary }}
-            className="flex items-center gap-2 hover:text-black transition-colors"
+            className="flex items-center gap-2 hover:text-white transition-colors"
           >
             <Home className="w-5 h-5" />
           </a>
@@ -267,7 +590,7 @@ export default function SystemPromptsPage() {
       <main className="px-6 py-12 max-w-7xl mx-auto">
         {/* 标题区 */}
         <div className="text-center mb-16">
-          <h2 style={{ fontFamily: 'Times New Roman, serif' }} className="text-5xl font-bold mb-4 tracking-wide">
+          <h2 style={{ fontFamily: 'Times New Roman, serif', color: COLORS.text }} className="text-5xl font-bold mb-4 tracking-wide">
             MYSTERY SPELL BOX
           </h2>
           <p style={{ color: COLORS.textSecondary }} className="text-lg max-w-2xl mx-auto">
@@ -304,7 +627,7 @@ export default function SystemPromptsPage() {
               />
 
               <div className="text-4xl mb-4">{cat.icon}</div>
-              <h3 style={{ fontFamily: 'Times New Roman, serif' }} className="text-xl font-semibold mb-2">
+              <h3 style={{ fontFamily: 'Times New Roman, serif', color: COLORS.text }} className="text-xl font-semibold mb-2">
                 {cat.name}
               </h3>
               <p style={{ color: COLORS.textSecondary }} className="text-sm mb-3">
@@ -335,7 +658,7 @@ export default function SystemPromptsPage() {
           <button
             onClick={currentView === 'category' && selectedSubCategory !== 'all' ? handleBackToCategory : handleBackToMenu}
             style={{ color: COLORS.textSecondary }}
-            className="flex items-center gap-2 hover:text-black transition-colors"
+            className="flex items-center gap-2 hover:text-white transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -347,13 +670,62 @@ export default function SystemPromptsPage() {
             </h1>
           </div>
         </div>
+
+        {/* 视图切换按钮 */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => handleViewModeChange('list')}
+            style={{
+              backgroundColor: viewMode === 'list' ? COLORS.accent : COLORS.bgTertiary,
+              color: viewMode === 'list' ? '#000' : COLORS.textSecondary,
+            }}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all hover:scale-105"
+          >
+            <Grid3X3 className="w-4 h-4" />
+            <span className="hidden sm:inline">列表</span>
+          </button>
+          <button
+            onClick={() => handleViewModeChange('globe')}
+            style={{
+              backgroundColor: viewMode === 'globe' ? COLORS.accent : COLORS.bgTertiary,
+              color: viewMode === 'globe' ? '#000' : COLORS.textSecondary,
+            }}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all hover:scale-105"
+          >
+            <Globe className="w-4 h-4" />
+            <span className="hidden sm:inline">球体</span>
+          </button>
+          <button
+            onClick={() => handleViewModeChange('stacked')}
+            style={{
+              backgroundColor: viewMode === 'stacked' ? COLORS.accent : COLORS.bgTertiary,
+              color: viewMode === 'stacked' ? '#000' : COLORS.textSecondary,
+            }}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all hover:scale-105"
+          >
+            <Layers className="w-4 h-4" />
+            <span className="hidden sm:inline">堆叠</span>
+          </button>
+          <button
+            onClick={() => handleViewModeChange('traditional')}
+            style={{
+              backgroundColor: viewMode === 'traditional' ? COLORS.accent : COLORS.bgTertiary,
+              color: viewMode === 'traditional' ? '#000' : COLORS.textSecondary,
+            }}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all hover:scale-105"
+          >
+            <Grid3X3 className="w-4 h-4" />
+            <span className="hidden sm:inline">网格</span>
+          </button>
+        </div>
+
         <div style={{ color: COLORS.textMuted }} className="text-sm">
           {filteredPrompts.length} 个提示词
         </div>
       </header>
 
-      {/* Category Slider */}
-      {selectedMainCategory === 'ai-tools' && (
+      {/* Category Slider - 仅在列表视图显示 */}
+      {selectedMainCategory === 'ai-tools' && viewMode === 'list' && (
         <div style={{
           backgroundColor: COLORS.bgSecondary,
           borderBottom: `1px solid ${COLORS.border}`
@@ -362,7 +734,7 @@ export default function SystemPromptsPage() {
             <button
               onClick={() => slideCategory('left')}
               style={{ color: COLORS.textSecondary, backgroundColor: COLORS.bgTertiary }}
-              className="p-2 rounded-lg hover:bg-gray-200 transition-all duration-200 flex-shrink-0 z-10"
+              className="p-2 rounded-lg hover:bg-gray-800 transition-all duration-200 flex-shrink-0 z-10"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -382,7 +754,7 @@ export default function SystemPromptsPage() {
                 }}
                 style={{
                   backgroundColor: selectedSubCategory === 'all' ? COLORS.accent : COLORS.bgTertiary,
-                  color: selectedSubCategory === 'all' ? '#fff' : COLORS.textSecondary,
+                  color: selectedSubCategory === 'all' ? '#000' : COLORS.textSecondary,
                 }}
                 className="px-4 py-1.5 text-sm font-medium rounded-full whitespace-nowrap transition-all duration-300 hover:scale-105 flex-shrink-0"
               >
@@ -394,7 +766,7 @@ export default function SystemPromptsPage() {
                   onClick={() => handleCategoryClick(cat)}
                   style={{
                     backgroundColor: selectedSubCategory === cat ? COLORS.accent : COLORS.bgTertiary,
-                    color: selectedSubCategory === cat ? '#fff' : COLORS.textSecondary,
+                    color: selectedSubCategory === cat ? '#000' : COLORS.textSecondary,
                   }}
                   className="px-4 py-1.5 text-sm font-medium rounded-full whitespace-nowrap transition-all duration-300 hover:scale-105 flex-shrink-0"
                 >
@@ -406,7 +778,7 @@ export default function SystemPromptsPage() {
             <button
               onClick={() => slideCategory('right')}
               style={{ color: COLORS.textSecondary, backgroundColor: COLORS.bgTertiary }}
-              className="p-2 rounded-lg hover:bg-gray-200 transition-all duration-200 flex-shrink-0 z-10"
+              className="p-2 rounded-lg hover:bg-gray-800 transition-all duration-200 flex-shrink-0 z-10"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -414,196 +786,218 @@ export default function SystemPromptsPage() {
         </div>
       )}
 
-      {/* Main Content */}
+      {/* 搜索框 - 列表视图显示 */}
+      {viewMode === 'list' && (
+        <div className="px-4 py-4" style={{ backgroundColor: COLORS.bgSecondary, borderBottom: `1px solid ${COLORS.border}` }}>
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: COLORS.textMuted }} />
+            <input
+              type="text"
+              placeholder="搜索提示词..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                backgroundColor: COLORS.bgTertiary,
+                border: `1px solid ${COLORS.border}`,
+                color: COLORS.text,
+              }}
+              className="w-full pl-10 pr-4 py-2.5 text-sm rounded-lg focus:outline-none focus:border-orange-500 transition-colors placeholder:text-gray-600"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* 主内容区 */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Mobile sidebar toggle */}
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          style={{ backgroundColor: COLORS.accent }}
-          className="lg:hidden fixed bottom-6 right-6 z-50 p-3 rounded-full shadow-lg"
-        >
-          {sidebarOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
-        </button>
-
-        {/* Left sidebar */}
-        <aside
-          style={{
-            backgroundColor: COLORS.bgSecondary,
-            borderRight: `1px solid ${COLORS.border}`
-          }}
-          className={`
-            w-full lg:w-80 flex-shrink-0
-            fixed lg:relative inset-0 z-40 lg:z-auto
-            transform transition-transform duration-500 ease-out
-            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-            pt-16 lg:pt-0
-          `}
-        >
-          <div className="h-full flex flex-col overflow-hidden">
-            {/* Search */}
-            <div className="p-4" style={{ borderBottom: `1px solid ${COLORS.border}` }}>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: COLORS.textMuted }} />
-                <input
-                  type="text"
-                  placeholder="搜索提示词..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  style={{
-                    backgroundColor: COLORS.bgTertiary,
-                    border: `1px solid ${COLORS.border}`,
-                    color: COLORS.text,
-                  }}
-                  className="w-full pl-10 pr-4 py-2.5 text-sm rounded-lg focus:outline-none focus:border-orange-500 transition-colors placeholder:text-gray-400"
-                />
-              </div>
-            </div>
-
-            {/* Prompt list */}
-            <div className="flex-1 overflow-y-auto">
-              {Object.entries(groupedPrompts).map(([category, prompts], groupIndex) => (
-                <div
-                  key={category}
-                  className="mb-2"
-                  style={{ animationDelay: `${groupIndex * 30}ms` }}
-                >
-                  <h3
-                    style={{ color: COLORS.accent, backgroundColor: COLORS.bgTertiary }}
-                    className="px-4 py-2 text-xs font-semibold sticky top-0"
-                  >
-                    {category} · {prompts.length}
-                  </h3>
-                  <div className="px-2 py-1">
-                    {prompts.map((prompt) => (
-                      <button
-                        key={prompt.id}
-                        onClick={() => {
-                          setSelectedPrompt(prompt);
-                          setSidebarOpen(false);
-                        }}
-                        style={{
-                          backgroundColor: selectedPrompt?.id === prompt.id ? COLORS.accentMuted : 'transparent',
-                          borderColor: selectedPrompt?.id === prompt.id ? COLORS.accent : 'transparent',
-                        }}
-                        className={`w-full text-left px-3 py-3 rounded-lg text-sm mb-1 transition-all duration-200 hover:bg-gray-100 border ${
-                          selectedPrompt?.id === prompt.id ? 'border-l-2' : ''
-                        }`}
-                      >
-                        <div
-                          style={{ color: selectedPrompt?.id === prompt.id ? COLORS.accent : COLORS.text }}
-                          className="font-medium truncate"
-                        >
-                          {prompt.name}
-                        </div>
-                        <div style={{ color: COLORS.textMuted }} className="text-xs truncate mt-0.5">
-                          {prompt.description}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-
-              {filteredPrompts.length === 0 && (
-                <div style={{ color: COLORS.textMuted }} className="p-8 text-center text-sm">
-                  没有找到匹配的提示词
-                </div>
-              )}
+        {/* 3D 视图渲染 */}
+        {viewMode !== 'list' ? (
+          <div className="flex-1 relative">
+            <ThreeViewRenderer
+              prompts={filteredPrompts}
+              viewMode={viewMode as 'globe' | 'stacked' | 'traditional'}
+              onSelectPrompt={(prompt) => {
+                setSelectedPrompt(prompt);
+                setViewMode('list');
+              }}
+            />
+            {/* 提示 */}
+            <div style={{ color: COLORS.textMuted }} className="absolute bottom-4 left-1/2 -translate-x-1/2 text-sm">
+              点击卡片查看详情
             </div>
           </div>
-        </aside>
+        ) : (
+          <>
+            {/* Mobile sidebar toggle */}
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              style={{ backgroundColor: COLORS.accent }}
+              className="lg:hidden fixed bottom-6 right-6 z-50 p-3 rounded-full shadow-lg"
+            >
+              {sidebarOpen ? <X className="w-5 h-5 text-black" /> : <Menu className="w-5 h-5 text-black" />}
+            </button>
 
-        {/* Right content area */}
-        <main className="flex-1 overflow-hidden flex flex-col" style={{ backgroundColor: COLORS.bg }}>
-          {selectedPrompt ? (
-            <>
-              {/* Content Header */}
-              <div
-                style={{
-                  backgroundColor: COLORS.bgSecondary,
-                  borderBottom: `1px solid ${COLORS.border}`
-                }}
-                className="p-6 flex items-center justify-between"
-              >
-                <div>
-                  <h2 className="text-xl font-semibold tracking-tight">{selectedPrompt.name}</h2>
-                  <p style={{ color: COLORS.textSecondary }} className="text-sm mt-1">{selectedPrompt.description}</p>
-                  <div style={{ color: COLORS.textMuted }} className="text-xs mt-2">
-                    来源: {selectedPrompt.category}
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <a
-                    href={`https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools/blob/main/${selectedPrompt.file}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      backgroundColor: COLORS.bgTertiary,
-                      border: `1px solid ${COLORS.border}`,
-                      color: COLORS.textSecondary
-                    }}
-                    className="p-2.5 rounded-lg hover:border-gray-500 transition-colors"
-                    title="查看原始文件"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                  <button
-                    onClick={handleCopy}
-                    style={{
-                      backgroundColor: copied ? '#22C55E' : COLORS.accent,
-                    }}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 text-white"
-                  >
-                    <Copy className="w-4 h-4" />
-                    {copied ? '已复制!' : '复制'}
-                  </button>
+            {/* Left sidebar */}
+            <aside
+              style={{
+                backgroundColor: COLORS.bgSecondary,
+                borderRight: `1px solid ${COLORS.border}`
+              }}
+              className={`
+                w-full lg:w-80 flex-shrink-0
+                fixed lg:relative inset-0 z-40 lg:z-auto
+                transform transition-transform duration-500 ease-out
+                ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+                pt-16 lg:pt-0
+              `}
+            >
+              <div className="h-full flex flex-col overflow-hidden">
+                {/* Prompt list */}
+                <div className="flex-1 overflow-y-auto">
+                  {Object.entries(groupedPrompts).map(([category, prompts], groupIndex) => (
+                    <div
+                      key={category}
+                      className="mb-2"
+                      style={{ animationDelay: `${groupIndex * 30}ms` }}
+                    >
+                      <h3
+                        style={{ color: COLORS.accent, backgroundColor: COLORS.bgTertiary }}
+                        className="px-4 py-2 text-xs font-semibold sticky top-0"
+                      >
+                        {category} · {prompts.length}
+                      </h3>
+                      <div className="px-2 py-1">
+                        {prompts.map((prompt) => (
+                          <button
+                            key={prompt.id}
+                            onClick={() => {
+                              setSelectedPrompt(prompt);
+                              setSidebarOpen(false);
+                            }}
+                            style={{
+                              backgroundColor: selectedPrompt?.id === prompt.id ? COLORS.accentMuted : 'transparent',
+                              borderColor: selectedPrompt?.id === prompt.id ? COLORS.accent : 'transparent',
+                            }}
+                            className={`w-full text-left px-3 py-3 rounded-lg text-sm mb-1 transition-all duration-200 hover:bg-gray-900 border ${
+                              selectedPrompt?.id === prompt.id ? 'border-l-2' : ''
+                            }`}
+                          >
+                            <div
+                              style={{ color: selectedPrompt?.id === prompt.id ? COLORS.accent : COLORS.text }}
+                              className="font-medium truncate"
+                            >
+                              {prompt.name}
+                            </div>
+                            <div style={{ color: COLORS.textMuted }} className="text-xs truncate mt-0.5">
+                              {prompt.description}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+
+                  {filteredPrompts.length === 0 && (
+                    <div style={{ color: COLORS.textMuted }} className="p-8 text-center text-sm">
+                      没有找到匹配的提示词
+                    </div>
+                  )}
                 </div>
               </div>
+            </aside>
 
-              {/* Content */}
-              <div className="flex-1 overflow-y-auto p-6">
-                {loading ? (
-                  <div className="flex items-center justify-center h-full" style={{ color: COLORS.textMuted }}>
-                    <div className="flex flex-col items-center gap-3">
-                      <div
-                        style={{ borderColor: `${COLORS.accent}30`, borderTopColor: COLORS.accent }}
-                        className="animate-spin w-8 h-8 border-2 rounded-full"
-                      />
-                      <span className="text-sm">加载中...</span>
-                    </div>
-                  </div>
-                ) : (
-                  <pre
+            {/* Right content area */}
+            <main className="flex-1 overflow-hidden flex flex-col" style={{ backgroundColor: COLORS.bg }}>
+              {selectedPrompt ? (
+                <>
+                  {/* Content Header */}
+                  <div
                     style={{
                       backgroundColor: COLORS.bgSecondary,
-                      border: `1px solid ${COLORS.border}`,
-                      color: COLORS.textSecondary,
+                      borderBottom: `1px solid ${COLORS.border}`
                     }}
-                    className="whitespace-pre-wrap font-mono text-sm p-6 rounded-xl overflow-x-auto leading-relaxed"
+                    className="p-6 flex items-center justify-between"
                   >
-                    {promptContent}
-                  </pre>
-                )}
-              </div>
-            </>
-          ) : (
-            <div className="flex-1 flex items-center justify-center" style={{ color: COLORS.textMuted }}>
-              <div className="text-center">
-                <Sparkle className="w-16 h-16 mx-auto mb-4 opacity-20" />
-                <p className="text-lg mb-2">选择一个提示词开始探索</p>
-                <p className="text-sm opacity-60">探索 AI 工具思维方式的神秘世界</p>
-              </div>
-            </div>
-          )}
-        </main>
+                    <div>
+                      <h2 className="text-xl font-semibold tracking-tight">{selectedPrompt.name}</h2>
+                      <p style={{ color: COLORS.textSecondary }} className="text-sm mt-1">{selectedPrompt.description}</p>
+                      <div style={{ color: COLORS.textMuted }} className="text-xs mt-2">
+                        来源: {selectedPrompt.category}
+                      </div>
+                    </div>
+                    <div className="flex gap-3">
+                      <a
+                        href={`https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools/blob/main/${selectedPrompt.file}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          backgroundColor: COLORS.bgTertiary,
+                          border: `1px solid ${COLORS.border}`,
+                          color: COLORS.textSecondary
+                        }}
+                        className="p-2.5 rounded-lg hover:border-gray-500 transition-colors"
+                        title="查看原始文件"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                      <button
+                        onClick={handleCopy}
+                        style={{
+                          backgroundColor: copied ? '#22C55E' : COLORS.accent,
+                        }}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 text-white"
+                      >
+                        <Copy className="w-4 h-4" />
+                        {copied ? '已复制!' : '复制'}
+                      </button>
+                    </div>
+                  </div>
 
-        {/* Overlay for mobile */}
-        {sidebarOpen && (
-          <div
-            className="lg:hidden fixed inset-0 z-30"
-            style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-            onClick={() => setSidebarOpen(false)}
-          />
+                  {/* Content */}
+                  <div className="flex-1 overflow-y-auto p-6">
+                    {loading ? (
+                      <div className="flex items-center justify-center h-full" style={{ color: COLORS.textMuted }}>
+                        <div className="flex flex-col items-center gap-3">
+                          <div
+                            style={{ borderColor: `${COLORS.accent}30`, borderTopColor: COLORS.accent }}
+                            className="animate-spin w-8 h-8 border-2 rounded-full"
+                          />
+                          <span className="text-sm">加载中...</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <pre
+                        style={{
+                          backgroundColor: COLORS.bgSecondary,
+                          border: `1px solid ${COLORS.border}`,
+                          color: COLORS.textSecondary,
+                        }}
+                        className="whitespace-pre-wrap font-mono text-sm p-6 rounded-xl overflow-x-auto leading-relaxed"
+                      >
+                        {promptContent}
+                      </pre>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className="flex-1 flex items-center justify-center" style={{ color: COLORS.textMuted }}>
+                  <div className="text-center">
+                    <Sparkle className="w-16 h-16 mx-auto mb-4 opacity-20" />
+                    <p className="text-lg mb-2">选择一个提示词开始探索</p>
+                    <p className="text-sm opacity-60">探索 AI 工具思维方式的神秘世界</p>
+                  </div>
+                </div>
+              )}
+            </main>
+
+            {/* Overlay for mobile */}
+            {sidebarOpen && (
+              <div
+                className="lg:hidden fixed inset-0 z-30"
+                style={{ backgroundColor: 'rgba(0,0,0,0.8)' }}
+                onClick={() => setSidebarOpen(false)}
+              />
+            )}
+          </>
         )}
       </div>
     </div>
