@@ -267,39 +267,32 @@
         let isAnimating = false;
         let hoverTimeout = null; // 防抖计时器
 
-        // 杂志数据
+        // 杂志数据 - 减少数量
         const magazineData = [];
         const titles = [
-            'THE NEW AGE', 'URBAN RHYTHM', 'CITY LIGHTS', 'MODERN VISION',
-            'FUTURE FORWARD', 'STREET SCENE', 'DESIGN REVOLUTION', 'CULTURAL SHIFT',
-            'DIGITAL DAWN', 'CREATIVE WAVE', 'AESTHETIC JOURNEY', 'STYLISH TIMES',
-            'ART & LIFE', 'CULTURE CLASH', 'METROPOLITAN', 'TIMELESS ELEGANCE',
-            'GENESIS', 'HORIZON', 'SYNTHESIS', 'MANIFESTO',
-            'VIVID', 'PRISM', 'ECHO', 'FUSION',
-            'MOMENTUM', 'VERTEX', 'ZENITH', 'APEX',
-            'NEXUS', 'POLYPHONY', 'KALEIDOSCOPE', 'CABINET',
-            'ANTHOLOGY', 'COLLECTIVE', 'COMPENDIUM', 'ARCHIVE'
+            'AI Assistant', 'Code Review', 'Data Analysis', 'Content Writer',
+            'Translation', 'Image Gen', 'Research Agent', 'Marketing',
+            'SQL Generator', 'API Design', 'Security', 'DevOps',
+            'Database', 'Testing', 'Frontend', 'Backend'
         ];
         const artists = [
-            'Sarah Chen', 'Marcus Webb', 'Elena Voss', 'James Okonkwo',
-            'Yuki Tanaka', 'Sofia Rossi', 'David Kim', 'Aisha Patel',
-            'Lucas Fernandez', 'Nina Johansson', 'Omar Hassan', 'Emma Liu'
+            'Claude', 'Cursor', 'GPT-4', 'Gemini',
+            'Perplexity', 'Copilot', 'Windsurf', 'Trae',
+            'Manus', 'Devin', 'v0', 'Lovable'
         ];
         const descriptions = [
-            'Exploring the boundaries of contemporary design',
-            'A visual journey through urban transformation',
-            'Celebrating the intersection of art and technology',
-            'Documenting the evolution of modern aesthetics',
-            'Capturing the spirit of a new generation',
-            'The future of creative expression unveiled'
+            'AI 提示词库',
+            '系统提示词',
+            '最佳实践',
+            '使用指南'
         ];
 
-        // 精致优雅的配色调色板
+        // 精致优雅的配色调色板 - 更鲜艳的颜色
         const colorPalettes = [
-            '#E8DCC8', '#C9B896', '#8B7355', '#2C3E50',
-            '#C0392B', '#2980B9', '#D4A017', '#7D3C98',
-            '#16A085', '#E67E22', '#34495E', '#1ABC9C',
-            '#B5651D', '#1F4E79', '#6C3483', '#239B56'
+            '#FF6B35', '#3B82F6', '#8B5CF6', '#EC4899',
+            '#10B981', '#F59E0B', '#06B6D4', '#EF4444',
+            '#14B8A6', '#A855F7', '#F97316', '#22C55E',
+            '#6366F1', '#84CC16', '#E11D48', '#0EA5E9'
         ];
 
         // ==================== 初始化 ====================
@@ -335,7 +328,7 @@
             mouse = new THREE.Vector2();
 
             // 生成杂志数据
-            generateMagazineData(36);
+            generateMagazineData(16);
 
             // 创建 3D 杂志 - 使用更小的卡片
             createMagazines();
@@ -391,8 +384,8 @@
 
         // ==================== 创建杂志封面 ====================
         function createMagazines() {
-            // 更小的卡片尺寸
-            const geometry = new THREE.PlaneGeometry(0.85, 1.15);
+            // 卡片尺寸适配新画布比例
+            const geometry = new THREE.PlaneGeometry(0.77, 1.0);
 
             magazineData.forEach((data, index) => {
                 const material = createMagazineMaterial(data.color, index);
@@ -403,44 +396,82 @@
             });
         }
 
-        // 创建精致杂志封面材质
+        // 创建精致杂志封面材质 - 更像真实杂志
         function createMagazineMaterial(baseColor, index) {
             const canvas = document.createElement('canvas');
-            canvas.width = 170;
-            canvas.height = 230;
+            canvas.width = 200;
+            canvas.height = 260;
             const ctx = canvas.getContext('2d');
 
-            // 细腻渐变背景
-            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0, baseColor);
-            gradient.addColorStop(0.5, shadeColor(baseColor, -10));
-            gradient.addColorStop(1, shadeColor(baseColor, -20));
-            ctx.fillStyle = gradient;
+            // 杂志封面质感 - 深色高级感背景
+            const bgGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            bgGradient.addColorStop(0, '#1a1a1a');
+            bgGradient.addColorStop(0.3, shadeColor(baseColor, -60));
+            bgGradient.addColorStop(1, '#0a0a0a');
+            ctx.fillStyle = bgGradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 添加微妙纹理
-            addNoiseTexture(ctx, canvas.width, canvas.height, 0.03);
+            // 顶部装饰条 - 杂志品牌色
+            ctx.fillStyle = baseColor;
+            ctx.fillRect(0, 0, canvas.width, 6);
 
-            // 精致图案设计 - 8种不同风格
-            drawPattern(ctx, index, canvas.width, canvas.height);
-
-            // 底部装饰线
-            ctx.strokeStyle = 'rgba(0,0,0,0.15)';
-            ctx.lineWidth = 1;
+            // 左侧装饰线
+            ctx.strokeStyle = baseColor;
+            ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(20, canvas.height - 35);
-            ctx.lineTo(canvas.width - 20, canvas.height - 35);
+            ctx.moveTo(15, 25);
+            ctx.lineTo(15, canvas.height - 25);
             ctx.stroke();
 
-            // 年份 - 右下角
-            ctx.fillStyle = 'rgba(0,0,0,0.35)';
-            ctx.font = 'bold 9px Arial';
+            // 大标题 - 居中清晰
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 16px "Times New Roman", Times, serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            const title = magazineData[index].title.toUpperCase();
+            const titleY = 100;
+            ctx.fillText(title, canvas.width / 2, titleY);
+
+            // 副标题/工具名
+            ctx.fillStyle = baseColor;
+            ctx.font = 'bold 11px Arial';
+            ctx.fillText(magazineData[index].artist, canvas.width / 2, titleY + 30);
+
+            // 中间装饰元素 - 几何图案
+            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, titleY + 70, 35, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, titleY + 70, 25, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // 底部信息区
+            ctx.fillStyle = 'rgba(255,255,255,0.6)';
+            ctx.font = '8px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('SYSTEM PROMPT', 20, canvas.height - 45);
+
+            // 序号 - 大字体
+            ctx.fillStyle = 'rgba(255,255,255,0.15)';
+            ctx.font = 'bold 48px Arial';
             ctx.textAlign = 'right';
-            ctx.fillText(magazineData[index].year.toString(), canvas.width - 15, canvas.height - 18);
+            ctx.fillText((index + 1).toString().padStart(2, '0'), canvas.width - 15, canvas.height - 20);
+
+            // 底部装饰线
+            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(20, canvas.height - 55);
+            ctx.lineTo(canvas.width - 20, canvas.height - 55);
+            ctx.stroke();
 
             const texture = new THREE.CanvasTexture(canvas);
             texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-            return new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+            return new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, transparent: false, opacity: 1 });
         }
 
         // 颜色加深/变浅辅助函数
@@ -623,31 +654,45 @@
 
         /**
          * STACKED VIEW - 杂志堆叠视图
-         * 悬停时卡片向上弹起，类似从杂志架抽取
+         * 从左上到右下堆叠，整体居中偏右，卡片间距更大
          */
         function positionStackedView() {
             const count = magazines.length;
-            const zSpacing = 0.012; // 更紧凑的 Z 轴间距
-            const ySpacing = 0.008; // Y 轴微小偏移
+            const xSpacing = 0.12;  // X 轴偏移 - 加大间距
+            const ySpacing = 0.09;  // Y 轴偏移 - 加大间距
+
+            // 计算整体偏移，让卡片居中
+            const totalWidth = (count - 1) * xSpacing;
+            const startX = -totalWidth / 2 + 0.1;
 
             magazines.forEach((mag, i) => {
-                // 最新的杂志在最前面
-                const z = -i * zSpacing;
-                const x = 0;
-                const y = -i * ySpacing;
+                // 从左上延伸到右下，i=0 在最前面（右上角）
+                const reversedIndex = (count - 1) - i;
+                const x = startX + reversedIndex * xSpacing;
+                const y = -0.8 + reversedIndex * ySpacing;
+                const z = -reversedIndex * 0.015;  // Z轴轻微偏移增加层次感
+
+                // 存储原始位置用于重置
+                mag.userData.stackedX = x;
+                mag.userData.stackedY = y;
+                mag.userData.stackedZ = z;
 
                 gsap.to(mag.position, {
                     x: x, y: y, z: z,
-                    duration: 1.5,
+                    duration: 1.0,
                     ease: "power3.inOut"
                 });
 
                 gsap.to(mag.quaternion, {
                     x: 0, y: 0, z: 0, w: 1,
-                    duration: 1.5,
+                    duration: 1.0,
                     ease: "power3.inOut"
                 });
             });
+
+            // 正视图
+            camera.position.set(0, 0, 4);
+            controls.update();
         }
 
         /**
@@ -684,7 +729,9 @@
 
         // ==================== 视图切换 ====================
         function switchView(view) {
-            if (isAnimating) return;
+            // 防止重复切换
+            if (isAnimating || currentView === view) return;
+
             isAnimating = true;
             currentView = view;
 
@@ -709,32 +756,26 @@
                     positionStackedView();
                     controls.enableRotate = false;
                     controls.autoRotate = false;
-                    camera.position.set(0, 0, 3.5);
-                    controls.update();
                     break;
                 case 'traditional':
                     positionTraditionalView();
                     controls.enableRotate = false;
                     controls.autoRotate = false;
-                    camera.position.set(0, 0, 5);
-                    controls.update();
                     break;
             }
 
             // 动画完成
             setTimeout(() => {
                 isAnimating = false;
-            }, 1600);
+            }, 1200);
         }
 
         // ==================== 交互事件 ====================
-        function onMouseMove(event) {
-            // 防抖处理，避免频繁触发
-            if (hoverTimeout) return;
+        let isHoverAnimating = false; // 防止重复动画
 
-            hoverTimeout = setTimeout(() => {
-                hoverTimeout = null;
-            }, 16);
+        function onMouseMove(event) {
+            // 防止在动画中触发
+            if (isHoverAnimating) return;
 
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -755,11 +796,10 @@
                     }
 
                     hoveredMagazine = intersected;
-                    const originalPos = { ...intersected.position };
 
                     // 悬停效果 - 根据视图不同
                     if (currentView === 'globe') {
-                        // 球体视图：轻微向相机方向移动
+                        isHoverAnimating = true;
                         const direction = new THREE.Vector3();
                         direction.subVectors(camera.position, intersected.position).normalize();
                         gsap.to(intersected.position, {
@@ -767,20 +807,21 @@
                             y: intersected.position.y + direction.y * 0.2,
                             z: intersected.position.z + direction.z * 0.2,
                             duration: 0.4,
-                            ease: "power2.out"
+                            ease: "power2.out",
+                            onComplete: () => isHoverAnimating = false
                         });
-                        // 轻微放大
                         gsap.to(intersected.scale, {
                             x: 1.08, y: 1.08, z: 1.08,
                             duration: 0.4,
                             ease: "power2.out"
                         });
                     } else if (currentView === 'traditional') {
-                        // 传统视图：向上弹起
+                        isHoverAnimating = true;
                         gsap.to(intersected.position, {
                             y: intersected.position.y + 0.25,
                             duration: 0.4,
-                            ease: "back.out(1.5)"
+                            ease: "back.out(1.5)",
+                            onComplete: () => isHoverAnimating = false
                         });
                         gsap.to(intersected.scale, {
                             x: 1.1, y: 1.1, z: 1.1,
@@ -788,15 +829,18 @@
                             ease: "power2.out"
                         });
                     } else if (currentView === 'stacked') {
-                        // 堆叠视图：向上弹起（类似抽取杂志）
+                        // 堆叠视图：只有悬停时才弹起
+                        isHoverAnimating = true;
                         gsap.to(intersected.position, {
-                            y: intersected.position.y + 0.6,
-                            duration: 0.5,
-                            ease: "back.out(1.7)"
+                            y: intersected.userData.stackedY + 0.5,
+                            z: 0.4,
+                            duration: 0.35,
+                            ease: "back.out(1.0)",
+                            onComplete: () => isHoverAnimating = false
                         });
                         gsap.to(intersected.scale, {
-                            x: 1.12, y: 1.12, z: 1.12,
-                            duration: 0.4,
+                            x: 1.1, y: 1.1, z: 1.1,
+                            duration: 0.3,
                             ease: "power2.out"
                         });
                     }
@@ -809,7 +853,6 @@
                     document.querySelector('.info-desc').textContent = data.description;
                     infoPanel.classList.add('visible');
 
-                    // 传统视图显示年份提示框
                     if (currentView === 'traditional') {
                         tooltip.textContent = data.year;
                         tooltip.style.left = event.clientX + 15 + 'px';
@@ -867,15 +910,16 @@
                     ease: "power2.out"
                 });
             } else if (currentView === 'stacked') {
-                const i = mag.userData.index;
-                const zSpacing = 0.012;
-                const ySpacing = 0.008;
+                // 使用存储的原始位置
+                const targetX = mag.userData.stackedX || 0;
+                const targetY = mag.userData.stackedY || 0;
+                const targetZ = mag.userData.stackedZ || 0;
 
                 gsap.to(mag.position, {
-                    x: 0,
-                    y: -i * ySpacing,
-                    z: -i * zSpacing,
-                    duration: 0.35,
+                    x: targetX,
+                    y: targetY,
+                    z: targetZ,
+                    duration: 0.3,
                     ease: "power2.out"
                 });
             }
