@@ -58,8 +58,9 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
+        mono: ['SF Mono', 'Söhne', 'JetBrains Mono', 'Menlo', 'Monaco', 'monospace'],
+        anthropic: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
       borderRadius: {
         xl: "calc(var(--radius) + 4px)",

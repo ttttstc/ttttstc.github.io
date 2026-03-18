@@ -14,39 +14,57 @@ import TutorialInstallPage from './sections/TutorialInstallPage';
 import DiaryPage from './sections/DiaryPage';
 import WorkspacePage from './sections/WorkspacePage';
 import TechEdenPage from './sections/TechEdenPage';
+import SystemPromptsPage from './sections/SystemPromptsPage';
 
-type PageType = 'landing' | 'cat-cafe' | 'home' | 'skill' | 'tutorial' | 'diary' | 'workspace' | 'tech';
+type PageType = 'landing' | 'cat-cafe' | 'prompts' | 'home' | 'skill' | 'tutorial' | 'diary' | 'workspace' | 'tech';
 
-// Get initial page from URL without hydration mismatch
+// 路由配置 - 路径到页面类型的映射
+const ROUTE_MAPPINGS: Array<{ pattern: (path: string) => boolean; page: PageType }> = [
+  // 精确匹配
+  { pattern: (p) => p === '/' || p === '/index.html', page: 'landing' },
+  { pattern: (p) => p === '/cat-cafe', page: 'cat-cafe' },
+  { pattern: (p) => p === '/prompts', page: 'prompts' },
+  { pattern: (p) => p === '/lobster' || p === '/lobster/', page: 'home' },
+  { pattern: (p) => p === '/lobster/skill', page: 'skill' },
+  { pattern: (p) => p === '/lobster/diary', page: 'diary' },
+  { pattern: (p) => p === '/lobster/workspace', page: 'workspace' },
+  { pattern: (p) => p === '/lobster/tech-eden', page: 'tech' },
+  // 前缀匹配
+  { pattern: (p) => p.startsWith('/lobster/tutorial') || p.startsWith('/docs/'), page: 'tutorial' },
+  { pattern: (p) => p === '/skill', page: 'skill' },
+  { pattern: (p) => p === '/tutorial' || p.startsWith('/docs/'), page: 'tutorial' },
+  { pattern: (p) => p === '/diary', page: 'diary' },
+  { pattern: (p) => p === '/workspace', page: 'workspace' },
+  { pattern: (p) => p === '/tech-eden', page: 'tech' },
+];
+
+// 页面类型到路径的映射
+const PATH_MAP: Record<PageType, string> = {
+  landing: '/',
+  'cat-cafe': '/cat-cafe',
+  prompts: '/prompts',
+  home: '/lobster',
+  skill: '/lobster/skill',
+  tutorial: '/lobster/tutorial',
+  diary: '/lobster/diary',
+  workspace: '/lobster/workspace',
+  tech: '/lobster/tech-eden',
+};
+
+// 根据路径获取页面类型
+const getPageFromPath = (path: string): PageType => {
+  for (const route of ROUTE_MAPPINGS) {
+    if (route.pattern(path)) {
+      return route.page;
+    }
+  }
+  return 'landing';
+};
+
+// 根据路径获取页面类型 (用于 SSR/初始化)
 const getInitialPage = (): PageType => {
   if (typeof window === 'undefined') return 'landing';
-  const path = window.location.pathname;
-
-  // Root path shows landing page
-  if (path === '/' || path === '/index.html') return 'landing';
-
-  // Cat cafe
-  if (path === '/cat-cafe') return 'cat-cafe';
-
-  // Lobster project pages - current paths with /lobster prefix or direct paths
-  if (path.startsWith('/lobster')) {
-    const subPath = path.replace('/lobster', '') || '/';
-    if (subPath === '/skill') return 'skill';
-    if (subPath === '/tutorial' || subPath.startsWith('/docs/')) return 'tutorial';
-    if (subPath === '/diary') return 'diary';
-    if (subPath === '/workspace') return 'workspace';
-    if (subPath === '/tech-eden') return 'tech';
-    return 'home';
-  }
-
-  // Legacy paths without /lobster prefix
-  if (path === '/skill') return 'skill';
-  if (path === '/tutorial' || path.startsWith('/docs/')) return 'tutorial';
-  if (path === '/diary') return 'diary';
-  if (path === '/workspace') return 'workspace';
-  if (path === '/tech-eden') return 'tech';
-
-  return 'landing';
+  return getPageFromPath(window.location.pathname);
 };
 
 function App() {
@@ -54,39 +72,7 @@ function App() {
 
   useEffect(() => {
     const handleNavigation = () => {
-      const path = window.location.pathname;
-
-      // Root path shows landing page
-      if (path === '/' || path === '/index.html') {
-        setCurrentPage('landing');
-        return;
-      }
-
-      // Cat cafe
-      if (path === '/cat-cafe') {
-        setCurrentPage('cat-cafe');
-        return;
-      }
-
-      // Lobster project pages
-      if (path.startsWith('/lobster')) {
-        const subPath = path.replace('/lobster', '') || '/';
-        if (subPath === '/skill') setCurrentPage('skill');
-        else if (subPath === '/tutorial' || subPath.startsWith('/docs/')) setCurrentPage('tutorial');
-        else if (subPath === '/diary') setCurrentPage('diary');
-        else if (subPath === '/workspace') setCurrentPage('workspace');
-        else if (subPath === '/tech-eden') setCurrentPage('tech');
-        else setCurrentPage('home');
-        return;
-      }
-
-      // Legacy paths
-      if (path === '/skill') setCurrentPage('skill');
-      else if (path === '/tutorial' || path.startsWith('/docs/')) setCurrentPage('tutorial');
-      else if (path === '/diary') setCurrentPage('diary');
-      else if (path === '/workspace') setCurrentPage('workspace');
-      else if (path === '/tech-eden') setCurrentPage('tech');
-      else setCurrentPage('landing');
+      setCurrentPage(getPageFromPath(window.location.pathname));
     };
 
     handleNavigation();
@@ -96,17 +82,7 @@ function App() {
 
   const navigateTo = (page: PageType) => {
     setCurrentPage(page);
-    const pathMap: Record<PageType, string> = {
-      landing: '/',
-      'cat-cafe': '/cat-cafe',
-      home: '/lobster',
-      skill: '/lobster/skill',
-      tutorial: '/lobster/tutorial',
-      diary: '/lobster/diary',
-      workspace: '/lobster/workspace',
-      tech: '/lobster/tech-eden',
-    };
-    window.history.pushState({}, '', pathMap[page]);
+    window.history.pushState({}, '', PATH_MAP[page]);
   };
 
   const renderPage = () => {
@@ -115,6 +91,8 @@ function App() {
         return <LandingPage />;
       case 'cat-cafe':
         return <CatCafePage />;
+      case 'prompts':
+        return <SystemPromptsPage />;
       case 'skill':
         return <SkillsPage />;
       case 'tutorial':
@@ -139,8 +117,8 @@ function App() {
     }
   };
 
-  // Landing and Cat Cafe pages have their own layout
-  if (currentPage === 'landing' || currentPage === 'cat-cafe') {
+  // Landing, Cat Cafe and Prompts pages have their own layout
+  if (currentPage === 'landing' || currentPage === 'cat-cafe' || currentPage === 'prompts') {
     return <>{renderPage()}</>;
   }
 

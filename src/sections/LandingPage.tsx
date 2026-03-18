@@ -1,4 +1,4 @@
-import { Sparkles, ArrowRight, Coffee, Bug, ArrowDown } from 'lucide-react';
+import { Sparkles, ArrowRight, Coffee, Bug, ArrowDown, Sparkle } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -19,6 +19,15 @@ const projects: Project[] = [
     href: '/lobster',
     status: 'ready',
     color: '#FF6B35',
+  },
+  {
+    id: 'prompts',
+    title: '神秘咒语盒',
+    description: '收集和整理各类 AI 工具的系统提示词，探索 AI 思维方式的秘密',
+    icon: Sparkle,
+    href: '/prompts',
+    status: 'ready',
+    color: '#8B5CF6',
   },
   {
     id: 'cat-cafe',
