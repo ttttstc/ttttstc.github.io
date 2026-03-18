@@ -36,30 +36,30 @@
             height: 100vh;
             padding: 60px 40px;
             z-index: 10;
-            background: linear-gradient(90deg, rgba(249,248,246,0.95) 0%, rgba(249,248,246,0) 100%);
+            background: linear-gradient(90deg, rgba(249,248,246,0.98) 0%, rgba(249,248,246,0.85) 60%, rgba(249,248,246,0) 100%);
             display: flex;
             flex-direction: column;
         }
 
         .title {
             font-family: 'Times New Roman', Times, serif;
-            font-size: 52px;
+            font-size: 48px;
             font-weight: 700;
-            letter-spacing: 8px;
+            letter-spacing: 6px;
             margin-bottom: 30px;
             color: #1a1a1a;
         }
 
         .intro {
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.8;
-            color: #666;
+            color: #777;
             margin-bottom: 60px;
-            max-width: 280px;
+            max-width: 260px;
         }
 
         .menu-label {
-            font-size: 11px;
+            font-size: 10px;
             letter-spacing: 3px;
             color: #999;
             margin-bottom: 20px;
@@ -69,17 +69,17 @@
         .view-buttons {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .view-btn {
             background: transparent;
             border: 1px solid #ddd;
-            padding: 16px 20px;
-            font-size: 12px;
+            padding: 14px 18px;
+            font-size: 11px;
             letter-spacing: 2px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             text-align: left;
             color: #666;
             position: relative;
@@ -95,18 +95,20 @@
             height: 100%;
             background: #1a1a1a;
             transform: scaleY(0);
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .view-btn:hover {
-            border-color: #1a1a1a;
-            color: #1a1a1a;
+            border-color: #aaa;
+            color: #333;
+            padding-left: 24px;
         }
 
         .view-btn.active {
             background: #1a1a1a;
             color: #F9F8F6;
             border-color: #1a1a1a;
+            padding-left: 18px;
         }
 
         .view-btn.active::before {
@@ -118,46 +120,47 @@
             position: fixed;
             right: 40px;
             bottom: 40px;
-            width: 320px;
-            padding: 30px;
-            background: rgba(255,255,255,0.95);
-            border: 1px solid #e0e0e0;
+            width: 300px;
+            padding: 28px;
+            background: rgba(255,255,255,0.97);
+            border: 1px solid #e8e6e3;
             z-index: 10;
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(20px) scale(0.95);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
         }
 
         .info-panel.visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
 
         .info-date {
-            font-size: 11px;
+            font-size: 10px;
             letter-spacing: 2px;
             color: #999;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
         }
 
         .info-title {
             font-family: 'Times New Roman', Times, serif;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 600;
             line-height: 1.3;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             color: #1a1a1a;
         }
 
         .info-artist {
-            font-size: 12px;
+            font-size: 11px;
             color: #666;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .info-desc {
-            font-size: 13px;
+            font-size: 12px;
             line-height: 1.6;
             color: #888;
         }
@@ -174,7 +177,7 @@
             align-items: center;
             justify-content: center;
             z-index: 100;
-            transition: opacity 0.8s ease;
+            transition: opacity 1s ease;
         }
 
         .loader.hidden {
@@ -184,20 +187,21 @@
 
         .loader-text {
             font-family: 'Times New Roman', Times, serif;
-            font-size: 48px;
-            letter-spacing: 12px;
-            animation: pulse 1.5s ease-in-out infinite;
+            font-size: 42px;
+            letter-spacing: 14px;
+            animation: pulse 2s ease-in-out infinite;
+            color: #1a1a1a;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.2; letter-spacing: 14px; }
+            50% { opacity: 0.8; letter-spacing: 18px; }
         }
 
         /* 提示框 */
         .tooltip {
             position: fixed;
-            padding: 8px 16px;
+            padding: 10px 18px;
             background: #1a1a1a;
             color: #F9F8F6;
             font-size: 11px;
@@ -205,8 +209,9 @@
             pointer-events: none;
             opacity: 0;
             transform: translateY(10px);
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             z-index: 20;
+            border-radius: 2px;
         }
 
         .tooltip.visible {
@@ -260,10 +265,10 @@
         let currentView = 'globe';
         let hoveredMagazine = null;
         let isAnimating = false;
+        let hoverTimeout = null; // 防抖计时器
 
         // 杂志数据
         const magazineData = [];
-        const years = [];
         const titles = [
             'THE NEW AGE', 'URBAN RHYTHM', 'CITY LIGHTS', 'MODERN VISION',
             'FUTURE FORWARD', 'STREET SCENE', 'DESIGN REVOLUTION', 'CULTURAL SHIFT',
@@ -289,12 +294,12 @@
             'The future of creative expression unveiled'
         ];
 
-        // 颜色调色板 - 复古杂志风格
+        // 精致优雅的配色调色板
         const colorPalettes = [
-            '#E8D5B7', '#C4A77D', '#8B7355', '#2C3E50',
-            '#E74C3C', '#3498DB', '#F39C12', '#9B59B6',
-            '#1ABC9C', '#E67E22', '#34495E', '#16A085',
-            '#D35400', '#2980B9', '#8E44AD', '#27AE60'
+            '#E8DCC8', '#C9B896', '#8B7355', '#2C3E50',
+            '#C0392B', '#2980B9', '#D4A017', '#7D3C98',
+            '#16A085', '#E67E22', '#34495E', '#1ABC9C',
+            '#B5651D', '#1F4E79', '#6C3483', '#239B56'
         ];
 
         // ==================== 初始化 ====================
@@ -303,9 +308,9 @@
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0xF9F8F6);
 
-            // 相机
-            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
+            // 相机 - 更远的视角
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 6;
 
             // 渲染器
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -316,26 +321,28 @@
             // 控制器
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
+            controls.dampingFactor = 0.03;
             controls.enableZoom = true;
-            controls.minDistance = 2;
-            controls.maxDistance = 15;
+            controls.minDistance = 3;
+            controls.maxDistance = 12;
             controls.enablePan = false;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 0.3;
 
             // 射线检测
             raycaster = new THREE.Raycaster();
+            raycaster.params.Mesh.threshold = 0.1; // 提升检测精度
             mouse = new THREE.Vector2();
 
             // 生成杂志数据
             generateMagazineData(36);
 
-            // 创建 3D 杂志
+            // 创建 3D 杂志 - 使用更小的卡片
             createMagazines();
 
             // 事件监听
             window.addEventListener('resize', onWindowResize);
             window.addEventListener('mousemove', onMouseMove);
-            window.addEventListener('click', onMouseClick);
 
             // 视图按钮事件
             document.querySelectorAll('.view-btn').forEach(btn => {
@@ -353,7 +360,7 @@
             // 隐藏加载动画
             setTimeout(() => {
                 document.querySelector('.loader').classList.add('hidden');
-            }, 1500);
+            }, 2000);
 
             // 开始渲染循环
             animate();
@@ -384,120 +391,213 @@
 
         // ==================== 创建杂志封面 ====================
         function createMagazines() {
-            const geometry = new THREE.PlaneGeometry(1.4, 1.8);
+            // 更小的卡片尺寸
+            const geometry = new THREE.PlaneGeometry(0.85, 1.15);
 
             magazineData.forEach((data, index) => {
-                // 创建材质 - 使用简单的几何图案
                 const material = createMagazineMaterial(data.color, index);
-
                 const mesh = new THREE.Mesh(geometry, material);
                 mesh.userData = { ...data, index: index };
-
                 magazines.push(mesh);
                 scene.add(mesh);
             });
         }
 
-        // 创建杂志封面材质
+        // 创建精致杂志封面材质
         function createMagazineMaterial(baseColor, index) {
             const canvas = document.createElement('canvas');
-            canvas.width = 280;
-            canvas.height = 360;
+            canvas.width = 170;
+            canvas.height = 230;
             const ctx = canvas.getContext('2d');
 
-            // 背景
-            ctx.fillStyle = baseColor;
-            ctx.fillRect(0, 0, 280, 360);
+            // 细腻渐变背景
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, baseColor);
+            gradient.addColorStop(0.5, shadeColor(baseColor, -10));
+            gradient.addColorStop(1, shadeColor(baseColor, -20));
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 几何图案设计
+            // 添加微妙纹理
+            addNoiseTexture(ctx, canvas.width, canvas.height, 0.03);
+
+            // 精致图案设计 - 8种不同风格
+            drawPattern(ctx, index, canvas.width, canvas.height);
+
+            // 底部装饰线
+            ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(20, canvas.height - 35);
+            ctx.lineTo(canvas.width - 20, canvas.height - 35);
+            ctx.stroke();
+
+            // 年份 - 右下角
+            ctx.fillStyle = 'rgba(0,0,0,0.35)';
+            ctx.font = 'bold 9px Arial';
+            ctx.textAlign = 'right';
+            ctx.fillText(magazineData[index].year.toString(), canvas.width - 15, canvas.height - 18);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+            return new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+        }
+
+        // 颜色加深/变浅辅助函数
+        function shadeColor(color, percent) {
+            const num = parseInt(color.replace('#', ''), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+                (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+        }
+
+        // 添加噪点纹理
+        function addNoiseTexture(ctx, w, h, opacity) {
+            const imageData = ctx.getImageData(0, 0, w, h);
+            const data = imageData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                const noise = (Math.random() - 0.5) * 255 * opacity;
+                data[i] = Math.min(255, Math.max(0, data[i] + noise));
+                data[i + 1] = Math.min(255, Math.max(0, data[i + 1] + noise));
+                data[i + 2] = Math.min(255, Math.max(0, data[i + 2] + noise));
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        // 绘制精致图案
+        function drawPattern(ctx, index, w, h) {
             const patterns = [
-                // 图案 1: 圆形装饰
-                () => {
-                    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                // 1. 圆形 + 文字居中
+                (ctx, w, h) => {
+                    ctx.fillStyle = 'rgba(255,255,255,0.25)';
                     ctx.beginPath();
-                    ctx.arc(140, 120, 60, 0, Math.PI * 2);
+                    ctx.arc(w/2, h/2 - 10, 35, 0, Math.PI * 2);
                     ctx.fill();
                     ctx.fillStyle = 'rgba(0,0,0,0.2)';
-                    ctx.font = 'bold 48px Times New Roman';
+                    ctx.font = 'bold 18px Times New Roman';
                     ctx.textAlign = 'center';
-                    ctx.fillText('NEW', 140, 130);
-                    ctx.fillText('YORK', 140, 180);
+                    ctx.fillText('NY', w/2, h/2 - 5);
+                    // 装饰线
+                    ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+                    ctx.lineWidth = 0.5;
+                    ctx.beginPath();
+                    ctx.moveTo(20, h/2 + 40);
+                    ctx.lineTo(w-20, h/2 + 40);
+                    ctx.stroke();
                 },
-                // 图案 2: 条纹
-                () => {
-                    ctx.fillStyle = 'rgba(255,255,255,0.2)';
-                    for (let i = 0; i < 8; i++) {
-                        ctx.fillRect(0, i * 50, 280, 20);
+                // 2. 水平条纹
+                (ctx, w, h) => {
+                    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+                    for (let i = 0; i < 6; i++) {
+                        ctx.fillRect(0, 20 + i * 35, w, 12);
                     }
-                    ctx.fillStyle = 'rgba(0,0,0,0.15)';
-                    ctx.font = 'bold 36px Arial';
+                    ctx.fillStyle = 'rgba(0,0,0,0.12)';
+                    ctx.font = 'bold 14px Arial';
                     ctx.textAlign = 'center';
-                    ctx.fillText('VOL.', 140, 80);
+                    ctx.fillText('VOL.', w/2, 35);
                 },
-                // 图案 3: 对角线
-                () => {
-                    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-                    ctx.lineWidth = 2;
-                    for (let i = -280; i < 560; i += 20) {
+                // 3. 对角线纹理
+                (ctx, w, h) => {
+                    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                    ctx.lineWidth = 1;
+                    for (let i = -h; i < w; i += 15) {
                         ctx.beginPath();
                         ctx.moveTo(i, 0);
-                        ctx.lineTo(i + 360, 360);
+                        ctx.lineTo(i + h, h);
                         ctx.stroke();
                     }
-                    ctx.fillStyle = 'rgba(0,0,0,0.2)';
-                    ctx.font = 'bold 32px Georgia';
+                    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+                    ctx.font = 'bold 12px Georgia';
                     ctx.textAlign = 'center';
-                    ctx.fillText('OVER', 140, 200);
+                    ctx.fillText('OVER', w/2, h/2 + 5);
                 },
-                // 图案 4: 中心方块
-                () => {
-                    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-                    ctx.fillRect(90, 100, 100, 100);
-                    ctx.fillStyle = 'rgba(0,0,0,0.3)';
-                    ctx.font = 'bold 24px Helvetica';
+                // 4. 中心方框
+                (ctx, w, h) => {
+                    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+                    ctx.fillRect(w/2 - 30, h/2 - 35, 60, 60);
+                    ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+                    ctx.strokeRect(w/2 - 30, h/2 - 35, 60, 60);
+                    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+                    ctx.font = 'bold 10px Helvetica';
                     ctx.textAlign = 'center';
-                    ctx.fillText('NY', 140, 155);
+                    ctx.fillText('NY', w/2, h/2 - 8);
                 },
-                // 图案 5: 波浪
-                () => {
-                    ctx.fillStyle = 'rgba(255,255,255,0.25)';
-                    for (let i = 0; i < 5; i++) {
+                // 5. 波浪线条
+                (ctx, w, h) => {
+                    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                    for (let i = 0; i < 4; i++) {
                         ctx.beginPath();
-                        ctx.ellipse(140, 80 + i * 50, 120 - i * 15, 15, 0, 0, Math.PI * 2);
+                        ctx.ellipse(w/2, 40 + i * 45, 70 - i * 10, 8, 0, 0, Math.PI * 2);
                         ctx.fill();
                     }
+                },
+                // 6. 左上角大数字
+                (ctx, w, h) => {
+                    ctx.fillStyle = 'rgba(0,0,0,0.12)';
+                    ctx.font = 'bold 48px Times New Roman';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(magazineData[index].year.toString().slice(-2), 15, 55);
+                    ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(15, 65);
+                    ctx.lineTo(60, 65);
+                    ctx.stroke();
+                },
+                // 7. 圆点装饰
+                (ctx, w, h) => {
+                    const dotCount = 9;
+                    const dotSpacing = 18;
+                    const startX = w/2 - (dotCount - 1) * dotSpacing / 2;
+                    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                    for (let i = 0; i < dotCount; i++) {
+                        ctx.beginPath();
+                        ctx.arc(startX + i * dotSpacing, h/2, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+                    ctx.font = 'bold 10px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('MAGAZINE', w/2, h/2 + 25);
+                },
+                // 8. 对称三角
+                (ctx, w, h) => {
+                    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                    ctx.beginPath();
+                    ctx.moveTo(w/2, 30);
+                    ctx.lineTo(w - 25, h - 50);
+                    ctx.lineTo(25, h - 50);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                    ctx.font = 'bold 11px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('DESIGN', w/2, h - 60);
                 }
             ];
 
-            patterns[index % patterns.length]();
-
-            // 年份
-            ctx.fillStyle = 'rgba(0,0,0,0.4)';
-            ctx.font = 'bold 14px Arial';
-            ctx.textAlign = 'left';
-            ctx.fillText(magazineData[index].year.toString(), 15, 345);
-
-            const texture = new THREE.CanvasTexture(canvas);
-            return new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+            patterns[index % patterns.length](ctx, w, h);
         }
 
         // ==================== 视图位置计算 ====================
 
         /**
-         * GLOBE VIEW - 斐波那契球面算法
-         * 使用斐波那契螺旋将点均匀分布在球面上
-         * 数学原理: phi = arccos(1 - 2*(i+0.5)/n), theta = pi*(1+sqrt(5))*i
+         * GLOBE VIEW - 斐波那契球面算法（紧凑版）
+         * 缩小球体半径，卡片更精致，避免穿插
          */
         function positionGlobeView() {
             const count = magazines.length;
-            const radius = 3; // 球体半径
+            const radius = 2.0; // 缩小球体半径
 
             magazines.forEach((mag, i) => {
-                // 斐波那契球面算法
-                const phi = Math.acos(1 - 2 * (i + 0.5) / count); // 极角
-                const theta = Math.PI * (1 + Math.sqrt(5)) * i;    // 方位角
+                // 斐波那契球面算法 - 更均匀分布
+                const phi = Math.acos(1 - 2 * (i + 0.5) / count);
+                const theta = Math.PI * (1 + Math.sqrt(5)) * i;
 
-                // 球面坐标转笛卡尔坐标
                 const x = radius * Math.sin(phi) * Math.cos(theta);
                 const y = radius * Math.sin(phi) * Math.sin(theta);
                 const z = radius * Math.cos(phi);
@@ -505,63 +605,60 @@
                 // 计算朝向 - 面向球体外侧
                 const normal = new THREE.Vector3(x, y, z).normalize();
                 const quaternion = new THREE.Quaternion();
-                const up = new THREE.Vector3(0, 1, 0);
                 quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), normal);
 
                 gsap.to(mag.position, {
                     x: x, y: y, z: z,
-                    duration: 1.2,
-                    ease: "power2.inOut"
+                    duration: 1.5,
+                    ease: "power3.inOut"
                 });
 
                 gsap.to(mag.quaternion, {
                     x: quaternion.x, y: quaternion.y, z: quaternion.z, w: quaternion.w,
-                    duration: 1.2,
-                    ease: "power2.inOut"
+                    duration: 1.5,
+                    ease: "power3.inOut"
                 });
             });
         }
 
         /**
-         * STACKED VIEW - 堆叠视图
-         * 类似一叠扑克牌，每张卡片在 Z 轴上有微小偏移
+         * STACKED VIEW - 杂志堆叠视图
+         * 悬停时卡片向上弹起，类似从杂志架抽取
          */
         function positionStackedView() {
             const count = magazines.length;
-            const zSpacing = 0.015; // Z 轴间距
-            const xOffset = 0.003;  // X 轴微小偏移
-            const yOffset = 0.002;  // Y 轴微小偏移
+            const zSpacing = 0.012; // 更紧凑的 Z 轴间距
+            const ySpacing = 0.008; // Y 轴微小偏移
 
             magazines.forEach((mag, i) => {
-                // 越新的杂志越在前面 (i 越大越靠前)
+                // 最新的杂志在最前面
                 const z = -i * zSpacing;
-                const x = (Math.random() - 0.5) * xOffset * i;
-                const y = (Math.random() - 0.5) * yOffset * i;
+                const x = 0;
+                const y = -i * ySpacing;
 
-                // 面向正前方
                 gsap.to(mag.position, {
-                    x: x, y: y, z: z + 0.5,
-                    duration: 1.2,
-                    ease: "power2.inOut"
+                    x: x, y: y, z: z,
+                    duration: 1.5,
+                    ease: "power3.inOut"
                 });
 
                 gsap.to(mag.quaternion, {
                     x: 0, y: 0, z: 0, w: 1,
-                    duration: 1.2,
-                    ease: "power2.inOut"
+                    duration: 1.5,
+                    ease: "power3.inOut"
                 });
             });
         }
 
         /**
          * TRADITIONAL VIEW - 传统网格视图
-         * 排列成扁平的 2D 网格
+         * 整齐平铺，每个卡片正面朝前，无旋转
          */
         function positionTraditionalView() {
             const count = magazines.length;
-            const cols = 6; // 列数
-            const spacingX = 1.6;
-            const spacingY = 2.0;
+            const cols = 6;
+            const spacingX = 1.0;
+            const spacingY = 1.35;
 
             magazines.forEach((mag, i) => {
                 const col = i % cols;
@@ -573,14 +670,14 @@
 
                 gsap.to(mag.position, {
                     x: x, y: y, z: z,
-                    duration: 1.2,
-                    ease: "power2.inOut"
+                    duration: 1.5,
+                    ease: "power3.inOut"
                 });
 
                 gsap.to(mag.quaternion, {
                     x: 0, y: 0, z: 0, w: 1,
-                    duration: 1.2,
-                    ease: "power2.inOut"
+                    duration: 1.5,
+                    ease: "power3.inOut"
                 });
             });
         }
@@ -605,17 +702,21 @@
                 case 'globe':
                     positionGlobeView();
                     controls.enableRotate = true;
+                    controls.autoRotate = true;
+                    controls.autoRotateSpeed = 0.3;
                     break;
                 case 'stacked':
                     positionStackedView();
                     controls.enableRotate = false;
-                    camera.position.set(0, 0, 5);
+                    controls.autoRotate = false;
+                    camera.position.set(0, 0, 3.5);
                     controls.update();
                     break;
                 case 'traditional':
                     positionTraditionalView();
                     controls.enableRotate = false;
-                    camera.position.set(0, 0, 8);
+                    controls.autoRotate = false;
+                    camera.position.set(0, 0, 5);
                     controls.update();
                     break;
             }
@@ -623,11 +724,18 @@
             // 动画完成
             setTimeout(() => {
                 isAnimating = false;
-            }, 1300);
+            }, 1600);
         }
 
         // ==================== 交互事件 ====================
         function onMouseMove(event) {
+            // 防抖处理，避免频繁触发
+            if (hoverTimeout) return;
+
+            hoverTimeout = setTimeout(() => {
+                hoverTimeout = null;
+            }, 16);
+
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -643,40 +751,55 @@
                 if (hoveredMagazine !== intersected) {
                     // 恢复上一个悬停的杂志
                     if (hoveredMagazine) {
-                        gsap.to(hoveredMagazine.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
-                        gsap.to(hoveredMagazine.position, { z: hoveredMagazine.userData.originalZ || 0, duration: 0.3 });
+                        resetMagazine(hoveredMagazine);
                     }
 
                     hoveredMagazine = intersected;
-                    hoveredMagazine.userData.originalZ = intersected.position.z;
+                    const originalPos = { ...intersected.position };
 
-                    // 悬停效果
+                    // 悬停效果 - 根据视图不同
                     if (currentView === 'globe') {
-                        // 球体视图：向相机方向移动
+                        // 球体视图：轻微向相机方向移动
                         const direction = new THREE.Vector3();
                         direction.subVectors(camera.position, intersected.position).normalize();
                         gsap.to(intersected.position, {
-                            x: intersected.position.x + direction.x * 0.3,
-                            y: intersected.position.y + direction.y * 0.3,
-                            z: intersected.position.z + direction.z * 0.3,
-                            duration: 0.3
+                            x: intersected.position.x + direction.x * 0.2,
+                            y: intersected.position.y + direction.y * 0.2,
+                            z: intersected.position.z + direction.z * 0.2,
+                            duration: 0.4,
+                            ease: "power2.out"
+                        });
+                        // 轻微放大
+                        gsap.to(intersected.scale, {
+                            x: 1.08, y: 1.08, z: 1.08,
+                            duration: 0.4,
+                            ease: "power2.out"
                         });
                     } else if (currentView === 'traditional') {
-                        // 传统视图：向上移动
+                        // 传统视图：向上弹起
                         gsap.to(intersected.position, {
-                            y: intersected.position.y + 0.3,
-                            duration: 0.3
+                            y: intersected.position.y + 0.25,
+                            duration: 0.4,
+                            ease: "back.out(1.5)"
+                        });
+                        gsap.to(intersected.scale, {
+                            x: 1.1, y: 1.1, z: 1.1,
+                            duration: 0.4,
+                            ease: "power2.out"
                         });
                     } else if (currentView === 'stacked') {
-                        // 堆叠视图：向右抽出
+                        // 堆叠视图：向上弹起（类似抽取杂志）
                         gsap.to(intersected.position, {
-                            x: intersected.position.x + 1.5,
-                            duration: 0.3
+                            y: intersected.position.y + 0.6,
+                            duration: 0.5,
+                            ease: "back.out(1.7)"
+                        });
+                        gsap.to(intersected.scale, {
+                            x: 1.12, y: 1.12, z: 1.12,
+                            duration: 0.4,
+                            ease: "power2.out"
                         });
                     }
-
-                    // 放大
-                    gsap.to(intersected.scale, { x: 1.1, y: 1.1, z: 1.1, duration: 0.3 });
 
                     // 显示信息面板
                     const data = intersected.userData;
@@ -697,38 +820,7 @@
             } else {
                 // 恢复悬停状态
                 if (hoveredMagazine) {
-                    const originalZ = hoveredMagazine.userData.originalZ || 0;
-
-                    gsap.to(hoveredMagazine.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
-
-                    if (currentView === 'globe') {
-                        // 恢复球体位置需要重新计算
-                        const i = hoveredMagazine.userData.index;
-                        const count = magazines.length;
-                        const radius = 3;
-                        const phi = Math.acos(1 - 2 * (i + 0.5) / count);
-                        const theta = Math.PI * (1 + Math.sqrt(5)) * i;
-                        const x = radius * Math.sin(phi) * Math.cos(theta);
-                        const y = radius * Math.sin(phi) * Math.sin(theta);
-                        const z = radius * Math.cos(phi);
-
-                        gsap.to(hoveredMagazine.position, { x, y, z, duration: 0.3 });
-                    } else if (currentView === 'traditional') {
-                        const col = hoveredMagazine.userData.index % 6;
-                        const row = Math.floor(hoveredMagazine.userData.index / 6);
-                        const x = (col - 2.5) * 1.6;
-                        const y = -(row - 2.5) * 2.0;
-                        gsap.to(hoveredMagazine.position, { x, y, z: 0, duration: 0.3 });
-                    } else if (currentView === 'stacked') {
-                        const i = hoveredMagazine.userData.index;
-                        gsap.to(hoveredMagazine.position, {
-                            x: (Math.random() - 0.5) * 0.003 * i,
-                            y: (Math.random() - 0.5) * 0.002 * i,
-                            z: -i * 0.015 + 0.5,
-                            duration: 0.3
-                        });
-                    }
-
+                    resetMagazine(hoveredMagazine);
                     hoveredMagazine = null;
                 }
 
@@ -737,8 +829,56 @@
             }
         }
 
-        function onMouseClick(event) {
-            // 可以添加点击事件
+        // 重置杂志卡片到原始位置
+        function resetMagazine(mag) {
+            gsap.to(mag.scale, {
+                x: 1, y: 1, z: 1,
+                duration: 0.35,
+                ease: "power2.out"
+            });
+
+            if (currentView === 'globe') {
+                const i = mag.userData.index;
+                const count = magazines.length;
+                const radius = 2.0;
+                const phi = Math.acos(1 - 2 * (i + 0.5) / count);
+                const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+                const x = radius * Math.sin(phi) * Math.cos(theta);
+                const y = radius * Math.sin(phi) * Math.sin(theta);
+                const z = radius * Math.cos(phi);
+
+                gsap.to(mag.position, {
+                    x: x, y: y, z: z,
+                    duration: 0.35,
+                    ease: "power2.out"
+                });
+            } else if (currentView === 'traditional') {
+                const col = mag.userData.index % 6;
+                const row = Math.floor(mag.userData.index / 6);
+                const spacingX = 1.0;
+                const spacingY = 1.35;
+                const count = magazines.length;
+                const x = (col - 2.5) * spacingX;
+                const y = -(row - Math.floor(count / 6) / 2) * spacingY;
+
+                gsap.to(mag.position, {
+                    x: x, y: y, z: 0,
+                    duration: 0.35,
+                    ease: "power2.out"
+                });
+            } else if (currentView === 'stacked') {
+                const i = mag.userData.index;
+                const zSpacing = 0.012;
+                const ySpacing = 0.008;
+
+                gsap.to(mag.position, {
+                    x: 0,
+                    y: -i * ySpacing,
+                    z: -i * zSpacing,
+                    duration: 0.35,
+                    ease: "power2.out"
+                });
+            }
         }
 
         function onWindowResize() {
@@ -750,14 +890,7 @@
         // ==================== 渲染循环 ====================
         function animate() {
             requestAnimationFrame(animate);
-
             controls.update();
-
-            // 球体视图下的缓慢旋转
-            if (currentView === 'globe' && !hoveredMagazine) {
-                scene.rotation.y += 0.001;
-            }
-
             renderer.render(scene, camera);
         }
 
