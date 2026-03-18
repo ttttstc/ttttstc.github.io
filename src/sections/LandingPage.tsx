@@ -1,4 +1,4 @@
-import { Sparkles, ArrowRight, Coffee, Bug, ArrowDown, Sparkle, Palette } from 'lucide-react';
+import { Sparkles, ArrowRight, Coffee, ArrowDown, Sparkle, Palette, Bug } from 'lucide-react';
 
 interface Project {
   id: string;
