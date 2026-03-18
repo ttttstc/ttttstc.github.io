@@ -4,7 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>泥巴猪的实验田</title>
+    <!-- Three.js and GSAP for 3D effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script>
+      // 兼容处理：将 THREE.OrbitControls 挂载到 window
+      if (typeof window !== 'undefined') {
+        window.THREE = window.THREE || THREE;
+        window.OrbitControls = window.OrbitControls || THREE.OrbitControls || (window.THREE && window.THREE.OrbitControls);
+      }
       (function() {
         var redirect = sessionStorage.getItem('redirect');
         if (redirect) {

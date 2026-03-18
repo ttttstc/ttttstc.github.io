@@ -17,10 +17,12 @@ const COLORS = {
   accentMuted: '#FF6B3533',
 };
 
-// 分类配置
+// 分类配置 - 智能工具数量从实际数据动态计算
+const getAiToolsCount = () => systemPrompts.length;
+
 const MAIN_CATEGORIES = [
   { id: 'prompt-engineering', name: '提示词工程', nameEn: 'Prompt Engineering', icon: '🧠', count: 0, color: '#FF6B35' },
-  { id: 'ai-tools', name: '智能工具', nameEn: 'AI Tools', icon: '💻', count: 84, color: '#3B82F6' },
+  { id: 'ai-tools', name: '智能工具', nameEn: 'AI Tools', icon: '💻', count: getAiToolsCount(), color: '#3B82F6' },
   { id: 'writing', name: '写作创作', nameEn: 'Writing', icon: '✍️', count: 0, color: '#8B5CF6' },
   { id: 'image-gen', name: '图像生成', nameEn: 'Image Generation', icon: '🎨', count: 0, color: '#EC4899' },
   { id: 'data-analysis', name: '数据分析', nameEn: 'Data Analysis', icon: '📊', count: 0, color: '#10B981' },
@@ -111,7 +113,17 @@ export default function SystemPromptsPage() {
     if (categoryListRef.current) categoryListRef.current.scrollTo({ left: newIndex * visibleItems * itemWidth, behavior: 'smooth' });
   };
 
-  const handleCategoryClick = (cat: string) => { setSelectedSubCategory(cat); setCategorySlideIndex(Math.floor(allCategories.indexOf(cat) / 6)); };
+  const handleCategoryClick = (cat: string) => {
+    setSelectedSubCategory(cat);
+    const catIndex = allCategories.indexOf(cat);
+    const newSlideIndex = Math.floor(catIndex / 6);
+    setCategorySlideIndex(newSlideIndex);
+    // 滑动到对应位置
+    if (categoryListRef.current) {
+      const itemWidth = 100; // 每个按钮约100px
+      categoryListRef.current.scrollTo({ left: newSlideIndex * 6 * itemWidth, behavior: 'smooth' });
+    }
+  };
 
   const handleMainCategoryClick = (id: string) => {
     setSelectedMainCategory(id);
@@ -193,7 +205,7 @@ export default function SystemPromptsPage() {
             <button onClick={() => slideCategory('left')} style={{ color: COLORS.textSecondary, backgroundColor: COLORS.bgTertiary }} className="p-2 rounded-lg hover:bg-gray-800 flex-shrink-0"><ChevronLeft className="w-5 h-5" /></button>
             <div ref={categoryListRef} className="flex gap-2 overflow-x-auto scrollbar-hide flex-1" style={{ scrollbarWidth: 'none' }}>
               <button
-                onClick={() => { setSelectedSubCategory('all'); setCategorySlideIndex(0); }}
+                onClick={() => { setSelectedSubCategory('all'); setCategorySlideIndex(0); if (categoryListRef.current) categoryListRef.current.scrollTo({ left: 0, behavior: 'smooth' }); }}
                 style={{ backgroundColor: selectedSubCategory === 'all' ? COLORS.accent : COLORS.bgTertiary, color: selectedSubCategory === 'all' ? '#000' : COLORS.textSecondary }}
                 className="px-4 py-1.5 text-sm font-medium rounded-full whitespace-nowrap hover:scale-105"
               >

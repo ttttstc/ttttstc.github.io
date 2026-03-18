@@ -15,8 +15,9 @@ import DiaryPage from './sections/DiaryPage';
 import WorkspacePage from './sections/WorkspacePage';
 import TechEdenPage from './sections/TechEdenPage';
 import SystemPromptsPage from './sections/SystemPromptsPage';
+import DesignShowcasePage from './sections/DesignShowcasePage';
 
-type PageType = 'landing' | 'cat-cafe' | 'prompts' | 'home' | 'skill' | 'tutorial' | 'diary' | 'workspace' | 'tech';
+type PageType = 'landing' | 'cat-cafe' | 'prompts' | 'home' | 'skill' | 'tutorial' | 'diary' | 'workspace' | 'tech' | 'design-showcase';
 
 // 路由配置 - 路径到页面类型的映射
 const ROUTE_MAPPINGS: Array<{ pattern: (path: string) => boolean; page: PageType }> = [
@@ -24,6 +25,7 @@ const ROUTE_MAPPINGS: Array<{ pattern: (path: string) => boolean; page: PageType
   { pattern: (p) => p === '/' || p === '/index.html', page: 'landing' },
   { pattern: (p) => p === '/cat-cafe', page: 'cat-cafe' },
   { pattern: (p) => p === '/prompts', page: 'prompts' },
+  { pattern: (p) => p === '/design-showcase', page: 'design-showcase' },
   { pattern: (p) => p === '/lobster' || p === '/lobster/', page: 'home' },
   { pattern: (p) => p === '/lobster/skill', page: 'skill' },
   { pattern: (p) => p === '/lobster/diary', page: 'diary' },
@@ -43,6 +45,7 @@ const PATH_MAP: Record<PageType, string> = {
   landing: '/',
   'cat-cafe': '/cat-cafe',
   prompts: '/prompts',
+  'design-showcase': '/design-showcase',
   home: '/lobster',
   skill: '/lobster/skill',
   tutorial: '/lobster/tutorial',
@@ -93,6 +96,8 @@ function App() {
         return <CatCafePage />;
       case 'prompts':
         return <SystemPromptsPage />;
+      case 'design-showcase':
+        return <DesignShowcasePage />;
       case 'skill':
         return <SkillsPage />;
       case 'tutorial':
@@ -117,8 +122,8 @@ function App() {
     }
   };
 
-  // Landing, Cat Cafe and Prompts pages have their own layout
-  if (currentPage === 'landing' || currentPage === 'cat-cafe' || currentPage === 'prompts') {
+  // Landing, Cat Cafe, Prompts and Design Showcase pages have their own layout
+  if (currentPage === 'landing' || currentPage === 'cat-cafe' || currentPage === 'prompts' || currentPage === 'design-showcase') {
     return <>{renderPage()}</>;
   }
 

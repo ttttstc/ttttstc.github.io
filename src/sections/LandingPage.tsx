@@ -1,4 +1,4 @@
-import { Sparkles, ArrowRight, Coffee, Bug, ArrowDown, Sparkle } from 'lucide-react';
+import { Sparkles, ArrowRight, Coffee, Bug, ArrowDown, Sparkle, Palette } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -28,6 +28,15 @@ const projects: Project[] = [
     href: '/prompts',
     status: 'ready',
     color: '#8B5CF6',
+  },
+  {
+    id: 'design-showcase',
+    title: '设计样板间',
+    description: '归档前端设计样式，展示前沿 UI/UX 设计实验与创意实现',
+    icon: Palette,
+    href: '/design-showcase',
+    status: 'ready',
+    color: '#EC4899',
   },
   {
     id: 'cat-cafe',
