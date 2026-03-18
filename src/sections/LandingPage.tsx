@@ -1,5 +1,7 @@
 import { Sparkles, ArrowRight, Coffee, ArrowDown, Sparkle, Palette, Bug } from 'lucide-react';
 
+// 首页项目配置
+
 interface Project {
   id: string;
   title: string;
