@@ -155,17 +155,21 @@ function ThreeViewRenderer({
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // 控制器
-    const controls = new (window as any).OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.enableZoom = true;
-    controls.minDistance = 2;
-    controls.maxDistance = 10;
-    controls.enablePan = false;
-    controls.autoRotate = viewMode === 'globe';
-    controls.autoRotateSpeed = 0.3;
-    controlsRef.current = controls;
+    // 控制器 - 使用 THREE.OrbitControls
+    const THREE = (window as any).THREE;
+    const OrbitControls = (window as any).OrbitControls || (THREE && THREE.OrbitControls);
+    if (OrbitControls) {
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.enableZoom = true;
+      controls.minDistance = 2;
+      controls.maxDistance = 10;
+      controls.enablePan = false;
+      controls.autoRotate = viewMode === 'globe';
+      controls.autoRotateSpeed = 0.3;
+      controlsRef.current = controls;
+    }
 
     // 射线检测
     const raycaster = new (window as any).THREE.Raycaster();
@@ -316,7 +320,9 @@ function ThreeViewRenderer({
     // 动画循环
     const animate = () => {
       animationFrameRef.current = requestAnimationFrame(animate);
-      controls.update();
+      if (controlsRef.current) {
+        controlsRef.current.update();
+      }
       renderer.render(scene, camera);
     };
     animate();
