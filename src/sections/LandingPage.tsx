@@ -1,4 +1,4 @@
-import { Sparkles, ArrowRight, Coffee, ArrowDown, Sparkle, Palette, Bug } from 'lucide-react';
+import { Sparkles, ArrowRight, Coffee, ArrowDown, Sparkle, Palette, Bug, GraduationCap } from 'lucide-react';
 
 // 首页项目配置
 
@@ -39,6 +39,15 @@ const projects: Project[] = [
     href: '/design-showcase',
     status: 'ready',
     color: '#EC4899',
+  },
+  {
+    id: 'learn-cc',
+    title: 'Agent 入门教程',
+    description: '从零掌握 AI Agent 的 12 堂课 —— 基于 Claude Code 的系统化学习路径',
+    icon: GraduationCap,
+    href: '/learn-cc',
+    status: 'ready',
+    color: '#10B981',
   },
   {
     id: 'cat-cafe',
