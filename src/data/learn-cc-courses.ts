@@ -26,3 +26,15 @@ export const getProgress = () => {
   const completed = courses.filter(c => c.status === 'completed').length;
   return { completed, total: courses.length };
 };
+
+export const getCourseById = (id: string): Course | undefined => {
+  return courses.find(c => c.id === id);
+};
+
+export const getPrevNextLesson = (id: string) => {
+  const index = courses.findIndex(c => c.id === id);
+  return {
+    prev: index > 0 ? courses[index - 1] : null,
+    next: index < courses.length - 1 ? courses[index + 1] : null,
+  };
+};

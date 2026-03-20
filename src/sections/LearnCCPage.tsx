@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Home, Github, ArrowRight, CheckCircle, Lock, PlayCircle } from 'lucide-react';
-import { courses, getProgress, type Course } from '../data/learn-cc-courses';
+import { Home, Github, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
+import { courses, type Course } from '../data/learn-cc-courses';
 
-// 颜色系统 - 与现有页面一致
+// 颜色系统
 const COLORS = {
   bg: '#000000',
   bgSecondary: '#0A0A0A',
@@ -16,117 +16,210 @@ const COLORS = {
   accentHover: '#FF8C5A',
 };
 
+// 按 Phase 分组
+const getCoursesByPhase = () => {
+  const phases: Record<number, Course[]> = {};
+  courses.forEach(course => {
+    if (!phases[course.phase]) {
+      phases[course.phase] = [];
+    }
+    phases[course.phase].push(course);
+  });
+  return phases;
+};
+
 export default function LearnCCPage() {
   const [loaded, setLoaded] = useState(false);
-  const progress = getProgress();
+  const [expandedPhase, setExpandedPhase] = useState<number | null>(1);
+  const phases = getCoursesByPhase();
 
   useEffect(() => {
-    setTimeout(() => setLoaded(true), 100);
+    // 延迟触发加载动画
+    const timer = setTimeout(() => setLoaded(true), 150);
+    return () => clearTimeout(timer);
   }, []);
 
-  const getStatusIcon = (status: Course['status']) => {
-    switch (status) {
-      case 'completed': return <CheckCircle className="w-5 h-5" />;
-      case 'current': return <PlayCircle className="w-5 h-5" />;
-      case 'locked': return <Lock className="w-5 h-5" />;
-    }
-  };
-
-  const getStatusColor = (status: Course['status']) => {
-    switch (status) {
-      case 'completed': return '#22C55E';
-      case 'current': return COLORS.accent;
-      case 'locked': return COLORS.textMuted;
-    }
+  const togglePhase = (phase: number) => {
+    setExpandedPhase(expandedPhase === phase ? null : phase);
   };
 
   return (
     <div style={{ backgroundColor: COLORS.bg }} className="min-h-screen text-white">
       {/* Header */}
-      <header style={{ backgroundColor: COLORS.bgSecondary, borderBottom: `1px solid ${COLORS.border}` }} className="h-16 flex items-center justify-between px-6 sticky top-0 z-50">
+      <header
+        style={{
+          backgroundColor: COLORS.bgSecondary,
+          borderBottom: `1px solid ${COLORS.border}`,
+        }}
+        className="h-16 flex items-center justify-between px-6 sticky top-0 z-50"
+      >
         <div className="flex items-center gap-4">
-          <a href="/" className="flex items-center gap-2" style={{ color: COLORS.textSecondary }}>
+          <a
+            href="/"
+            className="flex items-center gap-2 transition-colors"
+            style={{ color: COLORS.textSecondary }}
+          >
             <Home className="w-5 h-5" />
             <span>首页</span>
           </a>
           <div style={{ backgroundColor: COLORS.border }} className="w-px h-6" />
-          <h1 className="text-lg font-semibold" style={{ fontFamily: 'Times New Roman, Times, serif' }}>Agent 入门教程</h1>
+          <h1 className="text-lg font-semibold" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            Agent 入门教程
+          </h1>
         </div>
-        <a href="https://github.com/shareAI-lab/learn-claude-code" target="_blank" rel="noopener noreferrer" style={{ color: COLORS.textSecondary }} className="hover:text-white transition-colors">
+        <a
+          href="https://github.com/shareAI-lab/learn-claude-code"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: COLORS.textSecondary }}
+          className="hover:text-white transition-colors"
+        >
           <Github className="w-5 h-5" />
         </a>
       </header>
 
       {/* Hero */}
-      <section className="py-16 px-6">
+      <section
+        className={`py-20 px-6 transition-all duration-700 ease-out ${
+          loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}
+      >
         <div className="max-w-4xl mx-auto text-center">
-          <h2 style={{ fontFamily: 'Times New Roman, Times, serif' }} className="text-4xl md:text-5xl font-bold mb-4">
+          <h2
+            style={{ fontFamily: 'Times New Roman, Times, serif' }}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+          >
             Agent <span style={{ color: COLORS.accent }}>Mastery</span> Journey
           </h2>
-          <p style={{ color: COLORS.textSecondary }} className="text-lg mb-8">
-            从零掌握 AI Agent 的 12 堂课 · 构建你的第一个智能助手
+          <p style={{ color: COLORS.textSecondary }} className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
+            从零掌握 AI Agent 的 12 堂课 · 基于 Claude Code 的系统化学习路径
           </p>
-
-          {/* Progress */}
-          <div className="inline-flex items-center gap-4 px-6 py-3 rounded-full" style={{ backgroundColor: COLORS.bgTertiary, border: `1px solid ${COLORS.border}` }}>
-            <div style={{ color: COLORS.textSecondary }} className="text-sm">学习进度</div>
-            <div className="flex items-center gap-2">
-              <div className="w-32 h-2 rounded-full overflow-hidden" style={{ backgroundColor: COLORS.bgSecondary }}>
-                <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${(progress.completed / progress.total) * 100}%`, backgroundColor: COLORS.accent }} />
-              </div>
-              <span style={{ color: COLORS.accent }} className="font-semibold">{progress.completed}/{progress.total}</span>
-            </div>
+          <div
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm"
+            style={{ backgroundColor: `${COLORS.accent}15`, color: COLORS.accent }}
+          >
+            <span>点击章节卡片开始学习</span>
           </div>
         </div>
       </section>
 
-      {/* Course Cards */}
-      <section className="px-6 pb-16">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {courses.map((course, index) => (
-              <div
-                key={course.id}
-                className={`relative overflow-hidden rounded-xl transition-all duration-500 cursor-pointer hover:-translate-y-1 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+      {/* Phase Sections */}
+      <section className="px-6 pb-20">
+        <div className="max-w-4xl mx-auto">
+          {Object.entries(phases).map(([phase, phaseCourses], phaseIndex) => (
+            <div
+              key={phase}
+              className={`mb-4 transition-all duration-500 ease-out ${
+                loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}
+              style={{ transitionDelay: `${phaseIndex * 100 + 200}ms` }}
+            >
+              {/* Phase Header */}
+              <button
+                onClick={() => togglePhase(Number(phase))}
+                className="w-full flex items-center justify-between p-4 rounded-xl transition-all duration-300"
                 style={{
-                  backgroundColor: COLORS.bgTertiary,
+                  backgroundColor: COLORS.bgSecondary,
                   border: `1px solid ${COLORS.border}`,
-                  transitionDelay: `${index * 0.05}s`,
                 }}
               >
-                {/* Status & Phase */}
-                <div className="absolute top-4 right-4" style={{ color: getStatusColor(course.status) }}>{getStatusIcon(course.status)}</div>
-                <div className="absolute top-4 left-4">
-                  <span className="px-2 py-1 text-xs rounded-full" style={{ backgroundColor: `${COLORS.accent}20`, color: COLORS.accent }}>Phase {course.phase}</span>
+                <div className="flex items-center gap-3">
+                  <span
+                    className="px-3 py-1 rounded-full text-sm font-semibold"
+                    style={{ backgroundColor: `${COLORS.accent}20`, color: COLORS.accent }}
+                  >
+                    Phase {phase}
+                  </span>
+                  <span style={{ color: COLORS.textSecondary }}>
+                    {phaseCourses.map(c => c.title).join(' · ')}
+                  </span>
                 </div>
+                {expandedPhase === Number(phase) ? (
+                  <ChevronUp className="w-5 h-5" style={{ color: COLORS.textMuted }} />
+                ) : (
+                  <ChevronDown className="w-5 h-5" style={{ color: COLORS.textMuted }} />
+                )}
+              </button>
 
-                {/* Content */}
-                <div className="p-6 pt-16">
-                  <h3 style={{ fontFamily: 'Times New Roman, Times, serif' }} className="text-xl font-bold mb-2">{course.id.toUpperCase()}</h3>
-                  <h4 className="text-lg font-semibold mb-1">{course.title}</h4>
-                  <p style={{ color: COLORS.textSecondary }} className="text-sm mb-4">{course.subtitle}</p>
-                  <p className="text-xs italic leading-relaxed pl-3" style={{ color: COLORS.textMuted, borderLeft: `2px solid ${getStatusColor(course.status)}` }}>"{course.motto}"</p>
+              {/* Course Cards Grid */}
+              <div
+                className={`grid gap-4 mt-4 overflow-hidden transition-all duration-500 ease-out ${
+                  expandedPhase === Number(phase) ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                }`}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {phaseCourses.map((course, index) => (
+                    <a
+                      key={course.id}
+                      href={`/learn-cc/${course.id}`}
+                      className="group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-[1.02]"
+                      style={{
+                        backgroundColor: COLORS.bgTertiary,
+                        border: `1px solid ${COLORS.border}`,
+                        transitionDelay: `${index * 50}ms`,
+                      }}
+                    >
+                      {/* Hover glow effect */}
+                      <div
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                        style={{
+                          boxShadow: `inset 0 0 0 1px ${COLORS.accent}40, 0 0 40px ${COLORS.accent}15`,
+                        }}
+                      />
 
-                  {/* Button */}
-                  <div className="mt-6 flex items-center gap-2" style={{ color: course.status === 'locked' ? COLORS.textMuted : COLORS.accent }}>
-                    <span className="text-sm font-medium">
-                      {course.status === 'completed' ? '复习' : course.status === 'current' ? '开始学习' : '敬请期待'}
-                    </span>
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
+                      <div className="relative p-5">
+                        {/* ID Badge */}
+                        <div className="flex items-center justify-between mb-3">
+                          <span
+                            className="text-xs font-mono px-2 py-1 rounded"
+                            style={{ backgroundColor: COLORS.bgSecondary, color: COLORS.textMuted }}
+                          >
+                            {course.id.toUpperCase()}
+                          </span>
+                        </div>
+
+                        {/* Title */}
+                        <h3
+                          className="text-lg font-semibold mb-1 group-hover:text-lobster-orange transition-colors"
+                          style={{ fontFamily: 'Times New Roman, Times, serif' }}
+                        >
+                          {course.title}
+                        </h3>
+                        <p style={{ color: COLORS.textSecondary }} className="text-sm mb-3">
+                          {course.subtitle}
+                        </p>
+
+                        {/* Motto */}
+                        <p
+                          className="text-xs italic mb-4"
+                          style={{ color: COLORS.textMuted, borderLeft: `2px solid ${COLORS.accent}`, paddingLeft: '0.75rem' }}
+                        >
+                          {course.motto}
+                        </p>
+
+                        {/* Arrow indicator */}
+                        <div className="flex items-center gap-2" style={{ color: COLORS.accent }}>
+                          <span className="text-sm font-medium">进入学习</span>
+                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                        </div>
+                      </div>
+                    </a>
+                  ))}
                 </div>
-
-                {/* Hover glow */}
-                <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity pointer-events-none" style={{ boxShadow: `inset 0 0 0 1px ${COLORS.accent}, 0 0 30px ${COLORS.accent}20` }} />
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* Footer */}
-      <footer style={{ borderTop: `1px solid ${COLORS.border}` }} className="py-8 text-center">
-        <p style={{ color: COLORS.textMuted }} className="text-sm">© 2026 泥巴猪的实验田 · Agent Mastery Journey</p>
+      <footer
+        style={{ borderTop: `1px solid ${COLORS.border}` }}
+        className="py-8 text-center"
+      >
+        <p style={{ color: COLORS.textMuted }} className="text-sm">
+          © 2026 泥巴猪的实验田 · Agent Mastery Journey
+        </p>
       </footer>
     </div>
   );

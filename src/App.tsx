@@ -17,8 +17,9 @@ import TechEdenPage from './sections/TechEdenPage';
 import SystemPromptsPage from './sections/SystemPromptsPage';
 import DesignShowcasePage from './sections/DesignShowcasePage';
 import LearnCCPage from './sections/LearnCCPage';
+import LearnCCLessonPage from './sections/LearnCCLessonPage';
 
-type PageType = 'landing' | 'cat-cafe' | 'prompts' | 'home' | 'skill' | 'tutorial' | 'diary' | 'workspace' | 'tech' | 'design-showcase' | 'learn-cc';
+type PageType = 'landing' | 'cat-cafe' | 'prompts' | 'home' | 'skill' | 'tutorial' | 'diary' | 'workspace' | 'tech' | 'design-showcase' | 'learn-cc' | 'learn-cc-lesson';
 
 // 路由配置 - 路径到页面类型的映射
 const ROUTE_MAPPINGS: Array<{ pattern: (path: string) => boolean; page: PageType }> = [
@@ -28,6 +29,7 @@ const ROUTE_MAPPINGS: Array<{ pattern: (path: string) => boolean; page: PageType
   { pattern: (p) => p === '/prompts', page: 'prompts' },
   { pattern: (p) => p === '/design-showcase', page: 'design-showcase' },
   { pattern: (p) => p === '/learn-cc' || p === '/lobster/learn', page: 'learn-cc' },
+  { pattern: (p) => p.match(/^\/learn-cc\/s\d{2}$/) !== null, page: 'learn-cc-lesson' },
   { pattern: (p) => p === '/lobster' || p === '/lobster/', page: 'home' },
   { pattern: (p) => p === '/lobster/skill', page: 'skill' },
   { pattern: (p) => p === '/lobster/diary', page: 'diary' },
@@ -49,12 +51,19 @@ const PATH_MAP: Record<PageType, string> = {
   prompts: '/prompts',
   'design-showcase': '/design-showcase',
   'learn-cc': '/learn-cc',
+  'learn-cc-lesson': '/learn-cc',
   home: '/lobster',
   skill: '/lobster/skill',
   tutorial: '/lobster/tutorial',
   diary: '/lobster/diary',
   workspace: '/lobster/workspace',
   tech: '/lobster/tech-eden',
+};
+
+// 从路径提取 lesson ID
+const getLessonIdFromPath = (path: string): string | null => {
+  const match = path.match(/^\/learn-cc\/(s\d{2})$/);
+  return match ? match[1] : null;
 };
 
 // 根据路径获取页面类型
@@ -75,10 +84,15 @@ const getInitialPage = (): PageType => {
 
 function App() {
   const [currentPage, setCurrentPage] = useState<PageType>(getInitialPage);
+  const [lessonId, setLessonId] = useState<string | null>(getLessonIdFromPath(window.location.pathname));
 
   useEffect(() => {
     const handleNavigation = () => {
-      setCurrentPage(getPageFromPath(window.location.pathname));
+      const page = getPageFromPath(window.location.pathname);
+      setCurrentPage(page);
+      if (page === 'learn-cc-lesson') {
+        setLessonId(getLessonIdFromPath(window.location.pathname));
+      }
     };
 
     handleNavigation();
@@ -103,6 +117,8 @@ function App() {
         return <DesignShowcasePage />;
       case 'learn-cc':
         return <LearnCCPage />;
+      case 'learn-cc-lesson':
+        return <LearnCCLessonPage lessonId={lessonId} />;
       case 'skill':
         return <SkillsPage />;
       case 'tutorial':
@@ -128,7 +144,7 @@ function App() {
   };
 
   // Landing, Cat Cafe, Prompts and Design Showcase pages have their own layout
-  if (currentPage === 'landing' || currentPage === 'cat-cafe' || currentPage === 'prompts' || currentPage === 'design-showcase' || currentPage === 'learn-cc') {
+  if (currentPage === 'landing' || currentPage === 'cat-cafe' || currentPage === 'prompts' || currentPage === 'design-showcase' || currentPage === 'learn-cc' || currentPage === 'learn-cc-lesson') {
     return <>{renderPage()}</>;
   }
 
