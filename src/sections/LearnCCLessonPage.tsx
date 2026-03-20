@@ -50,7 +50,7 @@ interface Props {
 }
 
 // 改进的 Markdown 渲染
-const renderMarkdown = (content: string) => {
+const renderMarkdown = (content: string, phaseColor: string) => {
   const lines = content.split('\n');
   const elements: React.ReactElement[] = [];
   let inCodeBlock = false;
@@ -121,14 +121,14 @@ const renderMarkdown = (content: string) => {
           key={i}
           className="border-l-4 my-4 pl-4 py-1"
           style={{
-            borderColor: COLORS.accent,
+            borderColor: phaseColor,
             color: COLORS.textSecondary,
             fontStyle: 'italic',
-            backgroundColor: `${COLORS.accentMuted}30`,
+            backgroundColor: `${phaseColor}15`,
             borderRadius: '0 8px 8px 0',
           }}
         >
-          {renderInlineCode(line.slice(2))}
+          {renderInlineCode(line.slice(2), phaseColor)}
         </blockquote>
       );
     }
@@ -136,7 +136,7 @@ const renderMarkdown = (content: string) => {
     else if (line.startsWith('- ') || line.startsWith('* ')) {
       elements.push(
         <li key={i} className="ml-6 mb-2 list-disc" style={{ color: COLORS.textSecondary }}>
-          {renderInlineCode(line.slice(2))}
+          {renderInlineCode(line.slice(2), phaseColor)}
         </li>
       );
     }
@@ -162,7 +162,7 @@ const renderMarkdown = (content: string) => {
     else {
       elements.push(
         <p key={i} className="mb-4 leading-relaxed" style={{ color: COLORS.textSecondary }}>
-          {renderInlineCode(line)}
+          {renderInlineCode(line, phaseColor)}
         </p>
       );
     }
@@ -172,7 +172,7 @@ const renderMarkdown = (content: string) => {
 };
 
 // 行内代码渲染
-const renderInlineCode = (text: string) => {
+const renderInlineCode = (text: string, phaseColor: string) => {
   const parts = text.split(/(`[^`]+`)/);
   return parts.map((part, i) => {
     if (part.startsWith('`') && part.endsWith('`')) {
@@ -182,7 +182,7 @@ const renderInlineCode = (text: string) => {
           className="px-1.5 py-0.5 rounded text-sm"
           style={{
             backgroundColor: COLORS.bgSecondary,
-            color: COLORS.accent,
+            color: phaseColor,
             fontFamily: CODE_FONT,
           }}
         >
@@ -389,7 +389,7 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
               }}
             >
               <div className="prose prose-invert max-w-none">
-                {renderMarkdown(lesson.content)}
+                {renderMarkdown(lesson.content, phaseColor)}
               </div>
             </div>
           </div>
@@ -414,7 +414,7 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <span style={{ color: COLORS.accent, fontFamily: CODE_FONT }} className="text-sm">
+                  <span style={{ color: phaseColor, fontFamily: CODE_FONT }} className="text-sm">
                     agents/{lesson.id}_*.py
                   </span>
                 </div>
