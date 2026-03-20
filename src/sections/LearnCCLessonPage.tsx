@@ -16,6 +16,9 @@ const COLORS = {
   accentHover: '#FF8C5A',
 };
 
+// Anthropic 风格代码字体
+const CODE_FONT = "'IBM Plex Mono', 'SF Mono', Monaco, 'Andale Mono', 'Ubuntu Mono', monospace";
+
 interface Props {
   lessonId: string | null;
 }
@@ -35,8 +38,8 @@ const renderMarkdown = (content: string) => {
     if (line.startsWith('```')) {
       if (inCodeBlock) {
         elements.push(
-          <pre key={`code-${codeKey++}`} className="bg-[#0A0A0A] rounded-lg p-4 my-4 overflow-x-auto">
-            <code className="text-sm font-mono text-lobster-orange">
+          <pre key={`code-${codeKey++}`} className="bg-[#0A0A0A] rounded-lg p-4 my-4 overflow-x-auto" style={{ fontFamily: CODE_FONT }}>
+            <code className="text-sm text-lobster-orange" style={{ fontFamily: CODE_FONT }}>
               {codeContent.join('\n')}
             </code>
           </pre>
@@ -107,8 +110,8 @@ const renderInlineCode = (text: string) => {
       return (
         <code
           key={i}
-          className="px-1.5 py-0.5 rounded text-sm font-mono"
-          style={{ backgroundColor: COLORS.bgSecondary, color: COLORS.accent }}
+          className="px-1.5 py-0.5 rounded text-sm"
+          style={{ backgroundColor: COLORS.bgSecondary, color: COLORS.accent, fontFamily: CODE_FONT }}
         >
           {part.slice(1, -1)}
         </code>
@@ -290,7 +293,7 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <span style={{ color: COLORS.accent }} className="text-sm font-mono">agents/{lesson.id}_*.py</span>
+                  <span style={{ color: COLORS.accent, fontFamily: CODE_FONT }} className="text-sm">agents/{lesson.id}_*.py</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <a
@@ -313,10 +316,10 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
                 </div>
               </div>
               {/* Code content */}
-              <pre className="p-6 overflow-x-auto">
+              <pre className="p-6 overflow-x-auto" style={{ fontFamily: CODE_FONT }}>
                 <code
                   className="text-sm leading-relaxed"
-                  style={{ fontFamily: "'SF Mono', Monaco, 'Courier New', monospace", color: COLORS.textSecondary }}
+                  style={{ fontFamily: CODE_FONT, color: COLORS.textSecondary }}
                 >
                   {lesson.code}
                 </code>

@@ -18,6 +18,106 @@ export interface LessonContent extends Course {}
 
 export const lessons: LessonContent[] = [
   {
+    id: 's00',
+    title: 'Introduction',
+    subtitle: '课程介绍',
+    motto: 'Model is Agent. Code is Harness.',
+    phase: 0,
+    docUrl: 'https://github.com/shareAI-lab/learn-claude-code/blob/main/README-zh.md',
+    codeUrl: '',
+    content: `# Learn Claude Code - Agent Harness 工程教程
+
+## 概述
+
+本教程通过 Claude Code 的架构，系统性地教授 Agent Harness（智能体架构）工程。
+
+## 核心哲学
+
+> "Model is Agent. Code is Harness. Build good Harness, and Agent will do the rest."
+>
+> **模型即智能体，代码即架构。构建好的架构，智能体将完成剩余工作。**
+
+## 课程结构
+
+**12 节渐进式课程** — 每节增加一个 Harness 机制：
+
+### 第一阶段：基础
+
+| 课程 | 主题 | 描述 |
+|------|------|------|
+| s01 | Agent Loop | Agent 循环核心模式 |
+| s02 | Tool Use | 工具使用与调度 |
+
+### 第二阶段：规划
+
+| 课程 | 主题 | 描述 |
+|------|------|------|
+| s03 | TodoWrite | 任务清单管理 |
+| s04 | Subagents | 子代理与上下文隔离 |
+| s05 | Skills | 按需加载技能 |
+| s06 | Context Compact | 上下文压缩 |
+
+### 第三阶段：持久化
+
+| 课程 | 主题 | 描述 |
+|------|------|------|
+| s07 | Tasks | 持久化任务系统 |
+| s08 | Background Tasks | 后台任务执行 |
+
+### 第四阶段：团队协作
+
+| 课程 | 主题 | 描述 |
+|------|------|------|
+| s09 | Agent Teams | 多代理团队协作 |
+| s10 | Team Protocols | 团队协调协议 |
+| s11 | Autonomous Agents | 自主代理 |
+| s12 | Worktree Isolation | 工作树隔离 |
+
+## 核心工具
+
+- **Kode Agent CLI** - 开源编码智能体 (\`npm i -g @shareai-lab/kode\`)
+- **Kode Agent SDK** - 可嵌入的智能体能力
+- **Web 平台** - 交互式可视化和教程
+
+## 姊妹项目
+
+**claw0** - 将智能体从反应式转变为主动式：
+- Heartbeat（周期性唤醒）
+- Cron（定时任务）
+- IM 多渠道路由
+- 持久化记忆
+
+## 快速开始
+
+\`\`\`bash
+git clone https://github.com/shareAI-lab/learn-claude-code
+cd learn-claude-code
+pip install -r requirements.txt
+cp .env.example .env  # 添加你的 ANTHROPIC_API_KEY
+
+python agents/s01_agent_loop.py  # 从这里开始
+\`\`\`
+
+## 许可证
+
+MIT`,
+    code: `# 本课程为介绍章节，不包含代码示例
+# 请从 s01 开始学习 Agent Loop
+
+# 快速开始
+
+git clone https://github.com/shareAI-lab/learn-claude-code
+cd learn-claude-code
+pip install -r requirements.txt
+cp .env.example .env
+
+# 添加你的 ANTHROPIC_API_KEY 到 .env 文件
+ANTHROPIC_API_KEY=your_api_key_here
+
+# 运行第一课
+python agents/s01_agent_loop.py`,
+  },
+  {
     id: 's01',
     title: 'Agent Loop',
     subtitle: 'Agent 循环',

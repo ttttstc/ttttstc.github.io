@@ -30,7 +30,7 @@ const getCoursesByPhase = () => {
 
 export default function LearnCCPage() {
   const [loaded, setLoaded] = useState(false);
-  const [expandedPhase, setExpandedPhase] = useState<number | null>(1);
+  const [expandedPhase, setExpandedPhase] = useState<number | null>(0);
   const phases = getCoursesByPhase();
 
   useEffect(() => {
