@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Github, ArrowLeft, ArrowRight, FileText, Code, Copy, Check } from 'lucide-react';
 import { getLessonById, getLessonPrevNext, lessons } from '../data/learn-cc-lessons';
 
-// 青绿色+黑色配色系统
+// 莫兰迪配色系统 - 清新但有活力
 const COLORS = {
   bg: '#000000',
   bgSecondary: '#0A0A0A',
@@ -12,9 +12,17 @@ const COLORS = {
   text: '#FAFAFA',
   textSecondary: '#B0B0B0',
   textMuted: '#666666',
-  accent: '#00D9C0',
-  accentHover: '#00F5D8',
-  accentMuted: '#0D4D47',
+  accent: '#5EADB4', // 清新青绿
+  accentHover: '#7FC4CC',
+  accentMuted: '#1E3538',
+  // 莫兰迪 Phase 颜色 - 清新活泼
+  phases: [
+    '#D4A853', // Phase 0 - 琥珀金
+    '#5B9AAD', // Phase 1 - 孔雀蓝
+    '#8B7AA6', // Phase 2 - 梦幻紫
+    '#6AAF8C', // Phase 2 - 翠玉绿
+    '#C98080', // Phase 4 - 珊瑚粉
+  ],
 };
 
 // 代码字体 - 更清晰的显示
@@ -42,7 +50,7 @@ interface Props {
 }
 
 // 改进的 Markdown 渲染
-const renderMarkdown = (content: string) => {
+const renderMarkdown = (content: string, phaseColor: string) => {
   const lines = content.split('\n');
   const elements: React.ReactElement[] = [];
   let inCodeBlock = false;
@@ -113,14 +121,14 @@ const renderMarkdown = (content: string) => {
           key={i}
           className="border-l-4 my-4 pl-4 py-1"
           style={{
-            borderColor: COLORS.accent,
+            borderColor: phaseColor,
             color: COLORS.textSecondary,
             fontStyle: 'italic',
-            backgroundColor: `${COLORS.accentMuted}30`,
+            backgroundColor: `${phaseColor}15`,
             borderRadius: '0 8px 8px 0',
           }}
         >
-          {renderInlineCode(line.slice(2))}
+          {renderInlineCode(line.slice(2), phaseColor)}
         </blockquote>
       );
     }
@@ -128,7 +136,7 @@ const renderMarkdown = (content: string) => {
     else if (line.startsWith('- ') || line.startsWith('* ')) {
       elements.push(
         <li key={i} className="ml-6 mb-2 list-disc" style={{ color: COLORS.textSecondary }}>
-          {renderInlineCode(line.slice(2))}
+          {renderInlineCode(line.slice(2), phaseColor)}
         </li>
       );
     }
@@ -154,7 +162,7 @@ const renderMarkdown = (content: string) => {
     else {
       elements.push(
         <p key={i} className="mb-4 leading-relaxed" style={{ color: COLORS.textSecondary }}>
-          {renderInlineCode(line)}
+          {renderInlineCode(line, phaseColor)}
         </p>
       );
     }
@@ -164,7 +172,7 @@ const renderMarkdown = (content: string) => {
 };
 
 // 行内代码渲染
-const renderInlineCode = (text: string) => {
+const renderInlineCode = (text: string, phaseColor: string) => {
   const parts = text.split(/(`[^`]+`)/);
   return parts.map((part, i) => {
     if (part.startsWith('`') && part.endsWith('`')) {
@@ -174,7 +182,7 @@ const renderInlineCode = (text: string) => {
           className="px-1.5 py-0.5 rounded text-sm"
           style={{
             backgroundColor: COLORS.bgSecondary,
-            color: COLORS.accent,
+            color: phaseColor,
             fontFamily: CODE_FONT,
           }}
         >
@@ -220,9 +228,49 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
   }
 
   const title = getTitle(lesson.id);
+  const phaseColor = COLORS.phases[lesson.phase] || COLORS.accent;
 
   return (
     <div style={{ backgroundColor: COLORS.bg }} className="min-h-screen text-white">
+      {/* Right Side Navigation Panel */}
+      <div
+        className="fixed right-6 top-1/2 transform -translate-y-1/2 flex flex-col gap-3 z-50"
+      >
+        {/* Back to Tutorial - 使用当前章节的phase颜色 */}
+        <a
+          href={`/learn-cc?selected=${lessonId}`}
+          className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer group"
+          style={{
+            backgroundColor: `${phaseColor}15`,
+            border: `1px solid ${phaseColor}30`,
+          }}
+          title="返回教程首页"
+        >
+          <ArrowLeft className="w-5 h-5" style={{ color: phaseColor }} />
+          <span style={{ color: phaseColor }} className="text-sm font-medium group-hover:text-white transition-colors">
+            返回教程
+          </span>
+        </a>
+
+        {/* Next Chapter - 使用当前章节的phase颜色 */}
+        {next && (
+          <a
+            href={`/learn-cc/${next.id}`}
+            className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer group"
+            style={{
+              backgroundColor: `${phaseColor}20`,
+              border: `1px solid ${phaseColor}40`,
+            }}
+            title={`下一章: ${getTitle(next.id).cn}`}
+          >
+            <span style={{ color: phaseColor }} className="text-sm font-medium group-hover:text-white transition-colors">
+              下一章
+            </span>
+            <ArrowRight className="w-5 h-5" style={{ color: phaseColor }} />
+          </a>
+        )}
+      </div>
+
       {/* Header */}
       <header
         style={{
@@ -233,7 +281,7 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
       >
         <div className="flex items-center gap-4">
           <a
-            href="/learn-cc"
+            href={`/learn-cc?selected=${lessonId}`}
             className="flex items-center gap-2 transition-colors hover:opacity-80 cursor-pointer"
             style={{ color: COLORS.textSecondary }}
           >
@@ -243,7 +291,7 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
           <div style={{ backgroundColor: COLORS.border }} className="w-px h-6" />
           <span
             className="px-2 py-1 text-xs rounded-lg"
-            style={{ backgroundColor: COLORS.accentMuted, color: COLORS.accent }}
+            style={{ backgroundColor: `${phaseColor}25`, color: phaseColor }}
           >
             Phase {lesson.phase}
           </span>
@@ -270,7 +318,7 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
           <h2
             className="text-4xl md:text-5xl font-bold mb-4"
           >
-            <span style={{ color: COLORS.textSecondary }}>{title.cn}</span>
+            <span style={{ color: phaseColor }}>{title.cn}</span>
           </h2>
           <p style={{ color: COLORS.textSecondary }} className="text-xl mb-4">
             {title.en}
@@ -279,7 +327,7 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
             className="text-lg italic"
             style={{
               color: COLORS.textMuted,
-              borderLeft: `3px solid ${COLORS.accent}`,
+              borderLeft: `3px solid ${phaseColor}`,
               paddingLeft: '1rem',
               display: 'inline-block',
             }}
@@ -302,8 +350,8 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
                 activeTab === 'docs' ? 'shadow-sm' : ''
               }`}
               style={{
-                backgroundColor: activeTab === 'docs' ? COLORS.accentMuted : 'transparent',
-                color: activeTab === 'docs' ? COLORS.accent : COLORS.textMuted,
+                backgroundColor: activeTab === 'docs' ? `${phaseColor}20` : 'transparent',
+                color: activeTab === 'docs' ? phaseColor : COLORS.textMuted,
               }}
             >
               <FileText className="w-4 h-4" />
@@ -315,8 +363,8 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
                 activeTab === 'code' ? 'shadow-sm' : ''
               }`}
               style={{
-                backgroundColor: activeTab === 'code' ? COLORS.accentMuted : 'transparent',
-                color: activeTab === 'code' ? COLORS.accent : COLORS.textMuted,
+                backgroundColor: activeTab === 'code' ? `${phaseColor}20` : 'transparent',
+                color: activeTab === 'code' ? phaseColor : COLORS.textMuted,
               }}
             >
               <Code className="w-4 h-4" />
@@ -341,7 +389,7 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
               }}
             >
               <div className="prose prose-invert max-w-none">
-                {renderMarkdown(lesson.content)}
+                {renderMarkdown(lesson.content, phaseColor)}
               </div>
             </div>
           </div>
@@ -366,7 +414,7 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <span style={{ color: COLORS.accent, fontFamily: CODE_FONT }} className="text-sm">
+                  <span style={{ color: phaseColor, fontFamily: CODE_FONT }} className="text-sm">
                     agents/{lesson.id}_*.py
                   </span>
                 </div>

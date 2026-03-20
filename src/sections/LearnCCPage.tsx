@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Home, Github, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
-import { lessons, type Course } from '../data/learn-cc-lessons';
+import { useState, useEffect, useRef } from 'react';
+import { Home, Github, ArrowRight } from 'lucide-react';
+import { lessons } from '../data/learn-cc-lessons';
 
-// 青绿色+黑色配色系统
+// 莫兰迪配色系统 - 清新但有活力
 const COLORS = {
   bg: '#000000',
   bgSecondary: '#0A0A0A',
@@ -12,9 +12,15 @@ const COLORS = {
   text: '#FAFAFA',
   textSecondary: '#B0B0B0',
   textMuted: '#666666',
-  accent: '#00D9C0',      // 青绿色
-  accentHover: '#00F5D8',
-  accentMuted: '#0D4D47',  // 深青色背景
+  accent: '#5EADB4', // 清新青绿
+  // 莫兰迪 Phase 颜色 - 清新活泼
+  phases: [
+    '#D4A853', // Phase 0 - 琥珀金
+    '#5B9AAD', // Phase 1 - 孔雀蓝
+    '#8B7AA6', // Phase 2 - 梦幻紫
+    '#6AAF8C', // Phase 2 - 翠玉绿
+    '#C98080', // Phase 4 - 珊瑚粉
+  ],
 };
 
 // 中英文标题映射
@@ -34,36 +40,116 @@ const titleMap: Record<string, { cn: string; en: string }> = {
   s12: { cn: 'Worktree 隔离', en: 'Worktree Isolation' },
 };
 
-// 按 Phase 分组
-const getCoursesByPhase = () => {
-  const phases: Record<number, Course[]> = {};
-  lessons.forEach(course => {
-    if (!phases[course.phase]) {
-      phases[course.phase] = [];
+const getTitle = (id: string) => titleMap[id] || { cn: id, en: id };
+
+// Phase 信息
+const phaseInfo: Record<number, { name: string; desc: string }> = {
+  0: { name: '概述', desc: '模型即 Agent' },
+  1: { name: '基础', desc: '循环与工具' },
+  2: { name: '规划与知识', desc: '思考与记忆' },
+  3: { name: '持久化', desc: '任务与后台' },
+  4: { name: '团队协作', desc: '多 Agent 协作' },
+};
+
+// 计算每个 phase 的章节分布
+const getPhaseDistribution = () => {
+  const distribution: { phase: number; start: number; end: number; count: number }[] = [];
+  let currentStart = 0;
+
+  for (let phase = 0; phase <= 4; phase++) {
+    const phaseLessons = lessons.filter(l => l.phase === phase);
+    if (phaseLessons.length > 0) {
+      distribution.push({
+        phase,
+        start: currentStart,
+        end: currentStart + phaseLessons.length - 1,
+        count: phaseLessons.length,
+      });
+      currentStart += phaseLessons.length;
     }
-    phases[course.phase].push(course);
-  });
-  return phases;
+  }
+
+  return distribution;
 };
 
 export default function LearnCCPage() {
   const [loaded, setLoaded] = useState(false);
-  const [expandedPhase, setExpandedPhase] = useState<number | null>(0);
-  const phases = getCoursesByPhase();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startY = useRef(0);
+  const startScrollTop = useRef(0);
+
+  const phaseDistribution = getPhaseDistribution();
+
+  // 读取 URL 查询参数，设置初始选中的章节
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const selected = params.get('selected');
+    if (selected) {
+      const index = lessons.findIndex(l => l.id === selected);
+      if (index !== -1) {
+        setActiveIndex(index);
+        setScrollProgress(index / (lessons.length - 1));
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoaded(true), 150);
     return () => clearTimeout(timer);
   }, []);
 
-  const togglePhase = (phase: number) => {
-    setExpandedPhase(expandedPhase === phase ? null : phase);
+  // 滚轮滚动处理
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const newProgress = Math.max(0, Math.min(1, scrollProgress + e.deltaY * 0.001));
+      setScrollProgress(newProgress);
+      const newIndex = Math.round(newProgress * (lessons.length - 1));
+      setActiveIndex(newIndex);
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    return () => container.removeEventListener('wheel', handleWheel);
+  }, [scrollProgress]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    isDragging.current = true;
+    startY.current = e.clientY;
+    startScrollTop.current = scrollProgress;
+    containerRef.current && (containerRef.current.style.cursor = 'grabbing');
   };
 
-  const getTitle = (id: string) => titleMap[id] || { cn: id, en: id };
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current) return;
+    const deltaY = startY.current - e.clientY;
+    const newProgress = Math.max(0, Math.min(1, startScrollTop.current + deltaY * 0.002));
+    setScrollProgress(newProgress);
+    const newIndex = Math.round(newProgress * (lessons.length - 1));
+    setActiveIndex(newIndex);
+  };
+
+  const handleMouseUp = () => {
+    isDragging.current = false;
+    containerRef.current && (containerRef.current.style.cursor = 'grab');
+  };
+
+  const handleProgressClick = (index: number) => {
+    setActiveIndex(index);
+    setScrollProgress(index / (lessons.length - 1));
+  };
+
+  const currentLesson = lessons[activeIndex];
+  const currentPhase = currentLesson?.phase || 0;
+  const phaseColor = COLORS.phases[currentPhase] || COLORS.accent;
 
   return (
-    <div style={{ backgroundColor: COLORS.bg }} className="min-h-screen text-white">
+    <div style={{ backgroundColor: COLORS.bg }} className="min-h-screen text-white overflow-hidden">
       {/* Header */}
       <header
         style={{
@@ -82,9 +168,7 @@ export default function LearnCCPage() {
             <span>首页</span>
           </a>
           <div style={{ backgroundColor: COLORS.border }} className="w-px h-6" />
-          <h1 className="text-lg font-semibold">
-            Agent 入门教程
-          </h1>
+          <h1 className="text-lg font-semibold">Agent 入门教程</h1>
         </div>
         <a
           href="https://github.com/shareAI-lab/learn-claude-code"
@@ -97,152 +181,257 @@ export default function LearnCCPage() {
         </a>
       </header>
 
-      {/* Hero */}
-      <section
-        className={`py-20 px-6 transition-all duration-700 ease-out ${
-          loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}
+      {/* Phase Progress Bar */}
+      <div
+        style={{
+          backgroundColor: COLORS.bgSecondary,
+          borderBottom: `1px solid ${COLORS.border}`,
+          paddingTop: '20px',
+        }}
+        className="pb-4 px-6"
       >
-        <div className="max-w-4xl mx-auto text-center">
-          <h2
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-          >
+        {/* Hero Title */}
+        <div className="text-center mb-6">
+          <h2 className="text-4xl font-bold mb-2">
             Agent <span style={{ color: COLORS.accent }}>入门</span>教程
           </h2>
-          <p style={{ color: COLORS.textSecondary }} className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
+          <p style={{ color: COLORS.textMuted }} className="text-lg">
             从零掌握 AI Agent 的 12 堂课 · 基于 Claude Code 的系统化学习路径
           </p>
+        </div>
+
+        {/* Phase Labels */}
+        <div className="flex justify-between mb-3 max-w-4xl mx-auto">
+          {phaseDistribution.map((dist) => {
+            const info = phaseInfo[dist.phase];
+            const isActive = currentPhase >= dist.phase;
+            const isCurrent = currentPhase === dist.phase;
+            return (
+              <div
+                key={dist.phase}
+                className="flex flex-col items-center cursor-pointer"
+                onClick={() => handleProgressClick(dist.start)}
+              >
+                <div
+                  className="w-3 h-3 rounded-full mb-2 transition-all duration-300"
+                  style={{
+                    backgroundColor: isActive ? COLORS.phases[dist.phase] : COLORS.border,
+                    boxShadow: isCurrent ? `0 0 10px ${COLORS.phases[dist.phase]}` : 'none',
+                  }}
+                />
+                <span
+                  className="text-xs font-medium"
+                  style={{
+                    color: isCurrent ? COLORS.phases[dist.phase] : COLORS.textMuted,
+                  }}
+                >
+                  {info.name}
+                </span>
+                <span className="text-xs" style={{ color: COLORS.textMuted }}>
+                  {dist.count} 章节
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Progress Line - 按实际分布 */}
+        <div className="max-w-4xl mx-auto relative">
           <div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm"
-            style={{ backgroundColor: `${COLORS.accent}15`, color: COLORS.accent }}
-          >
-            <span>点击章节卡片开始学习</span>
+            className="h-1 rounded-full absolute top-0 left-0 right-0"
+            style={{ backgroundColor: COLORS.border }}
+          />
+          {/* Phase sections with actual distribution */}
+          <div className="h-1 rounded-full absolute top-0 left-0 flex">
+            {phaseDistribution.map((dist) => {
+              const widthPercent = (dist.count / lessons.length) * 100;
+              return (
+                <div
+                  key={dist.phase}
+                  className="h-full rounded-full transition-all duration-300"
+                  style={{
+                    width: `${widthPercent}%`,
+                    backgroundColor: currentPhase >= dist.phase ? COLORS.phases[dist.phase] : COLORS.border,
+                  }}
+                />
+              );
+            })}
+          </div>
+          {/* Progress indicator */}
+          <div
+            className="absolute top-1/2 transform -translate-y-1/2 w-4 h-4 rounded-full border-2 border-black transition-all duration-300"
+            style={{
+              left: `${(activeIndex / (lessons.length - 1)) * 100}%`,
+              backgroundColor: phaseColor,
+              boxShadow: `0 0 15px ${phaseColor}`,
+            }}
+          />
+        </div>
+
+        {/* Chapter Dots */}
+        <div className="flex justify-center gap-1 mt-3">
+          {lessons.map((lesson, index) => {
+            const isActive = index === activeIndex;
+            const lessonPhaseColor = COLORS.phases[lesson.phase] || COLORS.accent;
+            return (
+              <button
+                key={lesson.id}
+                onClick={() => handleProgressClick(index)}
+                className="w-2 h-2 rounded-full transition-all duration-300 cursor-pointer"
+                style={{
+                  backgroundColor: isActive ? lessonPhaseColor : COLORS.borderHover,
+                  transform: isActive ? 'scale(1.5)' : 'scale(1)',
+                }}
+                title={`${lesson.id}: ${getTitle(lesson.id).cn}`}
+              />
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Main Content - Stacked Cards with Scroll */}
+      <div
+        ref={containerRef}
+        className={`relative cursor-grab transition-all duration-700 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        style={{ height: 'calc(100vh - 280px)' }}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      >
+        {/* Background Cards (Stacked Effect) */}
+        <div className="absolute inset-0 flex items-center justify-center p-12">
+          <div className="relative w-full max-w-3xl" style={{ height: '500px' }}>
+            {lessons.map((lesson, index) => {
+              const title = getTitle(lesson.id);
+              const isActive = index === activeIndex;
+              const offset = index - activeIndex;
+
+              let translateY = 0;
+              let scale = 1;
+              let opacity = 0;
+              let zIndex = 0;
+              let blur = 0;
+
+              if (isActive) {
+                translateY = 0;
+                scale = 1;
+                opacity = 1;
+                zIndex = lessons.length;
+              } else if (Math.abs(offset) <= 3) {
+                translateY = offset * 80;
+                scale = 1 - Math.abs(offset) * 0.1;
+                opacity = 1 - Math.abs(offset) * 0.25;
+                zIndex = lessons.length - Math.abs(offset);
+                blur = Math.abs(offset) * 2;
+              }
+
+              const lessonPhaseColor = COLORS.phases[lesson.phase] || COLORS.accent;
+
+              return (
+                <a
+                  key={lesson.id}
+                  href={`/learn-cc/${lesson.id}`}
+                  className="absolute w-full transition-all duration-500 ease-out"
+                  style={{
+                    transform: `translateY(${translateY}px) scale(${scale})`,
+                    opacity,
+                    zIndex,
+                    top: '50%',
+                    marginTop: '-180px',
+                    filter: blur > 0 ? `blur(${blur}px)` : 'none',
+                    pointerEvents: isActive ? 'auto' : 'none',
+                  }}
+                >
+                  <div
+                    className="rounded-2xl p-8"
+                    style={{
+                      backgroundColor: isActive ? COLORS.bgTertiary : COLORS.bgSecondary,
+                      border: `1px solid ${isActive ? lessonPhaseColor : COLORS.border}`,
+                      borderLeft: `5px solid ${lessonPhaseColor}`,
+                      boxShadow: isActive
+                        ? `0 0 80px ${lessonPhaseColor}40, 0 25px 50px rgba(0,0,0,0.6)`
+                        : '0 15px 40px rgba(0,0,0,0.4)',
+                    }}
+                  >
+                    {/* Phase Badge */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <span
+                          className="text-xs font-mono px-3 py-1 rounded-lg"
+                          style={{
+                            backgroundColor: lessonPhaseColor,
+                            color: COLORS.bg,
+                            fontWeight: 600,
+                          }}
+                        >
+                          {lesson.id.toUpperCase()}
+                        </span>
+                        <span
+                          className="text-xs px-2 py-1 rounded"
+                          style={{
+                            backgroundColor: `${lessonPhaseColor}30`,
+                            color: lessonPhaseColor,
+                          }}
+                        >
+                          Phase {lesson.phase}
+                        </span>
+                      </div>
+                      <span style={{ color: COLORS.textMuted }} className="text-sm">
+                        {phaseInfo[lesson.phase]?.name}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h3
+                      className="text-3xl font-bold mb-2"
+                      style={{ color: isActive ? lessonPhaseColor : COLORS.text }}
+                    >
+                      {title.cn}
+                    </h3>
+                    <p style={{ color: COLORS.textSecondary }} className="text-xl mb-4">
+                      {title.en}
+                    </p>
+
+                    {/* Motto */}
+                    <p
+                      className="text-base italic mb-6"
+                      style={{
+                        color: COLORS.textMuted,
+                        borderLeft: `3px solid ${lessonPhaseColor}`,
+                        paddingLeft: '1rem',
+                      }}
+                    >
+                      {lesson.motto}
+                    </p>
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between">
+                      <span style={{ color: COLORS.textMuted }} className="text-sm">
+                        {index + 1} / {lessons.length}
+                      </span>
+                      <div className="flex items-center gap-2" style={{ color: lessonPhaseColor }}>
+                        <span className="text-sm font-medium">进入学习</span>
+                        <ArrowRight className="w-5 h-5" />
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
           </div>
         </div>
-      </section>
 
-      {/* Phase Sections */}
-      <section className="px-6 pb-20">
-        <div className="max-w-4xl mx-auto">
-          {Object.entries(phases).map(([phase, phaseCourses], phaseIndex) => (
-            <div
-              key={phase}
-              className={`mb-6 transition-all duration-500 ease-out ${
-                loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-              style={{ transitionDelay: `${phaseIndex * 100 + 200}ms` }}
-            >
-              {/* Phase Header */}
-              <button
-                onClick={() => togglePhase(Number(phase))}
-                className="w-full flex items-center justify-between p-5 rounded-xl transition-all duration-300 cursor-pointer"
-                style={{
-                  backgroundColor: COLORS.bgSecondary,
-                  border: `1px solid ${COLORS.border}`,
-                }}
-              >
-                <div className="flex items-center gap-4">
-                  <span
-                    className="px-4 py-1.5 rounded-lg text-sm font-semibold"
-                    style={{ backgroundColor: COLORS.accentMuted, color: COLORS.accent }}
-                  >
-                    Phase {phase}
-                  </span>
-                  <span style={{ color: COLORS.textSecondary }}>
-                    {phaseCourses.map(c => getTitle(c.id).cn).join(' · ')}
-                  </span>
-                </div>
-                {expandedPhase === Number(phase) ? (
-                  <ChevronUp className="w-5 h-5" style={{ color: COLORS.textMuted }} />
-                ) : (
-                  <ChevronDown className="w-5 h-5" style={{ color: COLORS.textMuted }} />
-                )}
-              </button>
-
-              {/* Stacked View Cards */}
-              <div
-                className={`grid gap-3 mt-4 overflow-hidden transition-all duration-500 ease-out ${
-                  expandedPhase === Number(phase) ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                }`}
-              >
-                <div className="flex flex-col gap-3">
-                  {phaseCourses.map((course, index) => {
-                    const title = getTitle(course.id);
-                    return (
-                      <a
-                        key={course.id}
-                        href={`/learn-cc/${course.id}`}
-                        className="group relative overflow-hidden rounded-lg transition-all duration-300 hover:translate-x-2 cursor-pointer"
-                        style={{
-                          backgroundColor: COLORS.bgTertiary,
-                          border: `1px solid ${COLORS.border}`,
-                          borderLeft: `3px solid ${COLORS.accent}`,
-                          transitionDelay: `${index * 50}ms`,
-                        }}
-                      >
-                        {/* Hover effect */}
-                        <div
-                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                          style={{
-                            background: `linear-gradient(90deg, ${COLORS.accentMuted}20 0%, transparent 100%)`,
-                          }}
-                        />
-
-                        <div className="relative p-5 flex items-center justify-between">
-                          {/* Left: ID and Title */}
-                          <div className="flex items-center gap-4">
-                            <span
-                              className="text-xs font-mono px-2 py-1 rounded"
-                              style={{ backgroundColor: COLORS.bgSecondary, color: COLORS.accent }}
-                            >
-                              {course.id.toUpperCase()}
-                            </span>
-                            <div>
-                              <h3
-                                className="text-base font-semibold group-hover:text-white transition-colors"
-                                style={{ color: COLORS.textSecondary }}
-                              >
-                                {title.cn}
-                              </h3>
-                              <p style={{ color: COLORS.textMuted }} className="text-sm">
-                                {title.en}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Right: Arrow */}
-                          <div className="flex items-center gap-3">
-                            <p
-                              className="text-xs italic hidden md:block"
-                              style={{ color: COLORS.textMuted, maxWidth: '200px' }}
-                            >
-                              {course.motto}
-                            </p>
-                            <ArrowRight
-                              className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
-                              style={{ color: COLORS.accent }}
-                            />
-                          </div>
-                        </div>
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          ))}
+        {/* Scroll Hint */}
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-center">
+          <p style={{ color: COLORS.textMuted }} className="text-sm mb-2">
+            滚轮滑动或拖拽切换章节
+          </p>
+          <div className="flex justify-center gap-1">
+            <span style={{ color: phaseColor }} className="text-lg animate-bounce">↓</span>
+          </div>
         </div>
-      </section>
-
-      {/* Footer */}
-      <footer
-        style={{ borderTop: `1px solid ${COLORS.border}` }}
-        className="py-8 text-center"
-      >
-        <p style={{ color: COLORS.textMuted }} className="text-sm">
-          © 2026 泥巴猪的实验田 · Agent 入门教程
-        </p>
-      </footer>
+      </div>
     </div>
   );
 }
