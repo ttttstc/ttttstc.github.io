@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Home, Github, ArrowRight } from 'lucide-react';
 import { lessons } from '../data/learn-cc-lessons';
 
-// 莫兰迪配色系统
+// 莫兰迪配色系统 - 清新但有活力
 const COLORS = {
   bg: '#000000',
   bgSecondary: '#0A0A0A',
@@ -12,14 +12,14 @@ const COLORS = {
   text: '#FAFAFA',
   textSecondary: '#B0B0B0',
   textMuted: '#666666',
-  accent: '#8FA8A8', // 莫兰迪青绿
-  // 莫兰迪 Phase 颜色 - 淡雅低调
+  accent: '#5EADB4', // 清新青绿
+  // 莫兰迪 Phase 颜色 - 清新活泼
   phases: [
-    '#B8A082', // Phase 0 - 暖米色
-    '#7A9BA8', // Phase 1 - 雾霾蓝
-    '#9B8AA8', // Phase 2 - 淡紫灰
-    '#8AA88F', // Phase 3 - 鼠尾草绿
-    '#A88A8F', // Phase 4 - 烟玫瑰
+    '#D4A853', // Phase 0 - 琥珀金
+    '#5B9AAD', // Phase 1 - 孔雀蓝
+    '#8B7AA6', // Phase 2 - 梦幻紫
+    '#6AAF8C', // Phase 2 - 翠玉绿
+    '#C98080', // Phase 4 - 珊瑚粉
   ],
 };
 
