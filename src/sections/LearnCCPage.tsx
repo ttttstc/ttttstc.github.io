@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { Home, Github, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
-import { lessons, type Course } from '../data/learn-cc-lessons';
+import { useState, useEffect, useRef } from 'react';
+import { Home, Github, ArrowRight } from 'lucide-react';
+import { lessons } from '../data/learn-cc-lessons';
 
 // 青绿色+黑色配色系统
 const COLORS = {
@@ -12,9 +12,9 @@ const COLORS = {
   text: '#FAFAFA',
   textSecondary: '#B0B0B0',
   textMuted: '#666666',
-  accent: '#00D9C0',      // 青绿色
+  accent: '#00D9C0',
   accentHover: '#00F5D8',
-  accentMuted: '#0D4D47',  // 深青色背景
+  accentMuted: '#0D4D47',
 };
 
 // 中英文标题映射
@@ -34,33 +34,50 @@ const titleMap: Record<string, { cn: string; en: string }> = {
   s12: { cn: 'Worktree 隔离', en: 'Worktree Isolation' },
 };
 
-// 按 Phase 分组
-const getCoursesByPhase = () => {
-  const phases: Record<number, Course[]> = {};
-  lessons.forEach(course => {
-    if (!phases[course.phase]) {
-      phases[course.phase] = [];
-    }
-    phases[course.phase].push(course);
-  });
-  return phases;
+const getTitle = (id: string) => titleMap[id] || { cn: id, en: id };
+
+// Phase 名称
+const phaseNames: Record<number, string> = {
+  0: '概述',
+  1: '基础',
+  2: '规划与知识',
+  3: '持久化',
+  4: '团队协作',
 };
 
 export default function LearnCCPage() {
   const [loaded, setLoaded] = useState(false);
-  const [expandedPhase, setExpandedPhase] = useState<number | null>(0);
-  const phases = getCoursesByPhase();
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [hoveringRight, setHoveringRight] = useState(false);
+  const rightPanelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoaded(true), 150);
     return () => clearTimeout(timer);
   }, []);
 
-  const togglePhase = (phase: number) => {
-    setExpandedPhase(expandedPhase === phase ? null : phase);
-  };
+  // 监听鼠标进入右边区域
+  useEffect(() => {
+    const handleMouseEnter = () => setHoveringRight(true);
+    const handleMouseLeave = () => setHoveringRight(false);
 
-  const getTitle = (id: string) => titleMap[id] || { cn: id, en: id };
+    const rightPanel = rightPanelRef.current;
+    if (rightPanel) {
+      rightPanel.addEventListener('mouseenter', handleMouseEnter);
+      rightPanel.addEventListener('mouseleave', handleMouseLeave);
+    }
+
+    return () => {
+      if (rightPanel) {
+        rightPanel.removeEventListener('mouseenter', handleMouseEnter);
+        rightPanel.removeEventListener('mouseleave', handleMouseLeave);
+      }
+    };
+  }, []);
+
+  const handleSelect = (index: number) => {
+    setSelectedIndex(index);
+  };
 
   return (
     <div style={{ backgroundColor: COLORS.bg }} className="min-h-screen text-white">
@@ -82,9 +99,7 @@ export default function LearnCCPage() {
             <span>首页</span>
           </a>
           <div style={{ backgroundColor: COLORS.border }} className="w-px h-6" />
-          <h1 className="text-lg font-semibold">
-            Agent 入门教程
-          </h1>
+          <h1 className="text-lg font-semibold">Agent 入门教程</h1>
         </div>
         <a
           href="https://github.com/shareAI-lab/learn-claude-code"
@@ -97,152 +112,216 @@ export default function LearnCCPage() {
         </a>
       </header>
 
-      {/* Hero */}
-      <section
-        className={`py-20 px-6 transition-all duration-700 ease-out ${
-          loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      {/* Main Content - Split View */}
+      <div
+        className={`flex transition-all duration-700 ease-out ${
+          loaded ? 'opacity-100' : 'opacity-0'
         }`}
+        style={{ height: 'calc(100vh - 64px)' }}
       >
-        <div className="max-w-4xl mx-auto text-center">
-          <h2
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-          >
-            Agent <span style={{ color: COLORS.accent }}>入门</span>教程
-          </h2>
-          <p style={{ color: COLORS.textSecondary }} className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-            从零掌握 AI Agent 的 12 堂课 · 基于 Claude Code 的系统化学习路径
-          </p>
-          <div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm"
-            style={{ backgroundColor: `${COLORS.accent}15`, color: COLORS.accent }}
-          >
-            <span>点击章节卡片开始学习</span>
+        {/* Left Sidebar */}
+        <div
+          className="h-full overflow-y-auto"
+          style={{
+            width: '320px',
+            backgroundColor: COLORS.bgSecondary,
+            borderRight: `1px solid ${COLORS.border}`,
+          }}
+        >
+          {/* Hero Title */}
+          <div className="p-6" style={{ borderBottom: `1px solid ${COLORS.border}` }}>
+            <h2 className="text-2xl font-bold mb-2">
+              Agent <span style={{ color: COLORS.accent }}>入门</span>教程
+            </h2>
+            <p style={{ color: COLORS.textMuted }} className="text-sm">
+              从零掌握 AI Agent 的 12 堂课
+            </p>
+          </div>
+
+          {/* Course List */}
+          <div className="p-4">
+            {lessons.map((lesson, index) => {
+              const title = getTitle(lesson.id);
+              const isSelected = selectedIndex === index;
+              return (
+                <button
+                  key={lesson.id}
+                  onClick={() => handleSelect(index)}
+                  className="w-full text-left mb-2 p-4 rounded-lg transition-all duration-300 cursor-pointer"
+                  style={{
+                    backgroundColor: isSelected ? COLORS.accentMuted : 'transparent',
+                    border: `1px solid ${isSelected ? COLORS.accent : COLORS.border}`,
+                    borderLeft: `3px solid ${isSelected ? COLORS.accent : 'transparent'}`,
+                  }}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span
+                      className="text-xs font-mono"
+                      style={{ color: isSelected ? COLORS.accent : COLORS.textMuted }}
+                    >
+                      {lesson.id.toUpperCase()}
+                    </span>
+                    <span
+                      className="text-xs px-2 py-0.5 rounded"
+                      style={{
+                        backgroundColor: isSelected ? COLORS.accent : COLORS.bgTertiary,
+                        color: isSelected ? COLORS.bg : COLORS.textMuted,
+                      }}
+                    >
+                      Phase {lesson.phase}
+                    </span>
+                  </div>
+                  <div
+                    className="font-semibold mb-1"
+                    style={{ color: isSelected ? COLORS.text : COLORS.textSecondary }}
+                  >
+                    {title.cn}
+                  </div>
+                  <div style={{ color: COLORS.textMuted }} className="text-sm">
+                    {title.en}
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
-      </section>
 
-      {/* Phase Sections */}
-      <section className="px-6 pb-20">
-        <div className="max-w-4xl mx-auto">
-          {Object.entries(phases).map(([phase, phaseCourses], phaseIndex) => (
-            <div
-              key={phase}
-              className={`mb-6 transition-all duration-500 ease-out ${
-                loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
-              style={{ transitionDelay: `${phaseIndex * 100 + 200}ms` }}
-            >
-              {/* Phase Header */}
-              <button
-                onClick={() => togglePhase(Number(phase))}
-                className="w-full flex items-center justify-between p-5 rounded-xl transition-all duration-300 cursor-pointer"
-                style={{
-                  backgroundColor: COLORS.bgSecondary,
-                  border: `1px solid ${COLORS.border}`,
-                }}
-              >
-                <div className="flex items-center gap-4">
-                  <span
-                    className="px-4 py-1.5 rounded-lg text-sm font-semibold"
-                    style={{ backgroundColor: COLORS.accentMuted, color: COLORS.accent }}
+        {/* Right Panel - Stacked View */}
+        <div
+          ref={rightPanelRef}
+          className="flex-1 relative overflow-hidden"
+          style={{
+            background: `linear-gradient(180deg, ${COLORS.bg} 0%, ${COLORS.bgSecondary} 100%)`,
+          }}
+        >
+          {/* Stacked Cards */}
+          <div className="absolute inset-0 flex items-center justify-center p-12">
+            <div className="relative w-full max-w-2xl" style={{ height: '400px' }}>
+              {lessons.map((lesson, index) => {
+                const title = getTitle(lesson.id);
+                const isSelected = selectedIndex === index;
+                const isAbove = index < selectedIndex;
+                const isBelow = index > selectedIndex;
+
+                // 堆叠偏移计算
+                let translateY = 0;
+                let scale = 1;
+                let opacity = 0.4;
+                let zIndex = lessons.length - Math.abs(index - selectedIndex);
+
+                if (isSelected) {
+                  // 选中的卡片 - 弹起到中间
+                  translateY = 0;
+                  scale = 1;
+                  opacity = 1;
+                  zIndex = lessons.length + 1;
+                } else if (hoveringRight) {
+                  // 鼠标进入右边区域后，所有卡片归位
+                  translateY = (index - selectedIndex) * 60;
+                  scale = 1 - Math.abs(index - selectedIndex) * 0.05;
+                  opacity = 1 - Math.abs(index - selectedIndex) * 0.15;
+                } else {
+                  // 默认堆叠效果 - 选中的弹起，其他的根据位置堆叠
+                  if (isAbove) {
+                    translateY = -30 + (selectedIndex - index) * 10;
+                  } else if (isBelow) {
+                    translateY = 30 + (index - selectedIndex) * 10;
+                  }
+                  scale = 1 - Math.abs(index - selectedIndex) * 0.08;
+                  opacity = 1 - Math.abs(index - selectedIndex) * 0.2;
+                }
+
+                return (
+                  <a
+                    key={lesson.id}
+                    href={`/learn-cc/${lesson.id}`}
+                    className="absolute w-full transition-all duration-500 cursor-pointer"
+                    style={{
+                      transform: `translateY(${translateY}px) scale(${scale})`,
+                      opacity,
+                      zIndex,
+                      top: '50%',
+                      marginTop: '-120px',
+                    }}
                   >
-                    Phase {phase}
-                  </span>
-                  <span style={{ color: COLORS.textSecondary }}>
-                    {phaseCourses.map(c => getTitle(c.id).cn).join(' · ')}
-                  </span>
-                </div>
-                {expandedPhase === Number(phase) ? (
-                  <ChevronUp className="w-5 h-5" style={{ color: COLORS.textMuted }} />
-                ) : (
-                  <ChevronDown className="w-5 h-5" style={{ color: COLORS.textMuted }} />
-                )}
-              </button>
+                    <div
+                      className="rounded-xl p-8"
+                      style={{
+                        backgroundColor: isSelected ? COLORS.bgTertiary : COLORS.bgSecondary,
+                        border: `1px solid ${isSelected ? COLORS.accent : COLORS.border}`,
+                        borderLeft: `4px solid ${isSelected ? COLORS.accent : COLORS.border}`,
+                        boxShadow: isSelected
+                          ? `0 0 60px ${COLORS.accent}30, 0 20px 40px rgba(0,0,0,0.5)`
+                          : '0 10px 30px rgba(0,0,0,0.3)',
+                      }}
+                    >
+                      {/* Card Header */}
+                      <div className="flex items-center justify-between mb-4">
+                        <span
+                          className="text-xs font-mono px-3 py-1 rounded-lg"
+                          style={{
+                            backgroundColor: isSelected ? COLORS.accent : COLORS.bgTertiary,
+                            color: isSelected ? COLORS.bg : COLORS.textMuted,
+                          }}
+                        >
+                          {lesson.id.toUpperCase()}
+                        </span>
+                        <span style={{ color: COLORS.textMuted }} className="text-sm">
+                          Phase {lesson.phase}
+                        </span>
+                      </div>
 
-              {/* Stacked View Cards */}
-              <div
-                className={`grid gap-3 mt-4 overflow-hidden transition-all duration-500 ease-out ${
-                  expandedPhase === Number(phase) ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                }`}
-              >
-                <div className="flex flex-col gap-3">
-                  {phaseCourses.map((course, index) => {
-                    const title = getTitle(course.id);
-                    return (
-                      <a
-                        key={course.id}
-                        href={`/learn-cc/${course.id}`}
-                        className="group relative overflow-hidden rounded-lg transition-all duration-300 hover:translate-x-2 cursor-pointer"
+                      {/* Card Title */}
+                      <h3
+                        className="text-2xl font-bold mb-2"
+                        style={{ color: isSelected ? COLORS.accent : COLORS.text }}
+                      >
+                        {title.cn}
+                      </h3>
+                      <p style={{ color: COLORS.textSecondary }} className="text-lg mb-4">
+                        {title.en}
+                      </p>
+
+                      {/* Motto */}
+                      <p
+                        className="text-sm italic mb-6"
                         style={{
-                          backgroundColor: COLORS.bgTertiary,
-                          border: `1px solid ${COLORS.border}`,
-                          borderLeft: `3px solid ${COLORS.accent}`,
-                          transitionDelay: `${index * 50}ms`,
+                          color: COLORS.textMuted,
+                          borderLeft: `2px solid ${COLORS.accent}`,
+                          paddingLeft: '1rem',
                         }}
                       >
-                        {/* Hover effect */}
-                        <div
-                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                          style={{
-                            background: `linear-gradient(90deg, ${COLORS.accentMuted}20 0%, transparent 100%)`,
-                          }}
-                        />
+                        {lesson.motto}
+                      </p>
 
-                        <div className="relative p-5 flex items-center justify-between">
-                          {/* Left: ID and Title */}
-                          <div className="flex items-center gap-4">
-                            <span
-                              className="text-xs font-mono px-2 py-1 rounded"
-                              style={{ backgroundColor: COLORS.bgSecondary, color: COLORS.accent }}
-                            >
-                              {course.id.toUpperCase()}
-                            </span>
-                            <div>
-                              <h3
-                                className="text-base font-semibold group-hover:text-white transition-colors"
-                                style={{ color: COLORS.textSecondary }}
-                              >
-                                {title.cn}
-                              </h3>
-                              <p style={{ color: COLORS.textMuted }} className="text-sm">
-                                {title.en}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Right: Arrow */}
-                          <div className="flex items-center gap-3">
-                            <p
-                              className="text-xs italic hidden md:block"
-                              style={{ color: COLORS.textMuted, maxWidth: '200px' }}
-                            >
-                              {course.motto}
-                            </p>
-                            <ArrowRight
-                              className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
-                              style={{ color: COLORS.accent }}
-                            />
-                          </div>
+                      {/* Card Footer */}
+                      <div className="flex items-center justify-between">
+                        <span style={{ color: COLORS.textMuted }} className="text-sm">
+                          {phaseNames[lesson.phase] || ''}
+                        </span>
+                        <div className="flex items-center gap-2" style={{ color: COLORS.accent }}>
+                          <span className="text-sm font-medium">进入学习</span>
+                          <ArrowRight className="w-4 h-4" />
                         </div>
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
+                      </div>
+                    </div>
+                  </a>
+                );
+              })}
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
 
-      {/* Footer */}
-      <footer
-        style={{ borderTop: `1px solid ${COLORS.border}` }}
-        className="py-8 text-center"
-      >
-        <p style={{ color: COLORS.textMuted }} className="text-sm">
-          © 2026 泥巴猪的实验田 · Agent 入门教程
-        </p>
-      </footer>
+          {/* Instructions */}
+          <div
+            className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-center"
+            style={{ color: COLORS.textMuted }}
+          >
+            <p className="text-sm">
+              {hoveringRight ? '点击卡片进入章节' : '点击左侧列表选择章节'}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
