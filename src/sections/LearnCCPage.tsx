@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Home, Github, ArrowRight } from 'lucide-react';
 import { lessons } from '../data/learn-cc-lessons';
 
-// Anthropic 风格配色系统
+// 莫兰迪配色系统
 const COLORS = {
   bg: '#000000',
   bgSecondary: '#0A0A0A',
@@ -12,14 +12,14 @@ const COLORS = {
   text: '#FAFAFA',
   textSecondary: '#B0B0B0',
   textMuted: '#666666',
-  accent: '#00D9C0',
-  // Anthropic 风格 Phase 颜色 - 使用同一色相不同亮度
+  accent: '#8FA8A8', // 莫兰迪青绿
+  // 莫兰迪 Phase 颜色 - 淡雅低调
   phases: [
-    '#D97706', // Phase 0 - 琥珀色
-    '#0891B2', // Phase 1 - 青色
-    '#7C3AED', // Phase 2 - 紫色
-    '#059669', // Phase 3 - 绿色
-    '#DC2626', // Phase 4 - 红色
+    '#B8A082', // Phase 0 - 暖米色
+    '#7A9BA8', // Phase 1 - 雾霾蓝
+    '#9B8AA8', // Phase 2 - 淡紫灰
+    '#8AA88F', // Phase 3 - 鼠尾草绿
+    '#A88A8F', // Phase 4 - 烟玫瑰
   ],
 };
 
@@ -82,6 +82,19 @@ export default function LearnCCPage() {
   const startScrollTop = useRef(0);
 
   const phaseDistribution = getPhaseDistribution();
+
+  // 读取 URL 查询参数，设置初始选中的章节
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const selected = params.get('selected');
+    if (selected) {
+      const index = lessons.findIndex(l => l.id === selected);
+      if (index !== -1) {
+        setActiveIndex(index);
+        setScrollProgress(index / (lessons.length - 1));
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoaded(true), 150);
