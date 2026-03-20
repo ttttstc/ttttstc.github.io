@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Home, Github, ArrowRight } from 'lucide-react';
 import { lessons } from '../data/learn-cc-lessons';
 
-// 青绿色+黑色配色系统
+// Anthropic 风格配色系统
 const COLORS = {
   bg: '#000000',
   bgSecondary: '#0A0A0A',
@@ -13,14 +13,13 @@ const COLORS = {
   textSecondary: '#B0B0B0',
   textMuted: '#666666',
   accent: '#00D9C0',
-  accentHover: '#00F5D8',
-  accentMuted: '#0D4D47',
+  // Anthropic 风格 Phase 颜色 - 使用同一色相不同亮度
   phases: [
-    '#FF6B6B', // Phase 0 - 红色
-    '#00D9C0', // Phase 1 - 青色
-    '#FFD93D', // Phase 2 - 黄色
-    '#6BCB77', // Phase 3 - 绿色
-    '#4D96FF', // Phase 4 - 蓝色
+    '#D97706', // Phase 0 - 琥珀色
+    '#0891B2', // Phase 1 - 青色
+    '#7C3AED', // Phase 2 - 紫色
+    '#059669', // Phase 3 - 绿色
+    '#DC2626', // Phase 4 - 红色
   ],
 };
 
@@ -43,13 +42,34 @@ const titleMap: Record<string, { cn: string; en: string }> = {
 
 const getTitle = (id: string) => titleMap[id] || { cn: id, en: id };
 
-// Phase 名称和描述
+// Phase 信息
 const phaseInfo: Record<number, { name: string; desc: string }> = {
   0: { name: '概述', desc: '模型即 Agent' },
   1: { name: '基础', desc: '循环与工具' },
   2: { name: '规划与知识', desc: '思考与记忆' },
   3: { name: '持久化', desc: '任务与后台' },
   4: { name: '团队协作', desc: '多 Agent 协作' },
+};
+
+// 计算每个 phase 的章节分布
+const getPhaseDistribution = () => {
+  const distribution: { phase: number; start: number; end: number; count: number }[] = [];
+  let currentStart = 0;
+
+  for (let phase = 0; phase <= 4; phase++) {
+    const phaseLessons = lessons.filter(l => l.phase === phase);
+    if (phaseLessons.length > 0) {
+      distribution.push({
+        phase,
+        start: currentStart,
+        end: currentStart + phaseLessons.length - 1,
+        count: phaseLessons.length,
+      });
+      currentStart += phaseLessons.length;
+    }
+  }
+
+  return distribution;
 };
 
 export default function LearnCCPage() {
@@ -60,6 +80,8 @@ export default function LearnCCPage() {
   const isDragging = useRef(false);
   const startY = useRef(0);
   const startScrollTop = useRef(0);
+
+  const phaseDistribution = getPhaseDistribution();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoaded(true), 150);
@@ -75,8 +97,6 @@ export default function LearnCCPage() {
       e.preventDefault();
       const newProgress = Math.max(0, Math.min(1, scrollProgress + e.deltaY * 0.001));
       setScrollProgress(newProgress);
-
-      // 根据进度计算当前索引
       const newIndex = Math.round(newProgress * (lessons.length - 1));
       setActiveIndex(newIndex);
     };
@@ -85,7 +105,6 @@ export default function LearnCCPage() {
     return () => container.removeEventListener('wheel', handleWheel);
   }, [scrollProgress]);
 
-  // 拖拽处理
   const handleMouseDown = (e: React.MouseEvent) => {
     isDragging.current = true;
     startY.current = e.clientY;
@@ -154,70 +173,72 @@ export default function LearnCCPage() {
         style={{
           backgroundColor: COLORS.bgSecondary,
           borderBottom: `1px solid ${COLORS.border}`,
-          paddingTop: '60px',
+          paddingTop: '20px',
         }}
         className="pb-4 px-6"
       >
+        {/* Hero Title */}
+        <div className="text-center mb-6">
+          <h2 className="text-4xl font-bold mb-2">
+            Agent <span style={{ color: COLORS.accent }}>入门</span>教程
+          </h2>
+          <p style={{ color: COLORS.textMuted }} className="text-lg">
+            从零掌握 AI Agent 的 12 堂课 · 基于 Claude Code 的系统化学习路径
+          </p>
+        </div>
+
         {/* Phase Labels */}
         <div className="flex justify-between mb-3 max-w-4xl mx-auto">
-          {Object.entries(phaseInfo).map(([phase, info]) => {
-            const phaseNum = Number(phase);
-            const isActive = currentPhase >= phaseNum;
-            const isCurrent = currentPhase === phaseNum;
+          {phaseDistribution.map((dist) => {
+            const info = phaseInfo[dist.phase];
+            const isActive = currentPhase >= dist.phase;
+            const isCurrent = currentPhase === dist.phase;
             return (
               <div
-                key={phase}
+                key={dist.phase}
                 className="flex flex-col items-center cursor-pointer"
-                onClick={() => {
-                  const firstIndex = lessons.findIndex(l => l.phase === phaseNum);
-                  if (firstIndex >= 0) handleProgressClick(firstIndex);
-                }}
+                onClick={() => handleProgressClick(dist.start)}
               >
                 <div
                   className="w-3 h-3 rounded-full mb-2 transition-all duration-300"
                   style={{
-                    backgroundColor: isActive ? COLORS.phases[phaseNum] : COLORS.border,
-                    boxShadow: isCurrent ? `0 0 10px ${COLORS.phases[phaseNum]}` : 'none',
+                    backgroundColor: isActive ? COLORS.phases[dist.phase] : COLORS.border,
+                    boxShadow: isCurrent ? `0 0 10px ${COLORS.phases[dist.phase]}` : 'none',
                   }}
                 />
                 <span
                   className="text-xs font-medium"
                   style={{
-                    color: isCurrent ? COLORS.phases[phaseNum] : COLORS.textMuted,
+                    color: isCurrent ? COLORS.phases[dist.phase] : COLORS.textMuted,
                   }}
                 >
                   {info.name}
                 </span>
-                <span
-                  className="text-xs"
-                  style={{ color: COLORS.textMuted }}
-                >
-                  {info.desc}
+                <span className="text-xs" style={{ color: COLORS.textMuted }}>
+                  {dist.count} 章节
                 </span>
               </div>
             );
           })}
         </div>
 
-        {/* Progress Line */}
+        {/* Progress Line - 按实际分布 */}
         <div className="max-w-4xl mx-auto relative">
-          {/* Background line */}
           <div
             className="h-1 rounded-full absolute top-0 left-0 right-0"
             style={{ backgroundColor: COLORS.border }}
           />
-          {/* Phase sections */}
+          {/* Phase sections with actual distribution */}
           <div className="h-1 rounded-full absolute top-0 left-0 flex">
-            {[0, 1, 2, 3, 4].map((phase) => {
-              const phaseLessons = lessons.filter(l => l.phase === phase);
-              const widthPercent = (phaseLessons.length / lessons.length) * 100;
+            {phaseDistribution.map((dist) => {
+              const widthPercent = (dist.count / lessons.length) * 100;
               return (
                 <div
-                  key={phase}
+                  key={dist.phase}
                   className="h-full rounded-full transition-all duration-300"
                   style={{
                     width: `${widthPercent}%`,
-                    backgroundColor: currentPhase >= phase ? COLORS.phases[phase] : COLORS.border,
+                    backgroundColor: currentPhase >= dist.phase ? COLORS.phases[dist.phase] : COLORS.border,
                   }}
                 />
               );
@@ -259,7 +280,7 @@ export default function LearnCCPage() {
       <div
         ref={containerRef}
         className={`relative cursor-grab transition-all duration-700 ${loaded ? 'opacity-100' : 'opacity-0'}`}
-        style={{ height: 'calc(100vh - 180px)' }}
+        style={{ height: 'calc(100vh - 280px)' }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}

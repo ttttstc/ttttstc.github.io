@@ -223,6 +223,45 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
 
   return (
     <div style={{ backgroundColor: COLORS.bg }} className="min-h-screen text-white">
+      {/* Right Side Navigation Panel */}
+      <div
+        className="fixed right-6 top-1/2 transform -translate-y-1/2 flex flex-col gap-3 z-50"
+      >
+        {/* Back to Tutorial */}
+        <a
+          href="/learn-cc"
+          className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer group"
+          style={{
+            backgroundColor: COLORS.bgTertiary,
+            border: `1px solid ${COLORS.border}`,
+          }}
+          title="返回教程首页"
+        >
+          <ArrowLeft className="w-5 h-5 text-gray-500 group-hover:text-cyan-400 transition-colors" />
+          <span className="text-sm font-medium text-gray-500 group-hover:text-white transition-colors">
+            返回教程
+          </span>
+        </a>
+
+        {/* Next Chapter */}
+        {next && (
+          <a
+            href={`/learn-cc/${next.id}`}
+            className="flex items-center gap-2 px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer group"
+            style={{
+              backgroundColor: `${COLORS.accent}20`,
+              border: `1px solid ${COLORS.accent}40`,
+            }}
+            title={`下一章: ${getTitle(next.id).cn}`}
+          >
+            <span style={{ color: COLORS.accent }} className="text-sm font-medium group-hover:text-white transition-colors">
+              下一章
+            </span>
+            <ArrowRight className="w-5 h-5" style={{ color: COLORS.accent }} />
+          </a>
+        )}
+      </div>
+
       {/* Header */}
       <header
         style={{
