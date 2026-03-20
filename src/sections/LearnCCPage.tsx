@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Home, Github, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
-import { courses, type Course } from '../data/learn-cc-courses';
+import { lessons, type Course } from '../data/learn-cc-lessons';
 
 // 颜色系统
 const COLORS = {
@@ -19,7 +19,7 @@ const COLORS = {
 // 按 Phase 分组
 const getCoursesByPhase = () => {
   const phases: Record<number, Course[]> = {};
-  courses.forEach(course => {
+  lessons.forEach(course => {
     if (!phases[course.phase]) {
       phases[course.phase] = [];
     }

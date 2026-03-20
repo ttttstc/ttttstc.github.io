@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Github, ArrowLeft, ArrowRight, FileText, Code, Copy, Check } from 'lucide-react';
-import { getCourseById, getPrevNextLesson } from '../data/learn-cc-courses';
+import { getLessonById, getLessonPrevNext, lessons } from '../data/learn-cc-lessons';
 
 // 颜色系统
 const COLORS = {
@@ -20,176 +20,102 @@ interface Props {
   lessonId: string | null;
 }
 
-// 模拟文档内容（实际应从 GitHub API 获取）
-const getLessonDoc = (id: string) => {
-  const docs: Record<string, { content: string; code: string }> = {
-    s01: {
-      content: `# Agent Loop
+// 简单的 Markdown 渲染
+const renderMarkdown = (content: string) => {
+  const lines = content.split('\n');
+  const elements: React.ReactElement[] = [];
+  let inCodeBlock = false;
+  let codeContent: string[] = [];
+  let codeKey = 0;
 
-## 什么是 Agent Loop？
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
 
-Agent Loop 是 AI Agent 的核心运行机制 —— 感知 → 思考 → 行动 → 反馈 的循环过程。
+    // 代码块
+    if (line.startsWith('```')) {
+      if (inCodeBlock) {
+        elements.push(
+          <pre key={`code-${codeKey++}`} className="bg-[#0A0A0A] rounded-lg p-4 my-4 overflow-x-auto">
+            <code className="text-sm font-mono text-lobster-orange">
+              {codeContent.join('\n')}
+            </code>
+          </pre>
+        );
+        codeContent = [];
+        inCodeBlock = false;
+      } else {
+        inCodeBlock = true;
+      }
+      continue;
+    }
 
-### 循环流程
+    if (inCodeBlock) {
+      codeContent.push(line);
+      continue;
+    }
 
-\`\`\`
-1. 接收用户输入 (Input)
-2. 分析任务 (Analyze)
-3. 执行动作 (Act)
-4. 评估结果 (Evaluate)
-5. 决定下一步 (Decide)
-   └─→ 继续循环或结束
-\`\`\`
+    // 标题
+    if (line.startsWith('# ')) {
+      elements.push(<h1 key={i} className="text-3xl font-bold mb-6 mt-8 text-white">{line.slice(2)}</h1>);
+    } else if (line.startsWith('## ')) {
+      elements.push(<h2 key={i} className="text-2xl font-bold mb-4 mt-6 text-white">{line.slice(3)}</h2>);
+    } else if (line.startsWith('### ')) {
+      elements.push(<h3 key={i} className="text-xl font-semibold mb-3 mt-5 text-white">{line.slice(4)}</h3>);
+    }
+    // 列表
+    else if (line.startsWith('- ') || line.startsWith('* ')) {
+      elements.push(
+        <li key={i} className="ml-6 mb-2 text-white/80 list-disc" style={{ color: COLORS.textSecondary }}>
+          {renderInlineCode(line.slice(2))}
+        </li>
+      );
+    }
+    // 表格行
+    else if (line.startsWith('|')) {
+      const cells = line.split('|').filter(c => c.trim());
+      if (cells.some(c => c.includes('---'))) continue; // 跳过分隔行
+      elements.push(
+        <tr key={i} className="border-b border-[#262626]">
+          {cells.map((cell, j) => (
+            <td key={j} className="px-4 py-2 text-white/70">{cell.trim()}</td>
+          ))}
+        </tr>
+      );
+    }
+    // 空行
+    else if (line.trim() === '') {
+      elements.push(<br key={i} />);
+    }
+    // 普通段落
+    else {
+      elements.push(
+        <p key={i} className="mb-4 text-white/80 leading-relaxed">
+          {renderInlineCode(line)}
+        </p>
+      );
+    }
+  }
 
-### 核心代码
+  return elements;
+};
 
-Agent 的基本循环结构：
-
-\`\`\`python
-while True:
-    # 1. 感知 - 获取上下文
-    context = await get_context()
-
-    # 2. 思考 - 规划下一步
-    plan = await agent.think(context)
-
-    # 3. 行动 - 执行工具
-    result = await agent.act(plan)
-
-    # 4. 反馈 - 评估结果
-    if agent.evaluate(result):
-        break
-\`\`\`
-
-### 关键要点
-
-- **自主性**：Agent 能自主决定下一步操作
-- **迭代性**：通过循环不断逼近目标
-- **工具性**：使用工具扩展能力边界`,
-      code: `"""
-Agent Loop - 基础 Agent 循环实现
-"""
-from anthropic import Anthropic
-import os
-
-class AgentLoop:
-    def __init__(self, model="claude-3-5-sonnet-20241022"):
-        self.client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        self.messages = []
-
-    def add_message(self, role: str, content: str):
-        """添加消息到上下文"""
-        self.messages.append({"role": role, "content": content})
-
-    def run(self, task: str, max_iterations:10):
-        """运行 Agent 循环"""
-        self.add_message("user", task)
-
-        for i in range(max_iterations):
-            # 调用模型获取响应
-            response = self.client.messages.create(
-                model=self.model,
-                max_tokens=4096,
-                messages=self.messages
-            )
-
-            # 提取响应内容
-            assistant_message = response.content[0].text
-            self.add_message("assistant", assistant_message)
-
-            # 检查是否完成（通过特殊标记或用户确认）
-            if "<done>" in assistant_message:
-                break
-
-        return self.messages
-
-# 使用示例
-if __name__ == "__main__":
-    agent = AgentLoop()
-    result = agent.run("帮我写一个 Python 排序算法")
-    print(result)`,
-    },
-    s02: {
-      content: `# Tool Use
-
-## 工具使用 (Tool Use)
-
-Tool Use 是 Claude Code 区别于普通对话的关键能力 —— 让 Agent 能够调用外部工具完成实际任务。
-
-### 内置工具
-
-Claude Code 提供多种内置工具：
-
-- **Bash**: 执行 shell 命令
-- **Read**: 读取文件内容
-- **Edit**: 编辑文件
-- **Write**: 写入文件
-- **Glob**: 搜索文件
-- **Grep**: 搜索文件内容
-- **TodoWrite**: 任务清单管理
-- **Task**: 创建子任务
-
-### 工具注册
-
-\`\`\`python
-from claude_code import ClaudeAgent
-
-agent = ClaudeAgent()
-
-# 注册自定义工具
-@agent.tool()
-def calculate(expression: str) -> float:
-    """执行数学计算"""
-    return eval(expression)
-
-# 使用工具
-result = agent.execute("计算 (10 + 5) * 2")
-\`\`\`
-
-### 工具设计原则
-
-1. **单一职责**：每个工具只做一件事
-2. **清晰命名**：名称要能表达功能
-3. **完整文档**：提供清晰的描述和参数说明`,
-      code: `"""
-Tool Use - 工具使用示例
-"""
-from typing import Any, Dict, List
-from claude_code import ClaudeAgent, tool
-
-# 创建 Agent 实例
-agent = ClaudeAgent()
-
-# 定义自定义工具
-@agent.tool(name="calculate", description="执行数学表达式计算")
-def calculate(expression: str) -> str:
-    """
-    计算数学表达式
-
-    Args:
-        expression: 数学表达式，如 "2 + 2" 或 "sqrt(16)"
-
-    Returns:
-        计算结果
-    """
-    try:
-        # 注意：实际使用请用安全的 eval 替代
-        import math
-        # 替换常用数学函数
-        expression = expression.replace("sqrt", "math.sqrt")
-        result = eval(expression)
-        return str(result)
-    except Exception as e:
-        return f"计算错误: {str(e)}"
-
-# 使用工具
-result = agent.run("计算 100 / 5 + 20 的值")
-print(result)`,
-    },
-  };
-
-  // 默认返回 s01 的内容作为占位
-  return docs[id] || docs['s01'];
+// 行内代码渲染
+const renderInlineCode = (text: string) => {
+  const parts = text.split(/(`[^`]+`)/);
+  return parts.map((part, i) => {
+    if (part.startsWith('`') && part.endsWith('`')) {
+      return (
+        <code
+          key={i}
+          className="px-1.5 py-0.5 rounded text-sm font-mono"
+          style={{ backgroundColor: COLORS.bgSecondary, color: COLORS.accent }}
+        >
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    return part;
+  });
 };
 
 export default function LearnCCLessonPage({ lessonId }: Props) {
@@ -197,26 +123,28 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
   const [copied, setCopied] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
-  const course = lessonId ? getCourseById(lessonId) : null;
-  const { prev, next } = lessonId ? getPrevNextLesson(lessonId) : { prev: null, next: null };
-  const lessonData = lessonId ? getLessonDoc(lessonId) : null;
+  const lesson = lessonId ? getLessonById(lessonId) : null;
+  const { prev, next } = lessonId ? getLessonPrevNext(lessonId) : { prev: null, next: null };
 
   useEffect(() => {
     setLoaded(true);
   }, []);
 
   const handleCopyCode = () => {
-    if (lessonData) {
-      navigator.clipboard.writeText(lessonData.code);
+    if (lesson?.code) {
+      navigator.clipboard.writeText(lesson.code);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
   };
 
-  if (!course) {
+  if (!lesson) {
     return (
       <div style={{ backgroundColor: COLORS.bg }} className="min-h-screen text-white flex items-center justify-center">
-        <p style={{ color: COLORS.textMuted }}>课程不存在</p>
+        <div className="text-center">
+          <p style={{ color: COLORS.textMuted }} className="mb-4">课程不存在</p>
+          <a href="/learn-cc" className="text-lobster-orange hover:underline">返回课程列表</a>
+        </div>
       </div>
     );
   }
@@ -245,10 +173,10 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
             className="px-2 py-1 text-xs rounded-full"
             style={{ backgroundColor: `${COLORS.accent}20`, color: COLORS.accent }}
           >
-            Phase {course.phase}
+            Phase {lesson.phase}
           </span>
-          <h1 className="text-lg font-semibold" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            {course.id.toUpperCase()}: {course.title}
+          <h1 className="text-lg font-semibold hidden md:block" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+            {lesson.id.toUpperCase()}: {lesson.title}
           </h1>
         </div>
         <a
@@ -271,16 +199,16 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
             style={{ fontFamily: 'Times New Roman, Times, serif' }}
             className="text-4xl md:text-5xl font-bold mb-4"
           >
-            {course.title}
+            {lesson.title}
           </h2>
           <p style={{ color: COLORS.textSecondary }} className="text-xl mb-4">
-            {course.subtitle}
+            {lesson.subtitle}
           </p>
           <p
             className="text-lg italic"
             style={{ color: COLORS.textMuted, borderLeft: `3px solid ${COLORS.accent}`, paddingLeft: '1rem' }}
           >
-            "{course.motto}"
+            "{lesson.motto}"
           </p>
         </div>
       </section>
@@ -336,47 +264,8 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
                 border: `1px solid ${COLORS.border}`,
               }}
             >
-              {/* Markdown content would be rendered here */}
               <div className="prose prose-invert max-w-none">
-                {lessonData?.content.split('\n').map((line, i) => {
-                  if (line.startsWith('# ')) {
-                    return <h1 key={i} className="text-3xl font-bold mb-4 mt-6">{line.slice(2)}</h1>;
-                  }
-                  if (line.startsWith('## ')) {
-                    return <h2 key={i} className="text-2xl font-bold mb-3 mt-5">{line.slice(3)}</h2>;
-                  }
-                  if (line.startsWith('### ')) {
-                    return <h3 key={i} className="text-xl font-semibold mb-2 mt-4">{line.slice(4)}</h3>;
-                  }
-                  if (line.startsWith('```')) {
-                    return null;
-                  }
-                  if (line.trim() === '') {
-                    return <br key={i} />;
-                  }
-                  // Handle inline code
-                  if (line.includes('`')) {
-                    const parts = line.split(/(`[^`]+`)/);
-                    return (
-                      <p key={i} className="mb-2">
-                        {parts.map((part, j) =>
-                          part.startsWith('`') && part.endsWith('`') ? (
-                            <code
-                              key={j}
-                              className="px-1.5 py-0.5 rounded text-sm"
-                              style={{ backgroundColor: COLORS.bgSecondary, color: COLORS.accent }}
-                            >
-                              {part.slice(1, -1)}
-                            </code>
-                          ) : (
-                            part
-                          )
-                        )}
-                      </p>
-                    );
-                  }
-                  return <p key={i} className="mb-2 text-white/80">{line}</p>;
-                })}
+                {renderMarkdown(lesson.content)}
               </div>
             </div>
           </div>
@@ -400,17 +289,28 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
                   borderBottom: `1px solid ${COLORS.border}`,
                 }}
               >
-                <span style={{ color: COLORS.textMuted }} className="text-sm">
-                  agents/{course.id}_agent_loop.py
-                </span>
-                <button
-                  onClick={handleCopyCode}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-colors hover:bg-white/5"
-                  style={{ color: copied ? '#22C55E' : COLORS.textMuted }}
-                >
-                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                  <span className="text-sm">{copied ? '已复制' : '复制'}</span>
-                </button>
+                <div className="flex items-center gap-3">
+                  <span style={{ color: COLORS.accent }} className="text-sm font-mono">agents/{lesson.id}_*.py</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <a
+                    href={lesson.codeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: COLORS.textMuted }}
+                    className="text-sm hover:text-white transition-colors mr-2"
+                  >
+                    GitHub →
+                  </a>
+                  <button
+                    onClick={handleCopyCode}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-colors hover:bg-white/5"
+                    style={{ color: copied ? '#22C55E' : COLORS.textMuted }}
+                  >
+                    {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    <span className="text-sm">{copied ? '已复制' : '复制'}</span>
+                  </button>
+                </div>
               </div>
               {/* Code content */}
               <pre className="p-6 overflow-x-auto">
@@ -418,7 +318,7 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
                   className="text-sm leading-relaxed"
                   style={{ fontFamily: "'SF Mono', Monaco, 'Courier New', monospace", color: COLORS.textSecondary }}
                 >
-                  {lessonData?.code}
+                  {lesson.code}
                 </code>
               </pre>
             </div>
@@ -450,6 +350,10 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
           ) : (
             <div />
           )}
+
+          <div className="text-sm" style={{ color: COLORS.textMuted }}>
+            {lessons.findIndex(l => l.id === lessonId) + 1} / {lessons.length}
+          </div>
 
           {next ? (
             <a
