@@ -2,18 +2,36 @@ import { useState, useEffect } from 'react';
 import { Home, Github, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { lessons, type Course } from '../data/learn-cc-lessons';
 
-// 颜色系统
+// 青绿色+黑色配色系统
 const COLORS = {
   bg: '#000000',
   bgSecondary: '#0A0A0A',
-  bgTertiary: '#141414',
-  border: '#262626',
-  borderHover: '#404040',
+  bgTertiary: '#111111',
+  border: '#1A1A1A',
+  borderHover: '#2A2A2A',
   text: '#FAFAFA',
-  textSecondary: '#A1A1A1',
-  textMuted: '#6B6B6B',
-  accent: '#FF6B35',
-  accentHover: '#FF8C5A',
+  textSecondary: '#B0B0B0',
+  textMuted: '#666666',
+  accent: '#00D9C0',      // 青绿色
+  accentHover: '#00F5D8',
+  accentMuted: '#0D4D47',  // 深青色背景
+};
+
+// 中英文标题映射
+const titleMap: Record<string, { cn: string; en: string }> = {
+  s00: { cn: '课程介绍', en: 'Introduction' },
+  s01: { cn: 'Agent 循环', en: 'Agent Loop' },
+  s02: { cn: '工具使用', en: 'Tool Use' },
+  s03: { cn: '待办写入', en: 'TodoWrite' },
+  s04: { cn: '子智能体', en: 'Subagents' },
+  s05: { cn: '技能加载', en: 'Skills' },
+  s06: { cn: '上下文压缩', en: 'Context Compact' },
+  s07: { cn: '任务系统', en: 'Tasks' },
+  s08: { cn: '后台任务', en: 'Background Tasks' },
+  s09: { cn: '智能体团队', en: 'Agent Teams' },
+  s10: { cn: '团队协议', en: 'Team Protocols' },
+  s11: { cn: '自治智能体', en: 'Autonomous Agents' },
+  s12: { cn: 'Worktree 隔离', en: 'Worktree Isolation' },
 };
 
 // 按 Phase 分组
@@ -34,7 +52,6 @@ export default function LearnCCPage() {
   const phases = getCoursesByPhase();
 
   useEffect(() => {
-    // 延迟触发加载动画
     const timer = setTimeout(() => setLoaded(true), 150);
     return () => clearTimeout(timer);
   }, []);
@@ -42,6 +59,8 @@ export default function LearnCCPage() {
   const togglePhase = (phase: number) => {
     setExpandedPhase(expandedPhase === phase ? null : phase);
   };
+
+  const getTitle = (id: string) => titleMap[id] || { cn: id, en: id };
 
   return (
     <div style={{ backgroundColor: COLORS.bg }} className="min-h-screen text-white">
@@ -56,14 +75,14 @@ export default function LearnCCPage() {
         <div className="flex items-center gap-4">
           <a
             href="/"
-            className="flex items-center gap-2 transition-colors"
+            className="flex items-center gap-2 transition-colors cursor-pointer hover:opacity-80"
             style={{ color: COLORS.textSecondary }}
           >
             <Home className="w-5 h-5" />
             <span>首页</span>
           </a>
           <div style={{ backgroundColor: COLORS.border }} className="w-px h-6" />
-          <h1 className="text-lg font-semibold" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
+          <h1 className="text-lg font-semibold">
             Agent 入门教程
           </h1>
         </div>
@@ -72,7 +91,7 @@ export default function LearnCCPage() {
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: COLORS.textSecondary }}
-          className="hover:text-white transition-colors"
+          className="hover:text-white transition-colors cursor-pointer"
         >
           <Github className="w-5 h-5" />
         </a>
@@ -86,10 +105,9 @@ export default function LearnCCPage() {
       >
         <div className="max-w-4xl mx-auto text-center">
           <h2
-            style={{ fontFamily: 'Times New Roman, Times, serif' }}
             className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
           >
-            Agent <span style={{ color: COLORS.accent }}>Mastery</span> Journey
+            Agent <span style={{ color: COLORS.accent }}>入门</span>教程
           </h2>
           <p style={{ color: COLORS.textSecondary }} className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
             从零掌握 AI Agent 的 12 堂课 · 基于 Claude Code 的系统化学习路径
@@ -109,7 +127,7 @@ export default function LearnCCPage() {
           {Object.entries(phases).map(([phase, phaseCourses], phaseIndex) => (
             <div
               key={phase}
-              className={`mb-4 transition-all duration-500 ease-out ${
+              className={`mb-6 transition-all duration-500 ease-out ${
                 loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
               style={{ transitionDelay: `${phaseIndex * 100 + 200}ms` }}
@@ -117,21 +135,21 @@ export default function LearnCCPage() {
               {/* Phase Header */}
               <button
                 onClick={() => togglePhase(Number(phase))}
-                className="w-full flex items-center justify-between p-4 rounded-xl transition-all duration-300"
+                className="w-full flex items-center justify-between p-5 rounded-xl transition-all duration-300 cursor-pointer"
                 style={{
                   backgroundColor: COLORS.bgSecondary,
                   border: `1px solid ${COLORS.border}`,
                 }}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                   <span
-                    className="px-3 py-1 rounded-full text-sm font-semibold"
-                    style={{ backgroundColor: `${COLORS.accent}20`, color: COLORS.accent }}
+                    className="px-4 py-1.5 rounded-lg text-sm font-semibold"
+                    style={{ backgroundColor: COLORS.accentMuted, color: COLORS.accent }}
                   >
                     Phase {phase}
                   </span>
                   <span style={{ color: COLORS.textSecondary }}>
-                    {phaseCourses.map(c => c.title).join(' · ')}
+                    {phaseCourses.map(c => getTitle(c.id).cn).join(' · ')}
                   </span>
                 </div>
                 {expandedPhase === Number(phase) ? (
@@ -141,70 +159,74 @@ export default function LearnCCPage() {
                 )}
               </button>
 
-              {/* Course Cards Grid */}
+              {/* Stacked View Cards */}
               <div
-                className={`grid gap-4 mt-4 overflow-hidden transition-all duration-500 ease-out ${
+                className={`grid gap-3 mt-4 overflow-hidden transition-all duration-500 ease-out ${
                   expandedPhase === Number(phase) ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
                 }`}
               >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {phaseCourses.map((course, index) => (
-                    <a
-                      key={course.id}
-                      href={`/learn-cc/${course.id}`}
-                      className="group relative overflow-hidden rounded-xl transition-all duration-300 hover:scale-[1.02]"
-                      style={{
-                        backgroundColor: COLORS.bgTertiary,
-                        border: `1px solid ${COLORS.border}`,
-                        transitionDelay: `${index * 50}ms`,
-                      }}
-                    >
-                      {/* Hover glow effect */}
-                      <div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                <div className="flex flex-col gap-3">
+                  {phaseCourses.map((course, index) => {
+                    const title = getTitle(course.id);
+                    return (
+                      <a
+                        key={course.id}
+                        href={`/learn-cc/${course.id}`}
+                        className="group relative overflow-hidden rounded-lg transition-all duration-300 hover:translate-x-2 cursor-pointer"
                         style={{
-                          boxShadow: `inset 0 0 0 1px ${COLORS.accent}40, 0 0 40px ${COLORS.accent}15`,
+                          backgroundColor: COLORS.bgTertiary,
+                          border: `1px solid ${COLORS.border}`,
+                          borderLeft: `3px solid ${COLORS.accent}`,
+                          transitionDelay: `${index * 50}ms`,
                         }}
-                      />
+                      >
+                        {/* Hover effect */}
+                        <div
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                          style={{
+                            background: `linear-gradient(90deg, ${COLORS.accentMuted}20 0%, transparent 100%)`,
+                          }}
+                        />
 
-                      <div className="relative p-5">
-                        {/* ID Badge */}
-                        <div className="flex items-center justify-between mb-3">
-                          <span
-                            className="text-xs font-mono px-2 py-1 rounded"
-                            style={{ backgroundColor: COLORS.bgSecondary, color: COLORS.textMuted }}
-                          >
-                            {course.id.toUpperCase()}
-                          </span>
+                        <div className="relative p-5 flex items-center justify-between">
+                          {/* Left: ID and Title */}
+                          <div className="flex items-center gap-4">
+                            <span
+                              className="text-xs font-mono px-2 py-1 rounded"
+                              style={{ backgroundColor: COLORS.bgSecondary, color: COLORS.accent }}
+                            >
+                              {course.id.toUpperCase()}
+                            </span>
+                            <div>
+                              <h3
+                                className="text-base font-semibold group-hover:text-white transition-colors"
+                                style={{ color: COLORS.textSecondary }}
+                              >
+                                {title.cn}
+                              </h3>
+                              <p style={{ color: COLORS.textMuted }} className="text-sm">
+                                {title.en}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Right: Arrow */}
+                          <div className="flex items-center gap-3">
+                            <p
+                              className="text-xs italic hidden md:block"
+                              style={{ color: COLORS.textMuted, maxWidth: '200px' }}
+                            >
+                              {course.motto}
+                            </p>
+                            <ArrowRight
+                              className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
+                              style={{ color: COLORS.accent }}
+                            />
+                          </div>
                         </div>
-
-                        {/* Title */}
-                        <h3
-                          className="text-lg font-semibold mb-1 group-hover:text-lobster-orange transition-colors"
-                          style={{ fontFamily: 'Times New Roman, Times, serif' }}
-                        >
-                          {course.title}
-                        </h3>
-                        <p style={{ color: COLORS.textSecondary }} className="text-sm mb-3">
-                          {course.subtitle}
-                        </p>
-
-                        {/* Motto */}
-                        <p
-                          className="text-xs italic mb-4"
-                          style={{ color: COLORS.textMuted, borderLeft: `2px solid ${COLORS.accent}`, paddingLeft: '0.75rem' }}
-                        >
-                          {course.motto}
-                        </p>
-
-                        {/* Arrow indicator */}
-                        <div className="flex items-center gap-2" style={{ color: COLORS.accent }}>
-                          <span className="text-sm font-medium">进入学习</span>
-                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                        </div>
-                      </div>
-                    </a>
-                  ))}
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -218,7 +240,7 @@ export default function LearnCCPage() {
         className="py-8 text-center"
       >
         <p style={{ color: COLORS.textMuted }} className="text-sm">
-          © 2026 泥巴猪的实验田 · Agent Mastery Journey
+          © 2026 泥巴猪的实验田 · Agent 入门教程
         </p>
       </footer>
     </div>

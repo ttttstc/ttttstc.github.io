@@ -2,28 +2,46 @@ import React, { useState, useEffect } from 'react';
 import { Github, ArrowLeft, ArrowRight, FileText, Code, Copy, Check } from 'lucide-react';
 import { getLessonById, getLessonPrevNext, lessons } from '../data/learn-cc-lessons';
 
-// 颜色系统
+// 青绿色+黑色配色系统
 const COLORS = {
   bg: '#000000',
   bgSecondary: '#0A0A0A',
-  bgTertiary: '#141414',
-  border: '#262626',
-  borderHover: '#404040',
+  bgTertiary: '#111111',
+  border: '#1A1A1A',
+  borderHover: '#2A2A2A',
   text: '#FAFAFA',
-  textSecondary: '#A1A1A1',
-  textMuted: '#6B6B6B',
-  accent: '#FF6B35',
-  accentHover: '#FF8C5A',
+  textSecondary: '#B0B0B0',
+  textMuted: '#666666',
+  accent: '#00D9C0',
+  accentHover: '#00F5D8',
+  accentMuted: '#0D4D47',
 };
 
-// Anthropic 风格代码字体
+// 代码字体 - 更清晰的显示
 const CODE_FONT = "'IBM Plex Mono', 'SF Mono', Monaco, 'Andale Mono', 'Ubuntu Mono', monospace";
+
+// 中英文标题映射
+const titleMap: Record<string, { cn: string; en: string }> = {
+  s00: { cn: '课程介绍', en: 'Introduction' },
+  s01: { cn: 'Agent 循环', en: 'Agent Loop' },
+  s02: { cn: '工具使用', en: 'Tool Use' },
+  s03: { cn: '待办写入', en: 'TodoWrite' },
+  s04: { cn: '子智能体', en: 'Subagents' },
+  s05: { cn: '技能加载', en: 'Skills' },
+  s06: { cn: '上下文压缩', en: 'Context Compact' },
+  s07: { cn: '任务系统', en: 'Tasks' },
+  s08: { cn: '后台任务', en: 'Background Tasks' },
+  s09: { cn: '智能体团队', en: 'Agent Teams' },
+  s10: { cn: '团队协议', en: 'Team Protocols' },
+  s11: { cn: '自治智能体', en: 'Autonomous Agents' },
+  s12: { cn: 'Worktree 隔离', en: 'Worktree Isolation' },
+};
 
 interface Props {
   lessonId: string | null;
 }
 
-// 简单的 Markdown 渲染
+// 改进的 Markdown 渲染
 const renderMarkdown = (content: string) => {
   const lines = content.split('\n');
   const elements: React.ReactElement[] = [];
@@ -38,8 +56,19 @@ const renderMarkdown = (content: string) => {
     if (line.startsWith('```')) {
       if (inCodeBlock) {
         elements.push(
-          <pre key={`code-${codeKey++}`} className="bg-[#0A0A0A] rounded-lg p-4 my-4 overflow-x-auto" style={{ fontFamily: CODE_FONT }}>
-            <code className="text-sm text-lobster-orange" style={{ fontFamily: CODE_FONT }}>
+          <pre
+            key={`code-${codeKey++}`}
+            className="rounded-lg my-4 overflow-x-auto"
+            style={{
+              backgroundColor: '#0A0A0A',
+              border: '1px solid #1A1A1A',
+              padding: '1rem',
+              fontFamily: CODE_FONT,
+              fontSize: '0.875rem',
+              lineHeight: '1.6',
+            }}
+          >
+            <code style={{ fontFamily: CODE_FONT, color: COLORS.textSecondary }}>
               {codeContent.join('\n')}
             </code>
           </pre>
@@ -59,16 +88,46 @@ const renderMarkdown = (content: string) => {
 
     // 标题
     if (line.startsWith('# ')) {
-      elements.push(<h1 key={i} className="text-3xl font-bold mb-6 mt-8 text-white">{line.slice(2)}</h1>);
+      elements.push(
+        <h1 key={i} className="text-2xl font-bold mb-6 mt-8" style={{ color: COLORS.text }}>
+          {line.slice(2)}
+        </h1>
+      );
     } else if (line.startsWith('## ')) {
-      elements.push(<h2 key={i} className="text-2xl font-bold mb-4 mt-6 text-white">{line.slice(3)}</h2>);
+      elements.push(
+        <h2 key={i} className="text-xl font-bold mb-4 mt-6" style={{ color: COLORS.text }}>
+          {line.slice(3)}
+        </h2>
+      );
     } else if (line.startsWith('### ')) {
-      elements.push(<h3 key={i} className="text-xl font-semibold mb-3 mt-5 text-white">{line.slice(4)}</h3>);
+      elements.push(
+        <h3 key={i} className="text-lg font-semibold mb-3 mt-5" style={{ color: COLORS.text }}>
+          {line.slice(4)}
+        </h3>
+      );
+    }
+    // 引用块
+    else if (line.startsWith('> ')) {
+      elements.push(
+        <blockquote
+          key={i}
+          className="border-l-4 my-4 pl-4 py-1"
+          style={{
+            borderColor: COLORS.accent,
+            color: COLORS.textSecondary,
+            fontStyle: 'italic',
+            backgroundColor: `${COLORS.accentMuted}30`,
+            borderRadius: '0 8px 8px 0',
+          }}
+        >
+          {renderInlineCode(line.slice(2))}
+        </blockquote>
+      );
     }
     // 列表
     else if (line.startsWith('- ') || line.startsWith('* ')) {
       elements.push(
-        <li key={i} className="ml-6 mb-2 text-white/80 list-disc" style={{ color: COLORS.textSecondary }}>
+        <li key={i} className="ml-6 mb-2 list-disc" style={{ color: COLORS.textSecondary }}>
           {renderInlineCode(line.slice(2))}
         </li>
       );
@@ -76,11 +135,13 @@ const renderMarkdown = (content: string) => {
     // 表格行
     else if (line.startsWith('|')) {
       const cells = line.split('|').filter(c => c.trim());
-      if (cells.some(c => c.includes('---'))) continue; // 跳过分隔行
+      if (cells.some(c => c.includes('---'))) continue;
       elements.push(
-        <tr key={i} className="border-b border-[#262626]">
+        <tr key={i} className="border-b" style={{ borderColor: COLORS.border }}>
           {cells.map((cell, j) => (
-            <td key={j} className="px-4 py-2 text-white/70">{cell.trim()}</td>
+            <td key={j} className="px-4 py-2" style={{ color: COLORS.textSecondary }}>
+              {cell.trim()}
+            </td>
           ))}
         </tr>
       );
@@ -92,7 +153,7 @@ const renderMarkdown = (content: string) => {
     // 普通段落
     else {
       elements.push(
-        <p key={i} className="mb-4 text-white/80 leading-relaxed">
+        <p key={i} className="mb-4 leading-relaxed" style={{ color: COLORS.textSecondary }}>
           {renderInlineCode(line)}
         </p>
       );
@@ -111,7 +172,11 @@ const renderInlineCode = (text: string) => {
         <code
           key={i}
           className="px-1.5 py-0.5 rounded text-sm"
-          style={{ backgroundColor: COLORS.bgSecondary, color: COLORS.accent, fontFamily: CODE_FONT }}
+          style={{
+            backgroundColor: COLORS.bgSecondary,
+            color: COLORS.accent,
+            fontFamily: CODE_FONT,
+          }}
         >
           {part.slice(1, -1)}
         </code>
@@ -141,16 +206,20 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
     }
   };
 
+  const getTitle = (id: string) => titleMap[id] || { cn: id, en: id };
+
   if (!lesson) {
     return (
       <div style={{ backgroundColor: COLORS.bg }} className="min-h-screen text-white flex items-center justify-center">
         <div className="text-center">
           <p style={{ color: COLORS.textMuted }} className="mb-4">课程不存在</p>
-          <a href="/learn-cc" className="text-lobster-orange hover:underline">返回课程列表</a>
+          <a href="/learn-cc" style={{ color: COLORS.accent }} className="hover:underline">返回课程列表</a>
         </div>
       </div>
     );
   }
+
+  const title = getTitle(lesson.id);
 
   return (
     <div style={{ backgroundColor: COLORS.bg }} className="min-h-screen text-white">
@@ -165,7 +234,7 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
         <div className="flex items-center gap-4">
           <a
             href="/learn-cc"
-            className="flex items-center gap-2 transition-colors hover:opacity-80"
+            className="flex items-center gap-2 transition-colors hover:opacity-80 cursor-pointer"
             style={{ color: COLORS.textSecondary }}
           >
             <ArrowLeft className="w-5 h-5" />
@@ -173,13 +242,13 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
           </a>
           <div style={{ backgroundColor: COLORS.border }} className="w-px h-6" />
           <span
-            className="px-2 py-1 text-xs rounded-full"
-            style={{ backgroundColor: `${COLORS.accent}20`, color: COLORS.accent }}
+            className="px-2 py-1 text-xs rounded-lg"
+            style={{ backgroundColor: COLORS.accentMuted, color: COLORS.accent }}
           >
             Phase {lesson.phase}
           </span>
-          <h1 className="text-lg font-semibold hidden md:block" style={{ fontFamily: 'Times New Roman, Times, serif' }}>
-            {lesson.id.toUpperCase()}: {lesson.title}
+          <h1 className="text-lg font-semibold hidden md:block">
+            {title.cn} · {title.en}
           </h1>
         </div>
         <a
@@ -187,7 +256,7 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: COLORS.textSecondary }}
-          className="hover:text-white transition-colors"
+          className="hover:text-white transition-colors cursor-pointer"
         >
           <Github className="w-5 h-5" />
         </a>
@@ -199,17 +268,21 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
       >
         <div className="max-w-4xl mx-auto text-center">
           <h2
-            style={{ fontFamily: 'Times New Roman, Times, serif' }}
             className="text-4xl md:text-5xl font-bold mb-4"
           >
-            {lesson.title}
+            <span style={{ color: COLORS.textSecondary }}>{title.cn}</span>
           </h2>
           <p style={{ color: COLORS.textSecondary }} className="text-xl mb-4">
-            {lesson.subtitle}
+            {title.en}
           </p>
           <p
             className="text-lg italic"
-            style={{ color: COLORS.textMuted, borderLeft: `3px solid ${COLORS.accent}`, paddingLeft: '1rem' }}
+            style={{
+              color: COLORS.textMuted,
+              borderLeft: `3px solid ${COLORS.accent}`,
+              paddingLeft: '1rem',
+              display: 'inline-block',
+            }}
           >
             "{lesson.motto}"
           </p>
@@ -225,12 +298,12 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
           >
             <button
               onClick={() => setActiveTab('docs')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all duration-200 ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-md transition-all duration-200 cursor-pointer ${
                 activeTab === 'docs' ? 'shadow-sm' : ''
               }`}
               style={{
-                backgroundColor: activeTab === 'docs' ? COLORS.bgTertiary : 'transparent',
-                color: activeTab === 'docs' ? COLORS.text : COLORS.textMuted,
+                backgroundColor: activeTab === 'docs' ? COLORS.accentMuted : 'transparent',
+                color: activeTab === 'docs' ? COLORS.accent : COLORS.textMuted,
               }}
             >
               <FileText className="w-4 h-4" />
@@ -238,12 +311,12 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
             </button>
             <button
               onClick={() => setActiveTab('code')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all duration-200 ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-md transition-all duration-200 cursor-pointer ${
                 activeTab === 'code' ? 'shadow-sm' : ''
               }`}
               style={{
-                backgroundColor: activeTab === 'code' ? COLORS.bgTertiary : 'transparent',
-                color: activeTab === 'code' ? COLORS.text : COLORS.textMuted,
+                backgroundColor: activeTab === 'code' ? COLORS.accentMuted : 'transparent',
+                color: activeTab === 'code' ? COLORS.accent : COLORS.textMuted,
               }}
             >
               <Code className="w-4 h-4" />
@@ -280,20 +353,22 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
             <div
               className="rounded-xl overflow-hidden"
               style={{
-                backgroundColor: COLORS.bgTertiary,
+                backgroundColor: '#0A0A0A',
                 border: `1px solid ${COLORS.border}`,
               }}
             >
               {/* Code header */}
               <div
-                className="flex items-center justify-between px-4 py-3"
+                className="flex items-center justify-between px-5 py-3"
                 style={{
                   backgroundColor: COLORS.bgSecondary,
                   borderBottom: `1px solid ${COLORS.border}`,
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <span style={{ color: COLORS.accent, fontFamily: CODE_FONT }} className="text-sm">agents/{lesson.id}_*.py</span>
+                  <span style={{ color: COLORS.accent, fontFamily: CODE_FONT }} className="text-sm">
+                    agents/{lesson.id}_*.py
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <a
@@ -301,13 +376,13 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{ color: COLORS.textMuted }}
-                    className="text-sm hover:text-white transition-colors mr-2"
+                    className="text-sm hover:text-white transition-colors cursor-pointer mr-3"
                   >
                     GitHub →
                   </a>
                   <button
                     onClick={handleCopyCode}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-colors hover:bg-white/5"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-colors hover:bg-white/5 cursor-pointer"
                     style={{ color: copied ? '#22C55E' : COLORS.textMuted }}
                   >
                     {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -315,11 +390,20 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
                   </button>
                 </div>
               </div>
-              {/* Code content */}
-              <pre className="p-6 overflow-x-auto" style={{ fontFamily: CODE_FONT }}>
+              {/* Code content - 优化显示 */}
+              <pre
+                className="p-6 overflow-x-auto"
+                style={{
+                  fontFamily: CODE_FONT,
+                  fontSize: '0.85rem',
+                  lineHeight: '1.7',
+                }}
+              >
                 <code
-                  className="text-sm leading-relaxed"
-                  style={{ fontFamily: CODE_FONT, color: COLORS.textSecondary }}
+                  style={{
+                    fontFamily: CODE_FONT,
+                    color: '#E0E0E0',
+                  }}
                 >
                   {lesson.code}
                 </code>
@@ -341,13 +425,13 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
           {prev ? (
             <a
               href={`/learn-cc/${prev.id}`}
-              className="flex items-center gap-2 group transition-opacity hover:opacity-80"
+              className="flex items-center gap-2 group transition-opacity hover:opacity-80 cursor-pointer"
               style={{ color: COLORS.textSecondary }}
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <div className="text-left">
                 <div className="text-xs" style={{ color: COLORS.textMuted }}>上一章</div>
-                <div className="font-medium">{prev.title}</div>
+                <div className="font-medium">{getTitle(prev.id).cn}</div>
               </div>
             </a>
           ) : (
@@ -361,12 +445,12 @@ export default function LearnCCLessonPage({ lessonId }: Props) {
           {next ? (
             <a
               href={`/learn-cc/${next.id}`}
-              className="flex items-center gap-2 group transition-opacity hover:opacity-80"
+              className="flex items-center gap-2 group transition-opacity hover:opacity-80 cursor-pointer"
               style={{ color: COLORS.textSecondary }}
             >
               <div className="text-right">
                 <div className="text-xs" style={{ color: COLORS.textMuted }}>下一章</div>
-                <div className="font-medium">{next.title}</div>
+                <div className="font-medium">{getTitle(next.id).cn}</div>
               </div>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </a>
