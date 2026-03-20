@@ -19,7 +19,7 @@ const COLORS = {
     '#5B9AAD', // Phase 1 - 孔雀蓝
     '#8B7AA6', // Phase 2 - 梦幻紫
     '#6AAF8C', // Phase 2 - 翠玉绿
-    '#C98080', // Phase 4 - 珊瑚粉
+    '#B08580', // Phase 4 - 陶土红
   ],
 };
 
