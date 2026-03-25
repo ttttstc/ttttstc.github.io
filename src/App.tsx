@@ -18,8 +18,12 @@ import SystemPromptsPage from './sections/SystemPromptsPage';
 import DesignShowcasePage from './sections/DesignShowcasePage';
 import LearnCCPage from './sections/LearnCCPage';
 import LearnCCLessonPage from './sections/LearnCCLessonPage';
+import VibeflowPage from './sections/VibeflowPage';
+import VibeflowTutorialPage from './sections/VibeflowTutorialPage';
+import VibeflowTutorialLessonPage from './sections/VibeflowTutorialLessonPage';
+import VibeflowEvolutionPage from './sections/VibeflowEvolutionPage';
 
-type PageType = 'landing' | 'cat-cafe' | 'prompts' | 'home' | 'skill' | 'tutorial' | 'diary' | 'workspace' | 'tech' | 'design-showcase' | 'learn-cc' | 'learn-cc-lesson';
+type PageType = 'landing' | 'cat-cafe' | 'prompts' | 'home' | 'skill' | 'tutorial' | 'diary' | 'workspace' | 'tech' | 'design-showcase' | 'learn-cc' | 'learn-cc-lesson' | 'vibeflow' | 'vibeflow-tutorial' | 'vibeflow-tutorial-lesson' | 'vibeflow-evolution';
 
 // 路由配置 - 路径到页面类型的映射
 const ROUTE_MAPPINGS: Array<{ pattern: (path: string) => boolean; page: PageType }> = [
@@ -35,6 +39,11 @@ const ROUTE_MAPPINGS: Array<{ pattern: (path: string) => boolean; page: PageType
   { pattern: (p) => p === '/lobster/diary', page: 'diary' },
   { pattern: (p) => p === '/lobster/workspace', page: 'workspace' },
   { pattern: (p) => p === '/lobster/tech-eden', page: 'tech' },
+  // VibeFlow 路由
+  { pattern: (p) => p === '/vibeflow', page: 'vibeflow' },
+  { pattern: (p) => p === '/vibeflow/tutorial', page: 'vibeflow-tutorial' },
+  { pattern: (p) => p.match(/^\/vibeflow\/tutorial\/.+$/) !== null, page: 'vibeflow-tutorial-lesson' },
+  { pattern: (p) => p === '/vibeflow/evolution', page: 'vibeflow-evolution' },
   // 前缀匹配
   { pattern: (p) => p.startsWith('/lobster/tutorial') || p.startsWith('/docs/'), page: 'tutorial' },
   { pattern: (p) => p === '/skill', page: 'skill' },
@@ -58,11 +67,21 @@ const PATH_MAP: Record<PageType, string> = {
   diary: '/lobster/diary',
   workspace: '/lobster/workspace',
   tech: '/lobster/tech-eden',
+  vibeflow: '/vibeflow',
+  'vibeflow-tutorial': '/vibeflow/tutorial',
+  'vibeflow-tutorial-lesson': '/vibeflow/tutorial',
+  'vibeflow-evolution': '/vibeflow/evolution',
 };
 
 // 从路径提取 lesson ID
 const getLessonIdFromPath = (path: string): string | null => {
   const match = path.match(/^\/learn-cc\/(s\d{2})$/);
+  return match ? match[1] : null;
+};
+
+// 从路径提取 vibeflow 教程章节 ID
+const getChapterIdFromPath = (path: string): string | null => {
+  const match = path.match(/^\/vibeflow\/tutorial\/(.+)$/);
   return match ? match[1] : null;
 };
 
@@ -85,6 +104,7 @@ const getInitialPage = (): PageType => {
 function App() {
   const [currentPage, setCurrentPage] = useState<PageType>(getInitialPage);
   const [lessonId, setLessonId] = useState<string | null>(getLessonIdFromPath(window.location.pathname));
+  const [chapterId, setChapterId] = useState<string | null>(getChapterIdFromPath(window.location.pathname));
 
   useEffect(() => {
     const handleNavigation = () => {
@@ -92,6 +112,9 @@ function App() {
       setCurrentPage(page);
       if (page === 'learn-cc-lesson') {
         setLessonId(getLessonIdFromPath(window.location.pathname));
+      }
+      if (page === 'vibeflow-tutorial-lesson') {
+        setChapterId(getChapterIdFromPath(window.location.pathname));
       }
     };
 
@@ -129,6 +152,14 @@ function App() {
         return <WorkspacePage />;
       case 'tech':
         return <TechEdenPage />;
+      case 'vibeflow':
+        return <VibeflowPage />;
+      case 'vibeflow-tutorial':
+        return <VibeflowTutorialPage />;
+      case 'vibeflow-tutorial-lesson':
+        return <VibeflowTutorialLessonPage chapterId={chapterId} />;
+      case 'vibeflow-evolution':
+        return <VibeflowEvolutionPage />;
       default:
         return (
           <main>
@@ -144,7 +175,7 @@ function App() {
   };
 
   // Landing, Cat Cafe, Prompts and Design Showcase pages have their own layout
-  if (currentPage === 'landing' || currentPage === 'cat-cafe' || currentPage === 'prompts' || currentPage === 'design-showcase' || currentPage === 'learn-cc' || currentPage === 'learn-cc-lesson') {
+  if (currentPage === 'landing' || currentPage === 'cat-cafe' || currentPage === 'prompts' || currentPage === 'design-showcase' || currentPage === 'learn-cc' || currentPage === 'learn-cc-lesson' || currentPage === 'vibeflow' || currentPage === 'vibeflow-tutorial' || currentPage === 'vibeflow-tutorial-lesson' || currentPage === 'vibeflow-evolution') {
     return <>{renderPage()}</>;
   }
 

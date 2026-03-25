@@ -1,4 +1,4 @@
-import { Sparkles, ArrowRight, Coffee, ArrowDown, Sparkle, Palette, Bug, GraduationCap } from 'lucide-react';
+import { Sparkles, ArrowRight, Coffee, ArrowDown, Sparkle, Palette, Bug, GraduationCap, Workflow } from 'lucide-react';
 
 // 首页项目配置
 
@@ -13,6 +13,15 @@ interface Project {
 }
 
 const projects: Project[] = [
+  {
+    id: 'vibeflow',
+    title: 'VibeFlow',
+    description: '结构化的 7 阶段软件交付框架 —— 让 AI 按工程纪律交付软件，而不是随机 vibe coding',
+    icon: Workflow,
+    href: '/vibeflow',
+    status: 'ready',
+    color: '#6366F1',
+  },
   {
     id: 'lobster',
     title: '小泥巴的进化历程',
