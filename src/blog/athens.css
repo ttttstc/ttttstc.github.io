@@ -1,0 +1,413 @@
+/*
+ * Athens 博客主题
+ * 设计语言来源见 docs/athens-design-language.md（参考重写，非源码拷贝）。
+ * 所有样式作用域收敛在 .blog-root 下，不影响主站「龙虾」橙色主题。
+ * 字体用免费 OFL 替代：Cinzel（罗马碑刻标题）+ Albert Sans（正文/标签）。
+ */
+
+.blog-root {
+  --a-blue: #0755bb;
+  --a-blue-dark: #054496;
+  --a-bg: #dcdbd5;
+  --a-panel: #e8e8e8;
+  --a-grid: #cbcbcb;
+  --a-soft: rgba(7, 85, 187, 0.32);
+  --a-white: #fff;
+  --a-visual: #f4f4f1;
+
+  --reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --reveal-dur: 900ms;
+  --hover-dur: 240ms;
+  --cell-gap: 4px;
+  --cell-radius: 4px;
+
+  --font-display: "Cinzel", "Albertus", "Optima", "Times New Roman", serif;
+  --font-body: "Albert Sans", "Inter", system-ui, sans-serif;
+
+  min-height: 100vh;
+  background: var(--a-bg);
+  color: var(--a-blue);
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.blog-root a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: color var(--hover-dur) ease;
+}
+.blog-root a:hover {
+  color: var(--a-blue-dark);
+}
+
+.blog-root ::selection {
+  background: var(--a-soft);
+  color: var(--a-blue-dark);
+}
+
+/* ---------- 砖墙栅格 ---------- */
+.blog-grid {
+  --cell: calc((100vw - 8px) / 3);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--cell-gap);
+  padding: var(--cell-gap);
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+.blog-cell {
+  position: relative;
+  min-width: 0;
+  min-height: var(--cell);
+  overflow: hidden;
+  border: 1px solid var(--a-grid);
+  border-radius: var(--cell-radius);
+  background: var(--a-bg);
+}
+
+.cell-white { background: var(--a-white); }
+.cell-span2 { grid-column: span 2; }
+.cell-full { grid-column: 1 / -1; }
+.cell-tall { min-height: calc((var(--cell) * 2) + var(--cell-gap)); }
+
+/* ---------- 揭示动画（等效原 MotionBoot：IO 触发一次） ---------- */
+.blog-root.motion-ready [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity var(--reveal-dur) var(--reveal-ease),
+    transform var(--reveal-dur) var(--reveal-ease);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.blog-root.motion-ready [data-reveal].is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+.reveal-d1 { --reveal-delay: 140ms; }
+.reveal-d2 { --reveal-delay: 210ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .blog-root.motion-ready [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- 标题排印 ---------- */
+.blog-h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+/* ---------- Hero 砖 ---------- */
+.blog-hero {
+  grid-column: 1 / -1;
+  min-height: calc(var(--cell) * 1.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+  background:
+    radial-gradient(120% 140% at 50% 0%, rgba(7, 85, 187, 0.06), transparent 60%),
+    var(--a-bg);
+}
+.blog-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 6vw, 72px);
+  font-weight: 700;
+  line-height: 1.02;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 18px;
+}
+.blog-hero p {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--a-soft);
+  margin: 0;
+}
+
+/* ---------- Facts / About 卡 ---------- */
+.facts-cell { display: flex; align-items: center; justify-content: center; }
+.facts-shell {
+  width: min(82%, 400px);
+  min-height: 360px;
+  padding: 24px 22px 22px;
+  border: 1px solid var(--a-grid);
+  border-radius: 2px;
+  background: var(--a-panel);
+  box-shadow: 0 0 0 24px rgba(255, 255, 255, 0.43);
+}
+.facts-shell .blog-h2 { text-align: center; }
+.facts-shell dl { margin: 56px 0 0; display: grid; gap: 24px; }
+.fact-row {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  align-items: start;
+  gap: 18px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.22;
+}
+.fact-row dt { font-family: var(--font-display); }
+.fact-row dd { margin: 0; text-align: right; white-space: pre-line; overflow-wrap: break-word; }
+
+/* ---------- 希腊柱（寄语） ---------- */
+.intro-cell { display: flex; align-items: center; justify-content: center; }
+.greek-column {
+  position: relative;
+  width: min(72%, 400px);
+  height: 84%;
+  min-height: 720px;
+  padding: 180px 56px 130px;
+  border-radius: 78px 78px 10px 10px;
+  background:
+    linear-gradient(90deg,
+      transparent 16%, rgba(255,255,255,0.13) 16% 17%, transparent 17% 28%,
+      rgba(255,255,255,0.13) 28% 29%, transparent 29% 40%, rgba(255,255,255,0.13) 40% 41%,
+      transparent 41% 52%, rgba(255,255,255,0.13) 52% 53%, transparent 53% 64%,
+      rgba(255,255,255,0.13) 64% 65%, transparent 65% 76%, rgba(255,255,255,0.13) 76% 77%,
+      transparent 77%),
+    var(--a-blue);
+  color: #fff;
+}
+.greek-column::before,
+.greek-column::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  background: var(--a-blue);
+  border: 4px solid rgba(255, 255, 255, 0.1);
+}
+.greek-column::before { top: 0; height: 110px; border-radius: 80px 80px 24px 24px; }
+.greek-column::after { bottom: 0; height: 86px; border-radius: 10px; }
+.column-scrollwork {
+  position: absolute;
+  top: 34px; left: 46px; right: 46px;
+  height: 70px;
+  border-top: 1px solid rgba(255, 255, 255, 0.17);
+  border-radius: 60px 60px 0 0;
+}
+.greek-column p {
+  position: relative;
+  z-index: 1;
+  max-width: 250px;
+  margin: 0 auto;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.column-lines {
+  position: absolute;
+  left: 72px; right: 72px; bottom: 116px;
+  height: 320px;
+  border-left: 1px solid rgba(255, 255, 255, 0.16);
+  border-right: 1px solid rgba(255, 255, 255, 0.16);
+  background: repeating-linear-gradient(90deg, transparent 0 31px, rgba(255,255,255,0.13) 32px 33px);
+}
+.greek-column.is-revealed { animation: column-settle 1200ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.greek-column.is-revealed .column-scrollwork { animation: column-line-sweep 1400ms ease both 180ms; }
+
+@keyframes column-settle {
+  0% { transform: translate3d(0, 20px, 0) scale(0.985); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes column-line-sweep {
+  0% { opacity: 0; transform: translateY(10px) scaleX(0.86); }
+  100% { opacity: 1; transform: translateY(0) scaleX(1); }
+}
+
+/* ---------- 文章列表（罗马数字编号，等效 packing-list） ---------- */
+.posts-cell {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 38px 44px;
+}
+.posts-cell .blog-h2 { text-align: left; margin-bottom: 18px; }
+.posts-list { display: grid; gap: 4px; }
+.post-row {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  align-items: baseline;
+  gap: 18px;
+  padding: 14px 8px;
+  background: var(--a-panel);
+  border-radius: 3px;
+  font-family: var(--font-body);
+  text-decoration: none;
+  color: var(--a-blue);
+  transition: background var(--hover-dur) ease, transform var(--hover-dur) ease;
+}
+.post-row:hover { background: #dedede; transform: translateX(4px); text-decoration: none; }
+.post-num { font-family: var(--font-display); font-size: 18px; }
+.post-main { min-width: 0; }
+.post-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+.post-excerpt { margin-top: 6px; font-size: 13px; line-height: 1.4; color: #2b2b2b; }
+.post-meta { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--a-soft); white-space: nowrap; }
+
+/* ---------- 文章详情（时间线版式，等效 itinerary） ---------- */
+.post-page { max-width: 980px; margin: 0 auto; padding: 0 4px; }
+.post-card { padding: 40px 38px 36px; }
+.post-card header {
+  display: grid;
+  grid-template-columns: 150px 1fr 150px;
+  align-items: center;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 4px;
+  background: var(--a-panel);
+  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-size: 13px;
+}
+.post-card header span:last-child { text-align: right; }
+.post-card h1 {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 5vw, 46px);
+  line-height: 1.05;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin: 48px 0 8px;
+}
+.post-card .post-sub {
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--a-soft);
+  margin: 0 0 8px;
+}
+.post-body { margin-top: 56px; }
+.body-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 42px;
+  padding: 28px 0;
+  border-top: 2px dotted rgba(203, 203, 203, 0.7);
+}
+.body-row:first-child { border-top: 0; }
+.body-kicker {
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.12;
+  text-transform: uppercase;
+}
+.body-content { font-family: var(--font-body); }
+.body-content p { max-width: 625px; margin: 0 0 14px; font-size: 15px; line-height: 1.6; color: #222; }
+.body-content p:last-child { margin-bottom: 0; }
+.body-content blockquote {
+  margin: 0 0 14px;
+  padding-left: 18px;
+  border-left: 3px solid var(--a-soft);
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: var(--a-blue);
+}
+.body-content ul { margin: 0 0 14px; padding-left: 20px; }
+.body-content li { font-size: 15px; line-height: 1.6; color: #222; }
+.body-content pre {
+  margin: 0 0 14px;
+  padding: 16px 18px;
+  background: #1a1a1a;
+  color: #e8e8e8;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-x: auto;
+  text-transform: none;
+}
+.post-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 0;
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---------- 浮雕封面砖（WebGL 金属扫光的容器） ---------- */
+.relief-cell { background: var(--a-visual); isolation: isolate; }
+.relief-cell .relief-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.relief-cell .relief-label {
+  position: absolute;
+  left: 14px;
+  bottom: 12px;
+  z-index: 3;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+/* ---------- 页脚 ---------- */
+.blog-footer {
+  grid-column: 1 / -1;
+  padding: 48px 24px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--a-soft);
+}
+
+/* ---------- 响应式：2 列 ---------- */
+@media (max-width: 809px) {
+  .blog-grid {
+    --cell: 194px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 2px;
+  }
+  .blog-cell { min-height: 194px; }
+  .cell-span2, .posts-cell { grid-column: 1 / -1; }
+  .greek-column { width: 84%; min-height: 360px; padding: 90px 28px 70px; border-radius: 36px 36px 6px 6px; }
+  .greek-column::before { height: 52px; border-radius: 36px 36px 14px 14px; }
+  .greek-column::after { height: 38px; }
+  .greek-column p { font-size: 13px; }
+  .column-lines { left: 30px; right: 30px; bottom: 52px; height: 150px; }
+  .body-row { grid-template-columns: 1fr; gap: 12px; }
+  .post-card header { grid-template-columns: 70px 1fr 70px; font-size: 10px; }
+}
