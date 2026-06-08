@@ -369,7 +369,7 @@ document.querySelectorAll('a[href^="/"]').forEach(function(a){
   a.addEventListener('click',function(e){
     e.preventDefault();
     sessionStorage.setItem('redirect',this.getAttribute('href'));
-    window.location.href='/index.html';
+    window.location.href='/app.html';
   });
 });
 </script>

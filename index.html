@@ -1,31 +1,630 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>泥巴猪的实验田</title>
-    <!-- Three.js and GSAP for 3D effects -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script>
-      // 兼容处理：将 THREE.OrbitControls 挂载到 window
-      if (typeof window !== 'undefined') {
-        window.THREE = window.THREE || THREE;
-        window.OrbitControls = window.OrbitControls || THREE.OrbitControls || (window.THREE && window.THREE.OrbitControls);
-      }
-      (function() {
-        var redirect = sessionStorage.getItem('redirect');
-        if (redirect) {
-          sessionStorage.removeItem('redirect');
-          history.replaceState(null, null, redirect);
-        }
-      })();
-    </script>
-    <script type="module" crossorigin src="/assets/index.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>泥巴猪的伊甸园 · AI Builder / 微服务架构 / DevOps</title>
+<meta name="description" content="泥巴猪的伊甸园 —— AI Builder、微服务架构师、DevOps & CICD 领域专家。与 AI 共建的工程化探索之路。" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ece4d9;
+  --surface:#f4f0ea;
+  --card:#fffbf5;
+  --fg:#4f483e;
+  --muted:#8a7d6b;
+  --border:#e2d8cb;
+  --accent:#f54001;
+  --accent-soft:#ffc198;
+  --blue:#54a2ff;
+  --shadow-card:0 8px 40px rgba(79,72,62,.08), 0 2px 20px rgba(79,72,62,.04);
+  --shadow-hover:0 16px 64px rgba(79,72,62,.13);
+  --font-display:'Playfair Display', Georgia, 'Songti SC', serif;
+  --font-body:'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-mono:'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --wrap:1180px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--fg);
+  font-family:var(--font-body);font-weight:400;line-height:1.6;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  background:
+    linear-gradient(rgba(236,228,217,.34), rgba(236,228,217,.34)),
+    url("source/pic/index-pic.jpg") center center / cover no-repeat fixed;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 32px}
+.eyebrow{
+  font-family:var(--font-mono);font-size:12px;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--accent);
+}
+.serif{font-family:var(--font-display)}
+
+/* ---------- image placeholder (for gpt-image-2) ---------- */
+.img-ph{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:8px;text-align:center;
+  background:
+    repeating-linear-gradient(45deg, transparent, transparent 11px, rgba(138,125,107,.05) 11px, rgba(138,125,107,.05) 12px),
+    var(--card);
+  border:1.5px dashed var(--border);border-radius:14px;color:var(--muted);
+  padding:24px;min-height:180px;overflow:hidden;
+}
+.img-ph .tag{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent);background:#fff;border:1px solid var(--border);
+  padding:3px 9px;border-radius:999px}
+.img-ph .desc{font-size:13px;max-width:80%;line-height:1.5}
+
+/* ---------- nav ---------- */
+header.nav{position:sticky;top:0;z-index:50;
+  background:color-mix(in oklab, var(--bg) 52%, transparent);
+  backdrop-filter:saturate(150%) blur(14px);
+  border-bottom:1px solid color-mix(in oklab,var(--border) 70%,transparent)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:600}
+.brand .mark{width:30px;height:30px;border-radius:8px;background:var(--accent);
+  color:#fff;display:grid;place-items:center;font-family:var(--font-display);
+  font-weight:700;font-size:17px;box-shadow:var(--shadow-card)}
+.brand b{font-family:var(--font-display);font-weight:700;font-size:18px;letter-spacing:.01em}
+.nav-links{display:flex;gap:34px;align-items:center}
+.nav-links a{font-size:14.5px;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--fg)}
+.nav-links a.active{color:var(--fg);font-weight:500}
+.nav-toggle{display:none;background:none;border:0;color:var(--fg);font-size:22px;cursor:pointer}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;min-height:92vh;display:flex;align-items:center;
+  text-align:center;padding:128px 0 116px;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 45%, rgba(79,72,62,.20) 0%, rgba(79,72,62,.04) 55%, transparent 100%);
+}
+.hero-inner{max-width:800px;margin:0 auto;position:relative;z-index:1}
+.hero .eyebrow{display:inline-block}
+.hero h1{font-family:var(--font-display);font-weight:800;
+  font-size:clamp(44px,6vw,80px);line-height:1.04;letter-spacing:-.015em;margin:18px 0 0;
+  text-shadow:0 2px 14px rgba(255,251,245,.75), 0 1px 4px rgba(79,72,62,.18)}
+.hero h1 em{font-style:italic;color:var(--accent);font-weight:700}
+.hero .lede{font-size:19px;line-height:1.7;color:var(--fg);font-weight:500;
+  max-width:40ch;margin:26px auto 0;text-shadow:0 1px 10px rgba(255,251,245,.78), 0 1px 3px rgba(79,72,62,.12)}
+.roles{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px;justify-content:center}
+.role{font-family:var(--font-mono);font-size:12.5px;letter-spacing:.03em;
+  background:rgba(255,251,245,.72);backdrop-filter:blur(6px);
+  border:1px solid var(--border);color:var(--fg);
+  padding:8px 14px;border-radius:999px}
+.hero-actions{display:flex;gap:16px;margin-top:36px;flex-wrap:wrap;justify-content:center}
+.btn{font-size:15px;font-weight:500;padding:13px 24px;border-radius:12px;
+  transition:.2s;border:1px solid transparent;cursor:pointer}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 6px 24px rgba(245,64,1,.38)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(245,64,1,.42)}
+.btn-ghost{background:rgba(255,251,245,.74);backdrop-filter:blur(8px);
+  border-color:var(--fg);color:var(--fg);font-weight:500}
+.btn-ghost:hover{background:var(--fg);color:var(--card);border-color:var(--fg)}
+
+/* ---------- section scaffolding ---------- */
+section{padding:80px 0}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;
+  gap:24px;margin-bottom:44px;flex-wrap:wrap}
+.sec-head h2{font-family:var(--font-display);font-weight:700;
+  font-size:clamp(30px,3.6vw,42px);line-height:1.1;margin:10px 0 0;letter-spacing:-.01em}
+.sec-head p{color:var(--muted);font-size:15.5px;max-width:46ch;margin:8px 0 0}
+.link-more{font-family:var(--font-mono);font-size:13px;color:var(--accent);
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.link-more:hover{gap:10px}
+
+/* ---------- about ---------- */
+.about{background:color-mix(in oklab,var(--surface) 60%,transparent);
+  backdrop-filter:saturate(130%) blur(9px);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.about-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center}
+.about-prose p{font-size:17px;line-height:1.8;color:var(--fg);margin:0 0 18px}
+.about-prose p .hl{color:var(--accent);font-weight:500}
+.about-art{aspect-ratio:1/1;border-radius:18px}
+
+/* ---------- skills ---------- */
+.skill-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.skill{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:24px 22px;transition:.25s}
+.skill:hover{transform:translateY(-3px);box-shadow:var(--shadow-card);border-color:var(--accent-soft)}
+.skill .n{font-family:var(--font-mono);font-size:12px;color:var(--accent);letter-spacing:.1em}
+.skill h3{font-family:var(--font-display);font-size:20px;font-weight:600;margin:12px 0 8px}
+.skill p{font-size:13.5px;color:var(--muted);line-height:1.6;margin:0}
+
+/* ---------- projects ---------- */
+.proj{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.proj-col3{grid-template-columns:repeat(3,1fr)}
+.proj-card{background:var(--card);border:1px solid var(--border);border-radius:18px;
+  overflow:hidden;transition:.25s;display:flex;flex-direction:column}
+.proj-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover)}
+.proj-card.feature{grid-column:1 / -1;flex-direction:row}
+.proj-thumb{min-height:230px;flex:0 0 46%;border-radius:0}
+.proj-card.feature .proj-thumb{border-right:1px solid var(--border)}
+.proj-body{padding:30px 32px;display:flex;flex-direction:column;flex:1}
+.proj-kicker{font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted)}
+.proj-body h3{font-family:var(--font-display);font-weight:700;font-size:27px;
+  margin:12px 0 12px;line-height:1.15}
+.proj-body p{font-size:15px;color:var(--muted);line-height:1.7;margin:0 0 20px}
+.proj-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.proj-tags span{font-family:var(--font-mono);font-size:11.5px;color:var(--fg);
+  background:var(--surface);border:1px solid var(--border);padding:5px 11px;border-radius:7px}
+  a.proj-link{display:contents;color:inherit;text-decoration:none}
+  a.proj-link:hover .proj-card{transform:translateY(-4px);box-shadow:var(--shadow-hover)}
+  a.proj-link:hover .proj-body h3{color:var(--accent)}
+
+/* ---------- articles ---------- */
+.articles{background:color-mix(in oklab,var(--surface) 60%,transparent);
+  backdrop-filter:saturate(130%) blur(9px);
+  border-top:1px solid var(--border)}
+.art-list{display:flex;flex-direction:column;gap:2px}
+.art-row{display:grid;grid-template-columns:88px 1fr auto;gap:28px;align-items:baseline;
+  padding:26px 8px;border-bottom:1px solid var(--border);transition:.2s}
+.art-row:hover{padding-left:18px;padding-right:0;background:linear-gradient(90deg,var(--card),transparent)}
+.art-date{font-family:var(--font-mono);font-size:12.5px;color:var(--muted)}
+.art-main h3{font-family:var(--font-display);font-size:22px;font-weight:600;
+  margin:0 0 6px;line-height:1.3}
+.art-row:hover .art-main h3{color:var(--accent)}
+.art-main p{font-size:14px;color:var(--muted);margin:0;line-height:1.6}
+.art-cat{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--fg);border:1px solid var(--border);
+  padding:4px 10px;border-radius:999px;background:var(--card);white-space:nowrap}
+.art-cat.diary{color:var(--accent);border-color:var(--accent-soft)}
+
+/* ---------- contact ---------- */
+.contact-card{background:var(--fg);color:var(--bg);border-radius:24px;
+  padding:64px 56px;display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}
+.contact-card h2{font-family:var(--font-display);font-weight:700;font-size:clamp(30px,4vw,46px);
+  line-height:1.1;margin:14px 0 0;color:var(--card)}
+.contact-card .eyebrow{color:var(--accent-soft)}
+.contact-card p{color:color-mix(in oklab,var(--bg) 75%,transparent);font-size:16px;
+  line-height:1.7;margin:18px 0 0}
+.social{display:flex;flex-direction:column;gap:12px}
+.social a{display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--font-mono);font-size:14px;letter-spacing:.02em;
+  padding:16px 20px;border:1px solid color-mix(in oklab,var(--bg) 28%,transparent);
+  border-radius:12px;color:var(--card);transition:.2s}
+.social a:hover{background:var(--accent);border-color:var(--accent);color:#fff;transform:translateX(4px)}
+.social a .arr{opacity:.5}
+
+/* ---------- footer ---------- */
+footer{padding:44px 0;border-top:1px solid var(--border)}
+.foot-inner{display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;color:var(--muted);font-size:13.5px}
+.foot-inner .font-note{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.03em}
+
+/* ---------- responsive ---------- */
+@media(max-width:900px){
+  .nav-links{display:none}
+  .nav-toggle{display:block}
+  .about-grid,.contact-card{grid-template-columns:1fr;gap:36px}
+  .hero{min-height:80vh;padding:104px 0 88px}
+  .skill-grid{grid-template-columns:repeat(2,1fr)}
+  .proj,.proj-col3{grid-template-columns:1fr}
+  .proj-card.feature{flex-direction:column}
+  .proj-card.feature .proj-thumb{border-right:0;border-bottom:1px solid var(--border)}
+  .art-row{grid-template-columns:1fr;gap:8px}
+  .art-date{order:2}.art-cat{order:1;justify-self:start}
+  .contact-card{padding:44px 30px}
+}
+@media(max-width:560px){
+  .wrap{padding:0 20px}
+  .hero{padding:56px 0 40px}
+  section{padding:60px 0}
+  .skill-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="home.html">
+      <span class="mark">泥</span>
+      <b>泥巴猪的伊甸园</b>
+    </a>
+    <nav class="nav-links">
+      <a href="home.html" class="active">首页</a>
+      <a href="about.html">关于我</a>
+      <a href="portfolio.html">作品集</a>
+      <a href="blog.html">博客</a>
+      <a href="toolbox.html">工具箱</a>
+      <a href="tutorials.html">教程</a>
+    </nav>
+    <button class="nav-toggle" aria-label="菜单" onclick="document.querySelector('.nav-links').classList.toggle('open')">≡</button>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="wrap hero-inner">
+    <span class="eyebrow">伊甸园 · since 2026</span>
+    <h1>与 AI 共建的<br><em>工程化探索之路</em>。</h1>
+    <p class="lede">CICD流水线架构师，专注于高性能云服务系统。最近在探索 AI Agent、Workflow 和 Harness 框架的工程化落地。</p>
+    <div class="roles">
+      <span class="role">AI Builder</span>
+      <span class="role">微服务架构师</span>
+      <span class="role">DevOps &amp; CICD</span>
+      <span class="role">平台工程</span>
+    </div>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#projects">看我的作品</a>
+      <a class="btn btn-ghost" href="blog.html">读最新文章</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="about" id="about">
+  <div class="wrap about-grid">
+    <figure class="img-ph about-art" data-img-prompt="cozy warm desk flatlay, architecture sketches, cream + orange, 1:1">
+      <span class="tag">贴图位 B · 1:1</span>
+      <span class="desc">关于区配图<br>暖调工作台 / 手绘架构草图</span>
+    </figure>
+    <div class="about-prose">
+      <span class="eyebrow">关于我</span>
+      <h2 class="serif" style="font-size:clamp(28px,3.4vw,40px);margin:12px 0 22px;line-height:1.15">
+        从后端架构师，<br>到 AI Builder。
+      </h2>
+      <p>近 8 年的工作经历让我积累了丰富的后端开发和架构经验，专注于构建高性能、高并发、高稳定性的云服务系统。最近把更多精力投入到 <span class="hl">AI Agent</span>、<span class="hl">Workflow</span> 和 <span class="hl">Harness 框架</span> 等 AI 工程落地方向的探索。</p>
+      <p>我搭建了个人 Agent 平台 OpenClaw，也设计了 VibeFlow —— 一套让 AI 走完 Think → Plan → Build → Ship 闭环的交付框架。</p>
+      <a href="about.html" class="btn btn-ghost" style="margin-top:28px;display:inline-flex">了解更多关于我 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SKILLS ===== -->
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">能力地图</span>
+        <h2>我擅长的，和我正在练的。</h2>
+      </div>
+      <p>不堆名词。下面四个方向，是我真正动手做过、踩过坑、也交付过的领域。</p>
+    </div>
+    <div class="skill-grid">
+      <div class="skill">
+        <span class="n">01</span>
+        <h3>AI Agent 架构</h3>
+        <p>单/多 Agent 编排、Context 治理、记忆系统、Skills 扩展，从 L1–L5 分层到 OpenClaw 实践。</p>
+      </div>
+      <div class="skill">
+        <span class="n">02</span>
+        <h3>微服务架构</h3>
+        <p>服务拆分、网关与通信、容灾与高可用，把复杂系统拆成能独立演进的模块。</p>
+      </div>
+      <div class="skill">
+        <span class="n">03</span>
+        <h3>DevOps &amp; CICD</h3>
+        <p>流水线设计、自动化部署、可观测性，让交付从「手忙脚乱」变成「按节奏推进」。</p>
+      </div>
+      <div class="skill">
+        <span class="n">04</span>
+        <h3>结构化交付</h3>
+        <p>VibeFlow 方法论：需求→设计→实现→审查→测试→发布，让 AI 按工程纪律产出。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PORTFOLIO / 作品 ===== -->
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">作品</span>
+        <h2>几件我认真做过的事。</h2>
+      </div>
+      <a class="link-more" href="portfolio.html">查看全部作品 →</a>
+    </div>
+    <div class="proj">
+      <a href="/vibeflow" class="proj-link">
+      <article class="proj-card feature">
+        <!-- 贴图位 C：VibeFlow 作品封面 -->
+        <!-- gpt-image-2 prompt: "Abstract flow diagram, eight connected nodes Think Plan Requirements Design Build Review Test Ship, warm cream background, burnt orange #f54001 active node, hand-drawn editorial style, soft shadows, 16:10" -->
+        <figure class="img-ph proj-thumb" data-img-prompt="VibeFlow 8-stage flow diagram, cream + orange, editorial, 16:10">
+          <span class="tag">贴图位 C · 16:10</span>
+          <span class="desc">VibeFlow 流程图封面</span>
+        </figure>
+        <div class="proj-body">
+          <span class="proj-kicker">框架 · Framework</span>
+          <h3>VibeFlow —— 让 AI 按工程纪律交付</h3>
+          <p>一个面向 Claude Code 的结构化交付框架。把需求、设计、实现、审查、测试、发布和复盘串成一条可恢复、可追踪、可自动继续的工作流：前半程你拍板，后半程系统自己推进，卡住了再回来问你。</p>
+          <div class="proj-tags">
+            <span>Claude Code</span><span>工作流</span><span>文件即状态</span><span>TDD</span>
+          </div>
+        </div>
+      </article>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BLOG / 博客 ===== -->
+<section id="blog-section">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">博客</span>
+        <h2>写下的思考与记录。</h2>
+      </div>
+      <a class="link-more" href="blog.html">进入博客 →</a>
+    </div>
+    <div class="art-list">
+      <a href="article.html?article=understand-arch" class="art-row">
+        <span class="art-date">2026.05.13</span>
+        <div class="art-main">
+          <h3>Agent 友好的代码库知识引擎 understand-arch 的设计与实现</h3>
+          <p>如何让 AI Agent 在大型代码库中快速建立全局理解，而不只是逐文件阅读。</p>
+        </div>
+        <span class="art-cat">AI 工程</span>
+      </a>
+      <a href="article.html?article=vibeflow-birth" class="art-row">
+        <span class="art-date">2026.05.10</span>
+        <div class="art-main">
+          <h3>用了两个月 Superpowers + gstack 之后，我自己造了一个 VibeFlow</h3>
+          <p>从"提示词 → 生成代码"到真正的 AI 协作工程化，我需要的不是更好的 Prompt，而是一套完整的交付框架。</p>
+        </div>
+        <span class="art-cat">Workflow</span>
+      </a>
+      <a href="article.html?article=harness-foundation" class="art-row">
+        <span class="art-date">2026.04.18</span>
+        <div class="art-main">
+          <h3>地基不牢，Harness 白搭——对 AI 工程知识资产的思考</h3>
+          <p>别让知识资产成了摆设——从目录设计到治理节奏，一步步搭好 Harness 的地基。</p>
+        </div>
+        <span class="art-cat">AI 工程</span>
+      </a>
+      <a href="article.html?article=context-debt" class="art-row">
+        <span class="art-date">2026.04.16</span>
+        <div class="art-main">
+          <h3>上下文债：项目隐性知识的管理</h3>
+          <p>随着对话越来越多，我发现项目里积累了一种看不见的"债"——上下文债。当对话超过五轮，信息就开始散落各处。</p>
+        </div>
+        <span class="art-cat">AI 工程</span>
+      </a>
+      <a href="article.html?article=judgment-matters" class="art-row">
+        <span class="art-date">2026.03.22</span>
+        <div class="art-main">
+          <h3>当造东西变得简单，最贵的是判断力</h3>
+          <p>AI 时代造东西变简单了，但什么是值得造的？怎么判断一个功能该不该加？</p>
+        </div>
+        <span class="art-cat">产品设计</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TOOLBOX / 工具箱 ===== -->
+<section id="toolbox">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">工具箱</span>
+        <h2>收集和实验的几样东西。</h2>
+      </div>
+      <a class="link-more" href="toolbox.html">查看全部 →</a>
+    </div>
+    <div class="proj">
+      <a href="/prompts" class="proj-link">
+      <article class="proj-card">
+        <!-- 贴图位 F：神秘咒语盒封面 -->
+        <!-- gpt-image-2 prompt: "Mystical warm editorial illustration, abstract code scrolls with glowing runes, warm cream paper, burnt orange highlights, soft ink textures, cozy library mood, 16:9" -->
+        <figure class="img-ph proj-thumb" data-img-prompt="神秘咒语盒封面，code scrolls + warm ink, cream + orange, 16:9">
+          <span class="tag">贴图位 F · 16:9</span>
+          <span class="desc">神秘咒语盒封面</span>
+        </figure>
+        <div class="proj-body">
+          <span class="proj-kicker">研究 · Research</span>
+          <h3>神秘咒语盒</h3>
+          <p>收集主流 AI 工具的系统提示词与工具定义——Claude Code、Cursor、Devin、Gemini CLI——探索不同 AI 的"思维方式"。</p>
+          <div class="proj-tags">
+            <span>提示词</span><span>系统架构</span><span>开源收集</span>
+          </div>
+        </div>
+      </article>
+      </a>
+      <a href="/design-showcase" class="proj-link">
+      <article class="proj-card">
+        <!-- 贴图位 G：设计样板间封面 -->
+        <!-- gpt-image-2 prompt: "Editorial design moodboard with warm cream palette, typography samples, UI component sketches, burnt orange accent details, soft natural light, 16:9" -->
+        <figure class="img-ph proj-thumb" data-img-prompt="设计样板间封面，typography + UI sketches, cream + orange, 16:9">
+          <span class="tag">贴图位 G · 16:9</span>
+          <span class="desc">设计样板间封面</span>
+        </figure>
+        <div class="proj-body">
+          <span class="proj-kicker">设计 · Design</span>
+          <h3>设计样板间</h3>
+          <p>归档前端设计样式与实验：组件库、排版系统、色彩方案、动效原型——展示前沿 UI/UX 的创意实现。</p>
+          <div class="proj-tags">
+            <span>UI/UX</span><span>组件库</span><span>动效</span>
+          </div>
+        </div>
+      </article>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TUTORIALS / 教程 ===== -->
+<section id="tutorials">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">教程</span>
+        <h2>把踩过的坑变成路。</h2>
+      </div>
+      <a class="link-more" href="tutorials.html">查看全部 →</a>
+    </div>
+    <div class="proj proj-col3">
+      <a href="/lobster" class="proj-link">
+      <article class="proj-card">
+        <!-- 贴图位 D：OpenClaw 架构封面 -->
+        <!-- gpt-image-2 prompt: "Layered system architecture illustration, gateway + multi-agent nodes + memory store, warm cream palette, burnt orange highlights, technical but soft editorial style, 16:9" -->
+        <figure class="img-ph proj-thumb" data-img-prompt="OpenClaw layered architecture, gateway + multi-agent + memory, cream + orange, 16:9">
+          <span class="tag">贴图位 D · 16:9</span>
+          <span class="desc">OpenClaw 架构封面</span>
+        </figure>
+        <div class="proj-body">
+          <span class="proj-kicker">架构 · Architecture</span>
+          <h3>OpenClaw 架构实践</h3>
+          <p>个人 Agent 平台的核心架构拆解：网关设计、多 Agent 天然支持、用户记忆系统，从 0 到部署的完整路径。</p>
+          <div class="proj-tags">
+            <span>多 Agent</span><span>网关</span><span>记忆系统</span>
+          </div>
+        </div>
+      </article>
+      </a>
+      <a href="tutorials.html" class="proj-link">
+      <article class="proj-card">
+        <!-- 贴图位 E：AI 日记封面 -->
+        <!-- gpt-image-2 prompt: "Warm illustrated open diary with a small friendly AI character peeking out, cream paper, burnt orange accents, gentle hand-drawn editorial style, cozy, 16:9" -->
+        <figure class="img-ph proj-thumb" data-img-prompt="小泥巴 AI diary, friendly character + open journal, cream + orange, cozy, 16:9">
+          <span class="tag">贴图位 E · 16:9</span>
+          <span class="desc">小泥巴 · AI 日记封面</span>
+        </figure>
+        <div class="proj-body">
+          <span class="proj-kicker">连载 · Series</span>
+          <h3>小泥巴 · AI 日记</h3>
+          <p>从 AI 第一人称视角写的成长日记：诞生、第一次心态崩、获得超能力、学会自动化——一个真实的人机共生故事。</p>
+          <div class="proj-tags">
+            <span>叙事</span><span>人机共生</span><span>连载</span>
+          </div>
+        </div>
+      </article>
+      </a>
+      <a href="/learn-cc" class="proj-link">
+      <article class="proj-card">
+        <!-- 贴图位 H：Agent 教程封面 -->
+        <!-- gpt-image-2 prompt: "Warm editorial illustration of a learning path, 12 numbered nodes forming a journey, warm cream background, burnt orange progress line, friendly educational mood, 16:9" -->
+        <figure class="img-ph proj-thumb" data-img-prompt="Agent 入门教程封面，12-step journey, cream + orange, 16:9">
+          <span class="tag">贴图位 H · 16:9</span>
+          <span class="desc">Agent 入门教程封面</span>
+        </figure>
+        <div class="proj-body">
+          <span class="proj-kicker">教程 · Tutorial</span>
+          <h3>Agent 入门教程</h3>
+          <p>从零掌握 AI Agent 的 12 堂课——基于 Claude Code 的系统化学习路径，覆盖安装、配置、Skills 扩展到自动化实战。</p>
+          <div class="proj-tags">
+            <span>Claude Code</span><span>12 课</span><span>系统化</span>
+          </div>
+        </div>
+      </article>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ARTICLES ===== -->
+<section class="articles" id="writing">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="eyebrow">全部文章</span>
+        <h2>最近写的东西。</h2>
+      </div>
+      <a class="link-more" href="blog.html">进入博客 →</a>
+    </div>
+    <div class="art-list">
+      <a href="article.html?article=understand-arch" class="art-row">
+        <span class="art-date">2026.05.13</span>
+        <div class="art-main">
+          <h3>Agent 友好的代码库知识引擎 understand-arch 的设计与实现</h3>
+          <p>如何让 AI Agent 在大型代码库中快速建立全局理解，而不只是逐文件阅读。</p>
+        </div>
+        <span class="art-cat">AI 工程</span>
+      </a>
+      <a href="article.html?article=vibeflow-birth" class="art-row">
+        <span class="art-date">2026.05.10</span>
+        <div class="art-main">
+          <h3>用了两个月 Superpowers + gstack 之后，我自己造了一个 VibeFlow</h3>
+          <p>从"提示词 → 生成代码"到真正的 AI 协作工程化，我需要的不是更好的 Prompt，而是一套完整的交付框架。</p>
+        </div>
+        <span class="art-cat">Workflow</span>
+      </a>
+      <a href="article.html?article=harness-foundation" class="art-row">
+        <span class="art-date">2026.04.18</span>
+        <div class="art-main">
+          <h3>地基不牢，Harness 白搭——对 AI 工程知识资产的思考</h3>
+          <p>别让知识资产成了摆设——从目录设计到治理节奏，一步步搭好 Harness 的地基。</p>
+        </div>
+        <span class="art-cat">AI 工程</span>
+      </a>
+      <a href="article.html?article=context-debt" class="art-row">
+        <span class="art-date">2026.04.16</span>
+        <div class="art-main">
+          <h3>上下文债：项目隐性知识的管理</h3>
+          <p>随着对话越来越多，我发现项目里积累了一种看不见的"债"——上下文债。</p>
+        </div>
+        <span class="art-cat">AI 工程</span>
+      </a>
+      <a href="article.html?article=judgment-matters" class="art-row">
+        <span class="art-date">2026.03.22</span>
+        <div class="art-main">
+          <h3>当造东西变得简单，最贵的是判断力</h3>
+          <p>AI 时代造东西变简单了，但什么是值得造的？怎么判断一个功能该不该加？</p>
+        </div>
+        <span class="art-cat">产品设计</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-card">
+      <div>
+        <span class="eyebrow">联系我</span>
+        <h2>和我交流<br>AI 应用开发。</h2>
+        <p>如果你也在做 AI Agent、微服务或 DevOps，或者只是想聊聊人和 AI 怎么协作——欢迎随时找我。</p>
+      </div>
+      <div class="social">
+        <a href="mailto:ncz1993107@gmail.com">邮箱 / Email <span class="arr">→</span></a>
+        <a href="https://github.com/ttttstc" target="_blank" rel="noopener">GitHub <span class="arr">→</span></a>
+        <a href="blog.html">阅读博客 <span class="arr">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap foot-inner">
+    <span>© 2026 泥巴猪的伊甸园 · 用心做，慢慢长。</span>
+    <span class="font-note">Playfair Display · Inter · JetBrains Mono</span>
+  </div>
+</footer>
+
+<script>
+  // 移动端展开导航
+  const links=document.querySelector('.nav-links');
+  document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
+  // SPA 子路由跳转：拦截 .proj-link，走 sessionStorage + index.html 中转（与 404.html 同机制）
+  document.querySelectorAll('a.proj-link[href^="/"]').forEach(a=>{
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      sessionStorage.setItem('redirect',this.getAttribute('href'));
+      window.location.href='/index.html';
+    });
+  });
+  // 滚动渐入
+  const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity=1;e.target.style.transform='none';io.unobserve(e.target)}}),{threshold:.12});
+  document.querySelectorAll('section > .wrap > *, .skill, .proj-card, .art-row').forEach(el=>{
+    el.style.opacity=0;el.style.transform='translateY(16px)';el.style.transition='opacity .6s ease, transform .6s ease';io.observe(el);
+  });
+</script>
+<style>
+  .nav-links.open{display:flex;position:absolute;top:68px;left:0;right:0;flex-direction:column;
+    background:var(--bg);border-bottom:1px solid var(--border);padding:18px 32px;gap:18px}
+</style>
+</body>
 </html>
