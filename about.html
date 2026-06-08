@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>关于 · 泥巴猪的伊甸园</title>
+<meta name="description" content="泥巴猪 —— AI Builder / 微服务架构师 / DevOps & CICD 领域专家。了解我的技术栈、项目作品与兴趣。" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ece4d9;
+  --surface:#f4f0ea;
+  --card:#fffbf5;
+  --fg:#4f483e;
+  --muted:#8a7d6b;
+  --border:#e2d8cb;
+  --accent:#f54001;
+  --accent-soft:#ffc198;
+  --blue:#54a2ff;
+  --shadow-card:0 8px 40px rgba(79,72,62,.08), 0 2px 20px rgba(79,72,62,.04);
+  --font-display:'Playfair Display', Georgia, 'Songti SC', serif;
+  --font-body:'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-mono:'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --wrap:860px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--fg);
+  font-family:var(--font-body);font-weight:400;line-height:1.6;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  background:url('source/pic/index-pic.jpg') fixed center/cover no-repeat;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;
+  background:linear-gradient(180deg, rgba(236,228,217,.34) 0%, rgba(236,228,217,.28) 40%, rgba(236,228,217,.40) 100%);
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 32px}
+.eyebrow{
+  font-family:var(--font-mono);font-size:12px;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--accent);
+}
+.serif{font-family:var(--font-display)}
+
+/* — nav — */
+header.nav{position:sticky;top:0;z-index:50;
+  background:color-mix(in oklab, var(--bg) 52%, transparent);
+  backdrop-filter:saturate(140%) blur(12px);
+  border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:600}
+.brand .mark{width:30px;height:30px;border-radius:8px;background:var(--accent);
+  color:#fff;display:grid;place-items:center;font-family:var(--font-display);
+  font-weight:700;font-size:17px;box-shadow:var(--shadow-card)}
+.brand b{font-family:var(--font-display);font-weight:700;font-size:18px;letter-spacing:.01em}
+.nav-links{display:flex;gap:34px;align-items:center}
+.nav-links a{font-size:14.5px;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--fg)}
+.nav-links a.active{color:var(--fg);font-weight:500}
+.nav-toggle{display:none;background:none;border:0;color:var(--fg);font-size:22px;cursor:pointer}
+
+/* — hero — */
+.about-hero{padding:96px 0 64px;text-align:center}
+.about-hero .tagline{
+  font-family:var(--font-display);font-style:italic;
+  font-size:clamp(32px,5vw,52px);color:var(--fg);font-weight:600;
+  margin:0 0 14px;line-height:1.2;
+}
+.about-hero .tagline .wave{display:inline-block;animation:wave 1.2s ease infinite;transform-origin:70% 70%}
+@keyframes wave{0%,100%{transform:rotate(0deg)}25%{transform:rotate(14deg)}75%{transform:rotate(-6deg)}}
+.about-hero .intro-tag{
+  font-family:var(--font-mono);font-size:13px;letter-spacing:.12em;
+  color:var(--muted);text-transform:uppercase;
+}
+
+/* — section — */
+section{padding:72px 0}
+section.alt{background:color-mix(in oklab, var(--surface) 60%, transparent);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.sec-label{
+  font-family:var(--font-mono);font-size:12px;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--accent);
+  margin-bottom:8px;display:block;
+}
+.sec-title{
+  font-family:var(--font-display);font-weight:700;
+  font-size:clamp(26px,3vw,36px);line-height:1.15;margin:0 0 32px;
+}
+
+/* — prose — */
+.prose{max-width:680px;margin:0 auto}
+.prose p{font-size:17px;line-height:1.9;margin:0 0 22px;color:var(--fg)}
+.prose p strong{color:var(--fg);font-weight:600}
+.prose .hl{color:var(--accent);font-weight:500}
+
+/* — current — */
+.current-card{
+  background:var(--card);border:1px solid var(--border);border-radius:18px;
+  padding:36px 40px;box-shadow:var(--shadow-card);
+}
+.current-card .icon-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.current-card .icon{width:44px;height:44px;border-radius:12px;background:var(--accent);
+  color:#fff;display:grid;place-items:center;font-size:20px;font-weight:700;
+  font-family:var(--font-display)}
+.current-card h3{font-family:var(--font-display);font-size:24px;font-weight:700;margin:0}
+.current-card p{font-size:15.5px;line-height:1.8;color:var(--muted);margin:14px 0 0}
+
+/* — tech stack — */
+.tag-cloud{display:flex;flex-wrap:wrap;gap:12px}
+.tag-cloud .tag{
+  font-family:var(--font-mono);font-size:13px;letter-spacing:.03em;
+  background:var(--card);border:1px solid var(--border);color:var(--fg);
+  padding:10px 18px;border-radius:10px;transition:.2s;
+}
+.tag-cloud .tag:hover{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+
+/* — hobbies — */
+.hobby-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:18px;
+}
+.hobby{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:28px 30px;transition:.2s;
+}
+.hobby:hover{transform:translateY(-2px);box-shadow:var(--shadow-card)}
+.hobby .emoji{font-size:32px;margin-bottom:12px;display:block}
+.hobby h4{font-family:var(--font-display);font-size:19px;font-weight:600;margin:0 0 8px}
+.hobby p{font-size:14px;color:var(--muted);line-height:1.6;margin:0}
+
+/* — blog intro — */
+.blog-blurb{background:var(--card);border:1px solid var(--border);border-radius:18px;
+  padding:40px 44px;box-shadow:var(--shadow-card)}
+.blog-blurb p{font-size:16px;line-height:1.9;color:var(--fg);margin:0}
+.blog-blurb p+p{margin-top:16px}
+
+/* — contact links — */
+.contact-links{display:flex;flex-direction:column;gap:2px}
+.contact-links a{
+  display:flex;align-items:center;gap:14px;padding:18px 20px;
+  font-family:var(--font-mono);font-size:14px;letter-spacing:.02em;
+  border-bottom:1px solid var(--border);color:var(--fg);transition:.2s;
+}
+.contact-links a:hover{background:var(--card);padding-left:28px;color:var(--accent)}
+.contact-links a .c-icon{font-size:20px;width:28px;text-align:center;flex-shrink:0}
+.contact-links a .c-label{color:var(--muted);font-size:12px;letter-spacing:.1em;text-transform:uppercase;width:56px;flex-shrink:0}
+
+/* — newsletter — */
+.newsletter{
+  background:var(--fg);color:var(--bg);border-radius:24px;
+  padding:56px 52px;text-align:center;
+}
+.newsletter .sec-label{color:var(--accent-soft)}
+.newsletter h2{
+  font-family:var(--font-display);font-weight:700;
+  font-size:clamp(28px,3.4vw,40px);line-height:1.2;margin:12px 0 18px;
+  color:var(--card);
+}
+.newsletter p{font-size:16px;color:color-mix(in oklab,var(--bg) 72%,transparent);
+  max-width:440px;margin:0 auto 28px;line-height:1.7}
+.newsletter .sub-form{display:flex;gap:12px;max-width:460px;margin:0 auto}
+.newsletter .sub-form input{
+  flex:1;padding:14px 20px;border-radius:12px;border:1px solid color-mix(in oklab,var(--bg) 32%,transparent);
+  background:color-mix(in oklab,var(--bg) 12%,transparent);color:var(--card);
+  font-family:var(--font-body);font-size:15px;outline:none;
+}
+.newsletter .sub-form input::placeholder{color:color-mix(in oklab,var(--bg) 48%,transparent)}
+.newsletter .sub-form input:focus{border-color:var(--accent-soft)}
+.newsletter .sub-form button{
+  padding:14px 28px;border-radius:12px;border:0;
+  background:var(--accent);color:#fff;font-family:var(--font-body);
+  font-size:15px;font-weight:500;cursor:pointer;
+  box-shadow:0 6px 22px rgba(245,64,1,.28);transition:.2s;
+}
+.newsletter .sub-form button:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(245,64,1,.36)}
+
+/* — footer — */
+footer{padding:44px 0}
+.foot-inner{display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted)}
+
+/* — responsive — */
+@media(max-width:680px){
+  .hobby-grid{grid-template-columns:1fr}
+  .newsletter{padding:40px 28px}
+  .newsletter .sub-form{flex-direction:column}
+  .contact-links a{gap:12px;font-size:13px;padding:16px 14px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="home.html">
+      <span class="mark">泥</span><b>泥巴猪的伊甸园</b>
+    </a>
+    <nav class="nav-links">
+      <a href="home.html">首页</a>
+      <a href="about.html" class="active">关于我</a>
+      <a href="portfolio.html">作品集</a>
+      <a href="blog.html">博客</a>
+      <a href="toolbox.html">工具箱</a>
+      <a href="tutorials.html">教程</a>
+    </nav>
+    <button class="nav-toggle" aria-label="菜单" onclick="document.querySelector('.nav-links').classList.toggle('open')">≡</button>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="about-hero">
+  <div class="wrap">
+    <p class="tagline">保持温暖，保持好奇<span class="wave">👋</span></p>
+    <p class="intro-tag">AI Builder · 微服务架构师 · DevOps & CICD</p>
+  </div>
+</section>
+
+<!-- ===== 个人简介 ===== -->
+<section>
+  <div class="wrap">
+    <span class="sec-label">关于我</span>
+    <h2 class="sec-title">近 8 年后端架构，<br>现在转向 AI Builder。</h2>
+    <div class="prose">
+      <p>近 8 年的工作经历让我积累了丰富的后端开发和架构经验，专注于构建<strong>高性能、高并发、高稳定性</strong>的云服务系统。最近重点关注 <span class="hl">AI Agent</span>、<span class="hl">Workflow</span>、<span class="hl">Harness 框架</span> 等 AI 工程落地方向的探索。</p>
+      <p>我搭建了个人 Agent 平台 OpenClaw，也设计了 <span class="hl">VibeFlow 交付框架</span>——让 AI 从「随机开写」变成「Think → Plan → Build → Ship 走完闭环」。</p>
+      <p>主攻后端和架构，但也具备全栈能力。业余时间喜欢折腾有趣的事情——比如把这个伊甸园从想法变成你现在看到的样子。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 目前在做的事 ===== -->
+<section class="alt">
+  <div class="wrap">
+    <span class="sec-label">目前在做什么</span>
+    <h2 class="sec-title">持续打磨交付。<br>让 AI Agent 真正可落地。</h2>
+    <div class="current-card">
+      <div class="icon-row">
+        <span class="icon">田</span>
+        <h3>泥巴猪的伊甸园</h3>
+      </div>
+      <p>这里是我的数字花园。记录了三样东西：OpenClaw Agent 平台的架构演进、VibeFlow 结构化交付框架的迭代、以及「小泥巴」——一个 AI 从零开始认识世界的成长日记。希望通过这些真实的记录，让更多工程师看到人机协作的可行路径，也帮你少踩一些坑。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 技术栈 ===== -->
+<section>
+  <div class="wrap">
+    <span class="sec-label">技术栈</span>
+    <h2 class="sec-title">动手干过的，<br>不是简历上的关键词。</h2>
+    <div class="tag-cloud">
+      <span class="tag">Java</span>
+      <span class="tag">Spring Boot</span>
+      <span class="tag">Python</span>
+      <span class="tag">CI/CD</span>
+      <span class="tag">GitHub Actions</span>
+      <span class="tag">Docker &amp; K8s</span>
+      <span class="tag">Agent 架构</span>
+      <span class="tag">Workflow</span>
+      <span class="tag">Harness 框架</span>
+      <span class="tag">OpenTelemetry</span>
+      <span class="tag">多 Agent 编排</span>
+      <span class="tag">RAG</span>
+      <span class="tag">MCP</span>
+      <span class="tag">Claude Code</span>
+      <span class="tag">微服务架构</span>
+      <span class="tag">平台工程</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 兴趣爱好 ===== -->
+<section class="alt">
+  <div class="wrap">
+    <span class="sec-label">工作之外</span>
+    <h2 class="sec-title">几件让我切回<br>「人脑」的事。</h2>
+    <div class="hobby-grid">
+      <div class="hobby">
+        <span class="emoji">🏗️</span>
+        <h4>拆解与重建系统</h4>
+        <p>对架构有洁癖。看到一个好的系统设计能盯着看很久，看到烂的就想动手重构。</p>
+      </div>
+      <div class="hobby">
+        <span class="emoji">✍️</span>
+        <h4>写作 / 输出</h4>
+        <p>通过写作来整理思路。写给自己看的技术笔记、写给同行看的经验分享，以及写不下去时硬逼自己输出的那种。</p>
+      </div>
+      <div class="hobby">
+        <span class="emoji">🔧</span>
+        <h4>工具锻造</h4>
+        <p>喜欢打磨趁手的工具——从命令行脚本、自动化流水线到 Agent 的 Tool/Skill 设计，享受"把重复劳动消灭掉"的成就感。</p>
+      </div>
+      <div class="hobby">
+        <span class="emoji">📚</span>
+        <h4>持续学习</h4>
+        <p>跟踪最新的 AI 产品和模型，体验各种 AI Coding 工具，保持对新技术的好奇和敏感。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 关于博客 ===== -->
+<section>
+  <div class="wrap">
+    <span class="sec-label">关于这个博客</span>
+    <h2 class="sec-title">一个数字花园，<br>不是内容流水线。</h2>
+    <div class="blog-blurb">
+      <p>这里是我的数字花园，主要记录在 AI 领域的学习和实践。你会看到关于 <span class="hl">AI 工程化落地实践</span>、<span class="hl">AI Agent 设计模式</span>、Harness 架构的深度文章，也会看到我对各种 AI Coding 工具（如 Claude Code、Codex、OpenClaw）的使用体验，以及对最新 AI 产品和模型的评测。</p>
+      <p>除了技术内容，你也能找到我的阅读笔记和一些思考随笔。我相信<span class="hl">写作是最好的学习方式</span>，通过输出来倒逼输入，通过分享来深化理解。希望这些内容对你有所帮助，也欢迎通过下面的方式与我交流。</p>
+      <p>这个博客也是我的求职作品集。希望这些内容能帮你了解我的技术品味和做事方式。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 联系方式 ===== -->
+<section class="alt">
+  <div class="wrap">
+    <span class="sec-label">联系方式</span>
+    <h2 class="sec-title">来交流。</h2>
+    <div class="contact-links">
+      <a href="mailto:ncz1993107@gmail.com">
+        <span class="c-icon">📧</span>
+        <span class="c-label">邮件</span>
+        <span>ncz1993107@gmail.com</span>
+      </a>
+      <a href="https://github.com/ttttstc" target="_blank" rel="noopener">
+        <span class="c-icon">⌨</span>
+        <span class="c-label">GitHub</span>
+        <span>@ttttstc</span>
+      </a>
+      <a href="blog.html">
+        <span class="c-icon">📝</span>
+        <span class="c-label">博客</span>
+        <span>阅读文章</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Newsletter ===== -->
+<section>
+  <div class="wrap">
+    <div class="newsletter">
+      <span class="sec-label">📬 保持联系</span>
+      <h2>不定期更新。<br>实验进展、新文章、想法。</h2>
+      <p>如果你想关注这个伊甸园的持续建设——从 Agent 架构到工程化交付的第一手实践笔记——欢迎留下邮箱（不定期推送，不打扰）。</p>
+      <form class="sub-form" onsubmit="event.preventDefault();alert('感谢订阅！后续上线时会通知你。')">
+        <input type="email" placeholder="你的邮箱地址" required />
+        <button type="submit">订阅更新</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap foot-inner">
+    <span>© 2026 泥巴猪的伊甸园 · 用心做，慢慢长。</span>
+    <a href="home.html" style="color:var(--accent)">← 回首页</a>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('a[href^="/"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    sessionStorage.setItem('redirect',this.getAttribute('href'));
+    window.location.href='/index.html';
+  });
+});
+</script>
+</body>
+</html>

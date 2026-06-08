@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>文章 · 泥巴猪的伊甸园</title>
+<meta name="description" content="OpenClaw 的优势不在技术难度，而在共识的推广与对多 Agent 的天然支持。" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ece4d9;--surface:#f4f0ea;--card:#fffbf5;--fg:#4f483e;--muted:#8a7d6b;
+  --border:#e2d8cb;--accent:#f54001;--accent-soft:#ffc198;--blue:#54a2ff;
+  --shadow-card:0 8px 40px rgba(79,72,62,.08), 0 2px 20px rgba(79,72,62,.04);
+  --font-display:'Playfair Display', Georgia, 'Songti SC', serif;
+  --font-body:'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --measure:720px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);
+  line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+.eyebrow{font-family:var(--font-mono);font-size:12px;font-weight:500;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--accent)}
+
+/* reading progress bar */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent);z-index:60;transition:width .1s}
+
+/* nav */
+header.nav{position:sticky;top:0;z-index:50;background:color-mix(in oklab,var(--bg) 88%,transparent);
+  backdrop-filter:saturate(140%) blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1180px;margin:0 auto;padding:0 32px;display:flex;align-items:center;
+  justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:600}
+.brand .mark{width:28px;height:28px;border-radius:8px;background:var(--accent);color:#fff;
+  display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:16px}
+.brand b{font-family:var(--font-display);font-weight:700;font-size:17px}
+.nav-back{font-family:var(--font-mono);font-size:13px;color:var(--muted);transition:.2s}
+.nav-back:hover{color:var(--accent)}
+.nav-links{display:flex;gap:34px;align-items:center}
+.nav-links a{font-size:14.5px;color:var(--muted);transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--fg)}
+.nav-toggle{display:none;background:none;border:0;color:var(--fg);font-size:22px;cursor:pointer}
+
+/* article frame */
+.measure{max-width:var(--measure);margin:0 auto;padding:0 28px}
+article{padding:56px 0 40px}
+.art-head .meta{font-family:var(--font-mono);font-size:13px;color:var(--muted);
+  display:flex;gap:16px;flex-wrap:wrap;margin:16px 0 0}
+.art-head h1{font-family:var(--font-display);font-weight:800;font-size:clamp(34px,5vw,52px);
+  line-height:1.12;letter-spacing:-.012em;margin:18px 0 0;text-wrap:balance}
+.art-head .standfirst{font-size:20px;line-height:1.65;color:var(--muted);
+  font-family:var(--font-display);font-style:italic;margin:24px 0 0;text-wrap:pretty}
+.byline{display:flex;align-items:center;gap:14px;margin:30px 0 0;
+  padding:18px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.byline .av{width:42px;height:42px;border-radius:50%;background:var(--accent);color:#fff;
+  display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:18px}
+.byline .who{font-size:14px;font-weight:500}
+.byline .who span{display:block;font-family:var(--font-mono);font-size:11.5px;
+  color:var(--muted);font-weight:400;margin-top:2px}
+
+/* hero image */
+.art-hero{margin:38px 0 8px}
+.img-ph{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;text-align:center;background:
+    repeating-linear-gradient(45deg,transparent,transparent 11px,rgba(138,125,107,.05) 11px,rgba(138,125,107,.05) 12px),var(--card);
+  border:1.5px dashed var(--border);border-radius:14px;color:var(--muted);padding:22px;min-height:300px}
+.img-ph .tag{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);background:#fff;border:1px solid var(--border);padding:3px 9px;border-radius:999px}
+.img-ph .desc{font-size:13px;line-height:1.5;max-width:80%}
+figure.fig{margin:36px 0}
+figure.fig figcaption{font-family:var(--font-mono);font-size:12px;color:var(--muted);
+  text-align:center;margin-top:12px}
+
+/* prose */
+.prose{font-size:18px;line-height:1.85;color:var(--fg)}
+.prose > p{margin:26px 0}
+.prose h2{font-family:var(--font-display);font-weight:700;font-size:30px;line-height:1.2;
+  margin:52px 0 4px;letter-spacing:-.01em}
+.prose h2 + p{margin-top:14px}
+.prose h3{font-family:var(--font-display);font-weight:600;font-size:23px;margin:40px 0 0}
+.prose h3 + p{margin-top:12px}
+.prose strong{font-weight:600;color:var(--fg)}
+.prose em{font-family:var(--font-display);font-style:italic}
+.prose a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;
+  text-decoration-color:var(--accent-soft)}
+.prose ul,.prose ol{padding-left:24px;margin:24px 0}
+.prose li{margin:10px 0}
+.prose li::marker{color:var(--accent)}
+.prose hr{border:0;border-top:1px solid var(--border);margin:48px 0}
+
+blockquote{margin:40px 0;padding:6px 0 6px 30px;border-left:3px solid var(--accent);
+  font-family:var(--font-display);font-style:italic;font-size:24px;line-height:1.5;color:var(--fg)}
+blockquote cite{display:block;font-family:var(--font-mono);font-style:normal;font-size:13px;
+  color:var(--muted);margin-top:14px}
+
+.prose code{font-family:var(--font-mono);font-size:.86em;background:var(--surface);
+  border:1px solid var(--border);border-radius:6px;padding:2px 7px;color:var(--accent)}
+pre{background:#2c2620;color:#f4f0ea;border-radius:14px;padding:24px 26px;overflow-x:auto;
+  margin:34px 0;font-family:var(--font-mono);font-size:14px;line-height:1.7;box-shadow:var(--shadow-card)}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:14px}
+.pre-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin:34px 0 -22px;display:block}
+
+.callout{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:24px 26px;margin:36px 0;display:flex;gap:16px;align-items:flex-start}
+.callout .bar{width:4px;align-self:stretch;border-radius:99px;background:var(--accent)}
+.callout p{margin:0;font-size:15.5px;line-height:1.7;color:var(--muted)}
+.callout strong{color:var(--fg)}
+
+/* markdown rendered elements */
+.md-content img{max-width:100%;border-radius:12px;margin:24px 0;box-shadow:var(--shadow-card);cursor:zoom-in;transition:transform .3s}
+.md-content img:hover{transform:scale(1.015)}
+.md-content img[data-err]{border:1.5px dashed var(--border);background:var(--surface);min-height:120px;object-fit:contain}
+
+/* lightbox */
+.lightbox{position:fixed;inset:0;z-index:200;background:rgba(79,72,62,.82);
+  backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;
+  cursor:zoom-out;opacity:0;pointer-events:none;transition:opacity .25s}
+.lightbox.open{opacity:1;pointer-events:auto}
+.lightbox img{max-width:92vw;max-height:90vh;border-radius:10px;box-shadow:0 24px 80px rgba(0,0,0,.35)}
+.md-content table{width:100%;border-collapse:collapse;margin:24px 0;font-size:15px}
+.md-content th,.md-content td{border:1px solid var(--border);padding:10px 14px;text-align:left}
+.md-content th{background:var(--surface);font-weight:600;font-family:var(--font-mono);font-size:13px;letter-spacing:.03em}
+
+/* loading & error */
+.loading-state{text-align:center;padding:100px 24px;color:var(--muted)}
+.loading-state .spinner{display:inline-block;width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:18px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error-state{text-align:center;padding:100px 24px;color:var(--muted)}
+.error-state .err-icon{font-size:40px;margin-bottom:16px}
+.error-state .err-msg{font-size:16px;margin:0 0 20px}
+.error-state a{color:var(--accent);font-family:var(--font-mono);font-size:14px}
+
+/* tags + share footer */
+.art-foot{max-width:var(--measure);margin:48px auto 0;padding:36px 28px 0;border-top:1px solid var(--border)}
+.tags{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:34px}
+.tags span{font-family:var(--font-mono);font-size:12px;color:var(--fg);background:var(--card);
+  border:1px solid var(--border);padding:6px 13px;border-radius:999px}
+
+/* next / prev */
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:8px 0 0}
+.pager a{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;
+  transition:.2s}
+.pager a:hover{box-shadow:var(--shadow-card);transform:translateY(-2px);border-color:var(--accent-soft)}
+.pager .lab{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.pager h4{font-family:var(--font-display);font-weight:600;font-size:17px;margin:10px 0 0;line-height:1.3}
+.pager .next{text-align:right}
+
+footer{padding:48px 0;border-top:1px solid var(--border);margin-top:64px}
+.foot-inner{max-width:1180px;margin:0 auto;padding:0 32px;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:13.5px}
+.foot-inner .font-note{font-family:var(--font-mono);font-size:11.5px}
+
+@media(max-width:880px){.nav-links{display:none}}
+@media(max-width:560px){
+  .measure{padding:0 22px}
+  .prose{font-size:17px}
+  .pager{grid-template-columns:1fr}
+  .pager .next{text-align:left}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="home.html"><span class="mark">泥</span><b>泥巴猪的伊甸园</b></a>
+    <nav class="nav-links">
+      <a href="home.html">首页</a>
+      <a href="about.html">关于我</a>
+      <a href="portfolio.html">作品集</a>
+      <a href="blog.html" class="active">博客</a>
+      <a href="toolbox.html">工具箱</a>
+      <a href="tutorials.html">教程</a>
+    </nav>
+    <button class="nav-toggle" aria-label="菜单" onclick="document.querySelector('.nav-links').classList.toggle('open')">≡</button>
+  </div>
+</header>
+
+<article>
+  <div class="measure art-head">
+    <span class="eyebrow" id="art-cat"></span>
+    <h1 id="art-title"></h1>
+    <p class="standfirst" id="art-standfirst" style="display:none"></p>
+    <div class="meta">
+      <span id="art-date"></span><span id="art-read"></span>
+    </div>
+    <div class="byline">
+      <span class="av">泥</span>
+      <div class="who">泥巴猪
+        <span>AI Builder · 微服务架构 · DevOps</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="measure prose md-content" id="art-body">
+    <div class="loading-state" id="art-loading">
+      <div class="spinner"></div>
+      <p>正在加载文章…</p>
+    </div>
+    <div class="error-state" id="art-error" style="display:none">
+      <p class="err-icon">📄</p>
+      <p class="err-msg">文章加载失败，可能是文件路径有误。</p>
+      <a href="blog.html">← 返回博客</a>
+    </div>
+  </div>
+
+  <div class="art-foot">
+    <div class="tags" id="art-tags"></div>
+    <div class="pager" id="art-pager"></div>
+  </div>
+</article>
+
+<footer>
+  <div class="foot-inner">
+    <span>© 2026 泥巴猪的伊甸园 · 用心做，慢慢长。</span>
+    <span class="font-note">Playfair Display · Inter · JetBrains Mono</span>
+  </div>
+</footer>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox"><img id="lightbox-img" src="" alt=""></div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+(function(){
+  // article data — same as blog.html
+  var articles = [
+    {slug:'understand-arch', title:'Agent 友好的代码库知识引擎 understand-arch 的设计与实现', date:'2026-06-06', read:'约 16 分钟', cat:'AI 工程能力', catSlug:'ai-eng', file:'source/blog/ai-engineering/Agent友好的代码库知识引擎understand-arch 的设计与实现.md', tags:['AI Agent','知识工程','Claude Code']},
+    {slug:'harness-foundation', title:'地基不牢，Harness 白搭：对 AI 工程知识资产的思考', date:'2026-06-01', read:'约 14 分钟', cat:'AI 工程能力', catSlug:'ai-eng', file:'source/blog/ai-engineering/地基不牢,Harness 白搭 对AI工程知识资产的思考.md', tags:['AI 工程','Harness','知识资产']},
+    {slug:'context-debt', title:'上下文债：项目隐性知识的管理', date:'2026-05-27', read:'约 20 分钟', cat:'AI 工程能力', catSlug:'ai-eng', file:'source/blog/ai-engineering/上下文债：项目隐性知识的管理.md', tags:['上下文债','知识管理','AI 工程']},
+    {slug:'judgment-matters', title:'当造东西变得简单，最贵的是判断力', date:'2026-05-18', read:'约 12 分钟', cat:'产品设计', catSlug:'product', file:'source/blog/design/当造东西变得简单，最贵的是判断力.md', tags:['产品设计','Anthropic','判断力']},
+    {slug:'vibeflow-birth', title:'用了两个月 Superpowers + gstack 之后，我自己造了一个 VibeFlow', date:'2026-05-11', read:'约 18 分钟', cat:'Workflow', catSlug:'workflow', file:'source/blog/workflow/用了两个月 Superpowers + gstack 之后，我自己造了一个 VibeFlow.md', tags:['VibeFlow','Workflow','Claude Code']}
+  ];
+
+  var slugMap = {}; articles.forEach(function(a){ slugMap[a.slug]=a; });
+  var slugList = articles.map(function(a){ return a.slug; });
+
+  // reading progress
+  var bar = document.getElementById('progress');
+  var onScroll = function(){var h=document.documentElement;
+    var p=h.scrollTop/(h.scrollHeight-h.clientHeight); bar.style.width=(p*100)+'%';};
+  document.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  // SPA route redirect
+  document.querySelectorAll('a[href^="/"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      sessionStorage.setItem('redirect',this.getAttribute('href'));
+      window.location.href='/index.html';
+    });
+  });
+
+  // custom renderer for images — lazy load + lightbox + error fallback
+  var renderer = new marked.Renderer();
+  renderer.image = function(href, title, text) {
+    var src = typeof href === 'object' ? href.href : href;
+    var alt = typeof text === 'string' ? text : (typeof href === 'object' ? href.text : text);
+    var t = typeof title === 'string' ? title : (typeof href === 'object' ? href.title : title);
+    var titleAttr = t ? ' title="'+t+'"' : '';
+    return '<img src="'+src+'" alt="'+alt+'"'+titleAttr+' loading="lazy" onclick="openLightbox(this)" onerror="imgFallback(this)">';
+  };
+  marked.setOptions({renderer: renderer});
+
+  // lightbox
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lightbox-img');
+  window.openLightbox = function(img){ lbImg.src=img.src; lb.classList.add('open'); };
+  lb.addEventListener('click',function(){ lb.classList.remove('open'); lbImg.src=''; });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') lb.click(); });
+
+  // image error fallback
+  window.imgFallback = function(img){
+    if(img.dataset.err) return;
+    img.dataset.err='1';
+    img.style.minHeight='120px';
+    img.alt='[图片加载失败] '+img.alt;
+  };
+
+  // load article
+  var params = new URLSearchParams(window.location.search);
+  var slug = params.get('article');
+  var art = slugMap[slug];
+
+  if(!art){
+    document.getElementById('art-loading').style.display='none';
+    document.getElementById('art-error').style.display='';
+    return;
+  }
+
+  // set metadata
+  document.title = art.title + ' · 泥巴猪的伊甸园';
+  document.getElementById('art-cat').textContent = art.cat;
+  document.getElementById('art-title').textContent = art.title;
+  document.getElementById('art-date').textContent = art.date.replace(/-/g,'·');
+  document.getElementById('art-read').textContent = art.read;
+
+  // tags
+  var tagsEl = document.getElementById('art-tags');
+  art.tags.forEach(function(t){ var s=document.createElement('span'); s.textContent=t; tagsEl.appendChild(s); });
+
+  // prev/next pager
+  var idx = slugList.indexOf(slug);
+  var pager = document.getElementById('art-pager');
+  if(idx > 0){
+    var prev = slugMap[slugList[idx-1]];
+    pager.innerHTML += '<a class="prev" href="article.html?article='+prev.slug+'"><div class="lab">← 上一篇</div><h4>'+prev.title+'</h4></a>';
+  }
+  if(idx < slugList.length-1){
+    var next = slugMap[slugList[idx+1]];
+    var nextHtml = '<a class="next" href="article.html?article='+next.slug+'"><div class="lab">下一篇 →</div><h4>'+next.title+'</h4></a>';
+    pager.innerHTML += nextHtml;
+  }
+
+  // fetch and render markdown
+  var bodyEl = document.getElementById('art-body');
+  var loadingEl = document.getElementById('art-loading');
+  var errorEl = document.getElementById('art-error');
+
+  fetch(art.file).then(function(r){
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return r.text();
+  }).then(function(md){
+    var html = marked.parse(md);
+    loadingEl.style.display='none';
+    bodyEl.innerHTML = html;
+  }).catch(function(){
+    loadingEl.style.display='none';
+    errorEl.style.display='';
+  });
+})();
+</script>
+</body>
+</html>

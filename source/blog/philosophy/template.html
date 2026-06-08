@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>玩转 OpenClaw：核心架构、运作原理与 Agent 部署 · 泥巴猪的实验田</title>
+<meta name="description" content="OpenClaw 的优势不在技术难度，而在共识的推广与对多 Agent 的天然支持。" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ece4d9;--surface:#f4f0ea;--card:#fffbf5;--fg:#4f483e;--muted:#8a7d6b;
+  --border:#e2d8cb;--accent:#f54001;--accent-soft:#ffc198;--blue:#54a2ff;
+  --shadow-card:0 8px 40px rgba(79,72,62,.08), 0 2px 20px rgba(79,72,62,.04);
+  --font-display:'Playfair Display', Georgia, 'Songti SC', serif;
+  --font-body:'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --measure:720px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);
+  line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+.eyebrow{font-family:var(--font-mono);font-size:12px;font-weight:500;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--accent)}
+
+/* reading progress bar */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent);z-index:60;transition:width .1s}
+
+/* nav */
+header.nav{position:sticky;top:0;z-index:50;background:color-mix(in oklab,var(--bg) 88%,transparent);
+  backdrop-filter:saturate(140%) blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1180px;margin:0 auto;padding:0 32px;display:flex;align-items:center;
+  justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:600}
+.brand .mark{width:28px;height:28px;border-radius:8px;background:var(--accent);color:#fff;
+  display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:16px}
+.brand b{font-family:var(--font-display);font-weight:700;font-size:17px}
+.nav-back{font-family:var(--font-mono);font-size:13px;color:var(--muted);transition:.2s}
+.nav-back:hover{color:var(--accent)}
+
+/* article frame */
+.measure{max-width:var(--measure);margin:0 auto;padding:0 28px}
+article{padding:56px 0 40px}
+.art-head .meta{font-family:var(--font-mono);font-size:13px;color:var(--muted);
+  display:flex;gap:16px;flex-wrap:wrap;margin:16px 0 0}
+.art-head h1{font-family:var(--font-display);font-weight:800;font-size:clamp(34px,5vw,52px);
+  line-height:1.12;letter-spacing:-.012em;margin:18px 0 0;text-wrap:balance}
+.art-head .standfirst{font-size:20px;line-height:1.65;color:var(--muted);
+  font-family:var(--font-display);font-style:italic;margin:24px 0 0;text-wrap:pretty}
+.byline{display:flex;align-items:center;gap:14px;margin:30px 0 0;
+  padding:18px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.byline .av{width:42px;height:42px;border-radius:50%;background:var(--accent);color:#fff;
+  display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:18px}
+.byline .who{font-size:14px;font-weight:500}
+.byline .who span{display:block;font-family:var(--font-mono);font-size:11.5px;
+  color:var(--muted);font-weight:400;margin-top:2px}
+
+/* hero image */
+.art-hero{margin:38px 0 8px}
+.img-ph{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;text-align:center;background:
+    repeating-linear-gradient(45deg,transparent,transparent 11px,rgba(138,125,107,.05) 11px,rgba(138,125,107,.05) 12px),var(--card);
+  border:1.5px dashed var(--border);border-radius:14px;color:var(--muted);padding:22px;min-height:300px}
+.img-ph .tag{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);background:#fff;border:1px solid var(--border);padding:3px 9px;border-radius:999px}
+.img-ph .desc{font-size:13px;line-height:1.5;max-width:80%}
+figure.fig{margin:36px 0}
+figure.fig figcaption{font-family:var(--font-mono);font-size:12px;color:var(--muted);
+  text-align:center;margin-top:12px}
+
+/* prose */
+.prose{font-size:18px;line-height:1.85;color:var(--fg)}
+.prose > p{margin:26px 0}
+.prose h2{font-family:var(--font-display);font-weight:700;font-size:30px;line-height:1.2;
+  margin:52px 0 4px;letter-spacing:-.01em}
+.prose h2 + p{margin-top:14px}
+.prose h3{font-family:var(--font-display);font-weight:600;font-size:23px;margin:40px 0 0}
+.prose h3 + p{margin-top:12px}
+.prose strong{font-weight:600;color:var(--fg)}
+.prose em{font-family:var(--font-display);font-style:italic}
+.prose a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;
+  text-decoration-color:var(--accent-soft)}
+.prose ul,.prose ol{padding-left:24px;margin:24px 0}
+.prose li{margin:10px 0}
+.prose li::marker{color:var(--accent)}
+.prose hr{border:0;border-top:1px solid var(--border);margin:48px 0}
+
+blockquote{margin:40px 0;padding:6px 0 6px 30px;border-left:3px solid var(--accent);
+  font-family:var(--font-display);font-style:italic;font-size:24px;line-height:1.5;color:var(--fg)}
+blockquote cite{display:block;font-family:var(--font-mono);font-style:normal;font-size:13px;
+  color:var(--muted);margin-top:14px}
+
+.prose code{font-family:var(--font-mono);font-size:.86em;background:var(--surface);
+  border:1px solid var(--border);border-radius:6px;padding:2px 7px;color:var(--accent)}
+pre{background:#2c2620;color:#f4f0ea;border-radius:14px;padding:24px 26px;overflow-x:auto;
+  margin:34px 0;font-family:var(--font-mono);font-size:14px;line-height:1.7;box-shadow:var(--shadow-card)}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:14px}
+.pre-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin:34px 0 -22px;display:block}
+
+.callout{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:24px 26px;margin:36px 0;display:flex;gap:16px;align-items:flex-start}
+.callout .bar{width:4px;align-self:stretch;border-radius:99px;background:var(--accent)}
+.callout p{margin:0;font-size:15.5px;line-height:1.7;color:var(--muted)}
+.callout strong{color:var(--fg)}
+
+/* tags + share footer */
+.art-foot{max-width:var(--measure);margin:48px auto 0;padding:36px 28px 0;border-top:1px solid var(--border)}
+.tags{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:34px}
+.tags span{font-family:var(--font-mono);font-size:12px;color:var(--fg);background:var(--card);
+  border:1px solid var(--border);padding:6px 13px;border-radius:999px}
+
+/* next / prev */
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:8px 0 0}
+.pager a{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;
+  transition:.2s}
+.pager a:hover{box-shadow:var(--shadow-card);transform:translateY(-2px);border-color:var(--accent-soft)}
+.pager .lab{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.pager h4{font-family:var(--font-display);font-weight:600;font-size:17px;margin:10px 0 0;line-height:1.3}
+.pager .next{text-align:right}
+
+footer{padding:48px 0;border-top:1px solid var(--border);margin-top:64px}
+.foot-inner{max-width:1180px;margin:0 auto;padding:0 32px;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:13.5px}
+.foot-inner .font-note{font-family:var(--font-mono);font-size:11.5px}
+
+@media(max-width:560px){
+  .measure{padding:0 22px}
+  .prose{font-size:17px}
+  .pager{grid-template-columns:1fr}
+  .pager .next{text-align:left}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="home.html"><span class="mark">泥</span><b>泥巴猪的实验田</b></a>
+    <a class="nav-back" href="blog.html">← 返回博客</a>
+  </div>
+</header>
+
+<article>
+  <div class="measure art-head">
+    <span class="eyebrow">技术架构</span>
+    <h1>玩转 OpenClaw：核心架构、运作原理与 Agent 部署</h1>
+    <p class="standfirst">它的优势从来不在技术难度，而在「共识的推广」，以及对多 Agent 的天然支持。</p>
+    <div class="meta">
+      <span>2026·03·09</span><span>约 18 分钟阅读</span><span>来源 · 实验田原创</span>
+    </div>
+    <div class="byline">
+      <span class="av">泥</span>
+      <div class="who">泥巴猪
+        <span>AI Builder · 微服务架构 · DevOps</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="measure art-hero">
+    <!-- 贴图位 H：文章头图 -->
+    <!-- gpt-image-2 prompt: "Wide hero illustration of OpenClaw layered architecture, gateway routing to multiple agent nodes with a shared memory store, warm cream #fffbf5 background, burnt orange #f54001 highlights, soft editorial technical drawing, no text, 3:2" -->
+    <figure class="img-ph" data-img-prompt="OpenClaw architecture hero, gateway + multi-agent + memory, cream + orange, 3:2">
+      <span class="tag">贴图位 H · 3:2</span>
+      <span class="desc">文章头图 · OpenClaw 整体架构示意</span>
+    </figure>
+  </div>
+
+  <div class="measure prose">
+    <p>OpenClaw 的技术难度，大概类似 AI Coding 诞生前「具备初级推荐算法的前后端通信 App」。做过几年开发的同学都知道，这其实并不难——所以技术框架并不是 OpenClaw 的亮点。</p>
+
+    <h2>OpenClaw 到底有什么不同？</h2>
+
+    <h3>1. 技术不复杂，优势在于共识的推广</h3>
+    <p>在没有 OpenClaw 之前，我们基本人手一个自己搭建的 Agent，像我之前搭建的 <strong>L1~L5 五层架构 Agent</strong>。每次跟朋友交流之前，都要先介绍一遍各自 Agent 的架构，然后才能聊具体的落地 Case。</p>
+    <p>OpenClaw 把 Agent 架构推广开来之后，我们基于它搭建个人 Agent，就不用再解释「架构是什么」了。能直接聊的，是更有价值的问题：怎么保活、怎么替换 RAG 算法库、怎么部署多 Agent、怎么复用 good case。</p>
+
+    <blockquote>
+      把架构变成共识，省下的不是代码，是沟通。
+      <cite>—— 泥巴猪</cite>
+    </blockquote>
+
+    <h3>2. 多 Agent 的天然支持</h3>
+    <p>熟悉 LLM 底层原理的同学都知道，LLM <em>成也 transformer，卡脖子也在 transformer</em>。Context 的瓶颈，严格约束了单 Agent 智能的发挥。</p>
+    <p>传统 Prompt 定义 Agent 身份，再加上层出不穷的 skills，正一步步蚕食 LLM 的 Context 窗口。为了更好地使用 LLM，<strong>专事专做</strong>几乎已经成了共识。</p>
+
+    <div class="callout">
+      <span class="bar"></span>
+      <p><strong>一句话总结：</strong>单 Agent 受限于 Context，多 Agent 才是出路。OpenClaw 的价值，在于把「多 Agent 协作」从一种奢侈品变成了默认配置。</p>
+    </div>
+
+    <h2>核心运作原理</h2>
+    <p>从请求进入到任务完成，OpenClaw 大致经过三层：网关层负责路由与隔离，Agent 层负责专事专做，记忆层负责跨对话的连续性。下面是一个最小化的部署示意：</p>
+
+    <span class="pre-label">deploy · 最小化部署</span>
+    <pre><code>$ openclaw init my-agent
+$ openclaw skill add memory web-search scheduler
+$ openclaw deploy --agents 3 --gateway on
+  ✓ gateway   listening :8080
+  ✓ agent-01  role=architect
+  ✓ agent-02  role=coder
+  ✓ agent-03  role=reviewer</code></pre>
+
+    <p>三个 Agent 各司其职：一个负责架构决策，一个负责写代码，一个负责审查。它们共享同一套记忆，却不共享 Context——这正是绕开 transformer 瓶颈的关键。</p>
+
+    <h3>部署清单</h3>
+    <ul>
+      <li>确定 Agent 角色边界，<strong>一个 Agent 一件事</strong>；</li>
+      <li>配置网关路由规则，把请求分发到对应角色；</li>
+      <li>接入记忆系统，让跨对话的上下文可持久；</li>
+      <li>用 good case 反哺，持续替换与优化 skills。</li>
+    </ul>
+
+    <hr>
+
+    <p>这篇先讲到这里。后面我会单独写一篇，拆解 <a href="article.html">网关层如何在多 Agent 之间做调度与隔离</a>，以及记忆系统的具体实现。这片实验田里的东西都还在长，欢迎一起折腾。</p>
+  </div>
+
+  <div class="art-foot">
+    <div class="tags">
+      <span>OpenClaw</span><span>AI Agent</span><span>多 Agent</span><span>架构</span><span>DevOps</span>
+    </div>
+    <div class="pager">
+      <a class="prev" href="article.html">
+        <div class="lab">← 上一篇</div>
+        <h4>OpenClaw 网关架构解析</h4>
+      </a>
+      <a class="next" href="article.html">
+        <div class="lab">下一篇 →</div>
+        <h4>VibeFlow：让 AI 按工程纪律交付</h4>
+      </a>
+    </div>
+  </div>
+</article>
+
+<footer>
+  <div class="foot-inner">
+    <span>© 2026 泥巴猪的实验田 · 用心做，慢慢长。</span>
+    <span class="font-note">Playfair Display · Inter · JetBrains Mono</span>
+  </div>
+</footer>
+
+<script>
+  const bar=document.getElementById('progress');
+  const onScroll=()=>{const h=document.documentElement;
+    const p=h.scrollTop/(h.scrollHeight-h.clientHeight);bar.style.width=(p*100)+'%';};
+  document.addEventListener('scroll',onScroll,{passive:true});onScroll();
+  // SPA 路由跳转（与 404.html 同机制）
+  document.querySelectorAll('a[href^="/"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      sessionStorage.setItem('redirect',this.getAttribute('href'));
+      window.location.href='/index.html';
+    });
+  });
+</script>
+</body>
+</html>

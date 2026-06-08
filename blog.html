@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>博客 · 泥巴猪的伊甸园</title>
+<meta name="description" content="泥巴猪的伊甸园博客 —— AI 工程化、Agent、Workflow、产品设计与工程实践的真实记录。" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ece4d9;--surface:#f4f0ea;--card:#fffbf5;--fg:#4f483e;--muted:#8a7d6b;
+  --border:#e2d8cb;--accent:#f54001;--accent-soft:#ffc198;--blue:#54a2ff;
+  --shadow-card:0 8px 40px rgba(79,72,62,.08), 0 2px 20px rgba(79,72,62,.04);
+  --shadow-hover:0 16px 64px rgba(79,72,62,.13);
+  --font-display:'Playfair Display', Georgia, 'Songti SC', serif;
+  --font-body:'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --wrap:1180px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);
+  line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 32px}
+.eyebrow{font-family:var(--font-mono);font-size:12px;font-weight:500;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--accent)}
+.serif{font-family:var(--font-display)}
+
+.img-ph{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;text-align:center;background:
+    repeating-linear-gradient(45deg,transparent,transparent 11px,rgba(138,125,107,.05) 11px,rgba(138,125,107,.05) 12px),var(--card);
+  border:1.5px dashed var(--border);border-radius:12px;color:var(--muted);padding:18px;min-height:150px}
+.img-ph .tag{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);background:#fff;border:1px solid var(--border);padding:3px 9px;border-radius:999px}
+.img-ph .desc{font-size:12.5px;line-height:1.5;max-width:86%}
+
+/* nav (shared) */
+header.nav{position:sticky;top:0;z-index:50;background:color-mix(in oklab,var(--bg) 86%,transparent);
+  backdrop-filter:saturate(140%) blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:600}
+.brand .mark{width:30px;height:30px;border-radius:8px;background:var(--accent);color:#fff;
+  display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:17px}
+.brand b{font-family:var(--font-display);font-weight:700;font-size:18px}
+.nav-links{display:flex;gap:34px;align-items:center}
+.nav-links a{font-size:14.5px;color:var(--muted);transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--fg)}
+.nav-toggle{display:none;background:none;border:0;color:var(--fg);font-size:22px;cursor:pointer}
+
+/* page head */
+.blog-head{padding:64px 0 44px;border-bottom:1px solid var(--border)}
+.blog-head h1{font-family:var(--font-display);font-weight:800;font-size:clamp(38px,5vw,60px);
+  letter-spacing:-.015em;line-height:1.05;margin:16px 0 0}
+.blog-head p{color:var(--muted);font-size:17px;max-width:52ch;margin:18px 0 0;line-height:1.7}
+
+/* layout: sidebar + content */
+.blog-grid{display:grid;grid-template-columns:236px 1fr;gap:56px;padding:48px 0 90px;align-items:start}
+.side{position:sticky;top:92px}
+.side h4{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 14px}
+.cat-list{list-style:none;margin:0 0 38px;padding:0;display:flex;flex-direction:column;gap:3px}
+.cat-list a{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;
+  border-radius:9px;font-size:14.5px;color:var(--fg);transition:.18s}
+.cat-list a:hover{background:var(--card)}
+.cat-list a.on{background:var(--accent);color:#fff}
+.cat-list a.on .c{color:#fff;opacity:.8}
+.cat-list .c{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.side-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.side-card p{font-size:13.5px;color:var(--muted);line-height:1.65;margin:0 0 14px}
+.side-card a{font-family:var(--font-mono);font-size:12.5px;color:var(--accent)}
+
+/* featured */
+.feat-label{display:flex;align-items:baseline;gap:14px;margin:0 0 22px}
+.feat-label h2{font-family:var(--font-display);font-weight:700;font-size:26px;margin:0}
+.feature{display:grid;grid-template-columns:1.1fr 1fr;gap:0;background:var(--card);
+  border:1px solid var(--border);border-radius:18px;overflow:hidden;margin-bottom:54px;transition:.25s}
+.feature:hover{box-shadow:var(--shadow-hover);transform:translateY(-3px)}
+.feature .img-ph{border:0;border-radius:0;min-height:280px;border-right:1px solid var(--border)}
+.feature .fbody{padding:38px 36px;display:flex;flex-direction:column;justify-content:center}
+.feature .meta{font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:.05em;
+  display:flex;gap:14px;margin-bottom:14px}
+.feature h3{font-family:var(--font-display);font-weight:700;font-size:30px;line-height:1.18;margin:0 0 16px}
+.feature p{font-size:15.5px;color:var(--muted);line-height:1.75;margin:0 0 22px}
+.read-more{font-family:var(--font-mono);font-size:13px;color:var(--accent);display:inline-flex;gap:6px;transition:.2s}
+.read-more:hover{gap:11px}
+
+/* list */
+.list-label{font-family:var(--font-display);font-weight:700;font-size:26px;margin:0 0 8px}
+.list-sub{color:var(--muted);font-size:14px;margin:0 0 26px}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;
+  display:flex;flex-direction:column;transition:.25s}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-card)}
+.card .img-ph{border:0;border-radius:0;border-bottom:1px solid var(--border);min-height:160px}
+.card .cbody{padding:22px 24px 24px;display:flex;flex-direction:column;flex:1}
+.card .meta{font-family:var(--font-mono);font-size:11.5px;color:var(--muted);display:flex;
+  gap:12px;align-items:center;margin-bottom:11px}
+.pill{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 9px;border-radius:999px;border:1px solid var(--border);color:var(--fg);background:var(--surface)}
+.pill.diary{color:var(--accent);border-color:var(--accent-soft)}
+.card h3{font-family:var(--font-display);font-weight:600;font-size:20px;line-height:1.3;margin:0 0 10px}
+.card:hover h3{color:var(--accent)}
+.card p{font-size:13.5px;color:var(--muted);line-height:1.65;margin:0 0 16px;flex:1}
+.card .rt{font-family:var(--font-mono);font-size:11.5px;color:var(--muted)}
+
+/* empty state */
+.empty-state{text-align:center;padding:80px 24px}
+.empty-state .empty-icon{font-size:48px;margin:0 0 16px}
+.empty-state .empty-title{font-family:var(--font-display);font-weight:700;font-size:24px;margin:0 0 10px}
+.empty-state .empty-desc{color:var(--muted);font-size:15.5px;line-height:1.7;margin:0}
+.empty-state .empty-desc a{color:var(--accent);border-bottom:1px solid var(--accent-soft)}
+.empty-state .empty-desc a:hover{border-color:var(--accent)}
+
+footer{padding:44px 0;border-top:1px solid var(--border)}
+.foot-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+  color:var(--muted);font-size:13.5px}
+.foot-inner .font-note{font-family:var(--font-mono);font-size:11.5px}
+
+@media(max-width:880px){
+  .nav-links{display:none}
+  .blog-grid{grid-template-columns:1fr;gap:34px}
+  .side{position:static}
+  .cat-list{flex-direction:row;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+  .cat-list a{background:var(--card);border:1px solid var(--border)}
+  .feature{grid-template-columns:1fr}
+  .feature .img-ph{border-right:0;border-bottom:1px solid var(--border)}
+  .cards{grid-template-columns:1fr}
+}
+@media(max-width:560px){.wrap{padding:0 20px}.blog-head{padding:44px 0 32px}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="home.html"><span class="mark">泥</span><b>泥巴猪的伊甸园</b></a>
+    <nav class="nav-links">
+      <a href="home.html">首页</a>
+      <a href="about.html">关于我</a>
+      <a href="portfolio.html">作品集</a>
+      <a href="blog.html" class="active">博客</a>
+      <a href="toolbox.html">工具箱</a>
+      <a href="tutorials.html">教程</a>
+    </nav>
+    <button class="nav-toggle" aria-label="菜单" onclick="document.querySelector('.nav-links').classList.toggle('open')">≡</button>
+  </div>
+</header>
+
+<div class="blog-head">
+  <div class="wrap">
+    <span class="eyebrow">博客 · Field Notes</span>
+    <h1>写给同路人。</h1>
+    <p>关于 AI 工程、系统架构、产品设计和一些不那么实用的思考。不追热点，只写真正做过、想过的东西。</p>
+  </div>
+</div>
+
+<div class="wrap blog-grid">
+  <!-- SIDEBAR -->
+  <aside class="side">
+    <h4>标签</h4>
+    <ul class="cat-list">
+      <li><a href="#all" class="on" data-filter="all">全部 <span class="c"></span></a></li>
+      <li><a href="#cicd" data-filter="cicd">CICD <span class="c"></span></a></li>
+      <li><a href="#ai-eng" data-filter="ai-eng">AI 工程能力 <span class="c"></span></a></li>
+      <li><a href="#skill" data-filter="skill">Skill <span class="c"></span></a></li>
+      <li><a href="#workflow" data-filter="workflow">Workflow <span class="c"></span></a></li>
+      <li><a href="#agent" data-filter="agent">Agent <span class="c"></span></a></li>
+      <li><a href="#product" data-filter="product">产品设计 <span class="c"></span></a></li>
+      <li><a href="#philosophy" data-filter="philosophy">哲学 <span class="c"></span></a></li>
+      <li><a href="#essay" data-filter="essay">随笔 <span class="c"></span></a></li>
+    </ul>
+    <div class="side-card">
+      <p>文章陆续上传中。想第一时间看到新内容，或聊聊架构与 AI？</p>
+      <a href="about.html">联系泥巴猪 →</a>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <main>
+    <h2 class="list-label">最新文章</h2>
+    <p class="list-sub">按时间倒序 · 持续更新中</p>
+
+    <div class="cards"></div>
+  </main>
+</div>
+
+<footer>
+  <div class="wrap foot-inner">
+    <span>© 2026 泥巴猪的伊甸园 · 用心做，慢慢长。</span>
+    <span class="font-note">Playfair Display · Inter · JetBrains Mono</span>
+  </div>
+</footer>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+(function(){
+  // 文章数据
+  var articles = [
+    {slug:'understand-arch', title:'Agent 友好的代码库知识引擎 understand-arch 的设计与实现', date:'2026-06-06', read:'约 16 分钟', cat:'AI 工程能力', catSlug:'ai-eng', file:'source/blog/ai-engineering/Agent友好的代码库知识引擎understand-arch 的设计与实现.md', tags:['AI Agent','知识工程','Claude Code']},
+    {slug:'harness-foundation', title:'地基不牢，Harness 白搭：对 AI 工程知识资产的思考', date:'2026-06-01', read:'约 14 分钟', cat:'AI 工程能力', catSlug:'ai-eng', file:'source/blog/ai-engineering/地基不牢,Harness 白搭 对AI工程知识资产的思考.md', tags:['AI 工程','Harness','知识资产']},
+    {slug:'context-debt', title:'上下文债：项目隐性知识的管理', date:'2026-05-27', read:'约 20 分钟', cat:'AI 工程能力', catSlug:'ai-eng', file:'source/blog/ai-engineering/上下文债：项目隐性知识的管理.md', tags:['上下文债','知识管理','AI 工程']},
+    {slug:'judgment-matters', title:'当造东西变得简单，最贵的是判断力', date:'2026-05-18', read:'约 12 分钟', cat:'产品设计', catSlug:'product', file:'source/blog/design/当造东西变得简单，最贵的是判断力.md', tags:['产品设计','Anthropic','判断力']},
+    {slug:'vibeflow-birth', title:'用了两个月 Superpowers + gstack 之后，我自己造了一个 VibeFlow', date:'2026-05-11', read:'约 18 分钟', cat:'Workflow', catSlug:'workflow', file:'source/blog/workflow/用了两个月 Superpowers + gstack 之后，我自己造了一个 VibeFlow.md', tags:['VibeFlow','Workflow','Claude Code']}
+  ];
+
+  // 按日期倒序
+  articles.sort(function(a,b){ return b.date.localeCompare(a.date); });
+
+  // 抽取摘要（取 markdown 第一个非标题、非图片段落的前 120 字）
+  function excerpt(md){
+    var lines = md.split('\n');
+    for(var i=0;i<lines.length;i++){
+      var l=lines[i].trim();
+      if(!l || l.startsWith('#') || l.startsWith('!') || l.startsWith('---') || l.startsWith('>') || l.startsWith('```')) continue;
+      l = l.replace(/\*\*/g,'').replace(/\*/g,'').replace(/`[^`]*`/g,'').replace(/\[([^\]]*)\]\([^)]*\)/g,'$1');
+      return l.length>120 ? l.slice(0,120)+'…' : l;
+    }
+    return '';
+  }
+
+  // 渲染卡片
+  var grid = document.querySelector('.cards');
+  articles.forEach(function(a){
+    var card = document.createElement('article');
+    card.className='card';
+    card.setAttribute('data-cat', a.catSlug);
+    card.innerHTML =
+      '<div class="cbody">'+
+        '<div class="meta"><span class="pill'+(a.catSlug==='essay'||a.catSlug==='philosophy'?' diary':'')+'">'+a.cat+'</span><span>'+a.date+'</span><span>'+a.read+'</span></div>'+
+        '<h3>'+a.title+'</h3>'+
+        '<p class="card-excerpt"></p>'+
+        '<span class="rt">阅读全文 →</span>'+
+      '</div>';
+    card.style.cursor='pointer';
+    card.addEventListener('click',function(e){
+      e.preventDefault();
+      window.location.href='article.html?article='+a.slug;
+    });
+    grid.appendChild(card);
+
+    // 异步取摘要
+    fetch(a.file).then(function(r){return r.text();}).then(function(md){
+      card.querySelector('.card-excerpt').textContent = excerpt(md);
+    });
+  });
+
+  // 更新侧栏计数
+  var counts = {all:articles.length,'ai-eng':0,product:0,workflow:0};
+  articles.forEach(function(a){ if(counts[a.catSlug]!==undefined) counts[a.catSlug]++; });
+  var lis = document.querySelectorAll('.cat-list li');
+  lis.forEach(function(li){
+    var link = li.querySelector('a[data-filter]');
+    if(!link) return;
+    var f = link.getAttribute('data-filter');
+    var c = li.querySelector('.c');
+    if(c && counts[f]!==undefined) c.textContent = counts[f];
+  });
+
+  // 标签筛选
+  var btns = document.querySelectorAll('.cat-list a[data-filter]');
+  btns.forEach(function(b){
+    b.addEventListener('click',function(e){
+      e.preventDefault();
+      btns.forEach(function(x){ x.classList.remove('on'); });
+      this.classList.add('on');
+      var cat = this.getAttribute('data-filter');
+      var cards = document.querySelectorAll('.card[data-cat]');
+      cards.forEach(function(c){
+        c.style.display = (cat==='all' || c.getAttribute('data-cat')===cat) ? '' : 'none';
+      });
+    });
+  });
+
+  // SPA 路由跳转
+  document.querySelectorAll('a[href^="/"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      sessionStorage.setItem('redirect',this.getAttribute('href'));
+      window.location.href='/index.html';
+    });
+  });
+})();
+</script>
+
+</html>
