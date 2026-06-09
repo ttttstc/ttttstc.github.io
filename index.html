@@ -179,19 +179,19 @@ section{padding:80px 0}
 
 /* ---------- contact ---------- */
 .contact-card{background:var(--fg);color:var(--bg);border-radius:24px;
-  padding:64px 56px;display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}
+  padding:64px 56px;display:grid;grid-template-columns:1.2fr .8fr;gap:56px;align-items:center}
 .contact-card h2{font-family:var(--font-display);font-weight:700;font-size:clamp(30px,4vw,46px);
   line-height:1.1;margin:14px 0 0;color:var(--card)}
 .contact-card .eyebrow{color:var(--accent-soft)}
 .contact-card p{color:color-mix(in oklab,var(--bg) 75%,transparent);font-size:16px;
   line-height:1.7;margin:18px 0 0}
-.social{display:flex;flex-direction:column;gap:12px}
-.social a{display:flex;align-items:center;justify-content:space-between;
-  font-family:var(--font-mono);font-size:14px;letter-spacing:.02em;
-  padding:16px 20px;border:1px solid color-mix(in oklab,var(--bg) 28%,transparent);
-  border-radius:12px;color:var(--card);transition:.2s}
-.social a:hover{background:var(--accent);border-color:var(--accent);color:#fff;transform:translateX(4px)}
-.social a .arr{opacity:.5}
+.contact-channels{display:flex;flex-direction:column;gap:2px}
+.contact-item{display:flex;align-items:baseline;gap:16px;padding:18px 22px;
+  border-radius:14px;transition:.2s;cursor:pointer;text-decoration:none;color:inherit}
+.contact-item:hover{background:color-mix(in oklab,var(--bg) 10%,transparent);transform:translateX(4px)}
+.contact-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent-soft);min-width:52px;flex-shrink:0}
+.contact-value{font-family:var(--font-body);font-size:15.5px;color:var(--card);letter-spacing:.01em}
 
 /* ---------- footer ---------- */
 footer{padding:44px 0;border-top:1px solid var(--border)}
@@ -264,9 +264,8 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
 <!-- ===== ABOUT ===== -->
 <section class="about" id="about">
   <div class="wrap about-grid">
-    <figure class="img-ph about-art" data-img-prompt="cozy warm desk flatlay, architecture sketches, cream + orange, 1:1">
-      <span class="tag">贴图位 B · 1:1</span>
-      <span class="desc">关于区配图<br>暖调工作台 / 手绘架构草图</span>
+    <figure class="about-art">
+      <img src="source/pic/index/关于我.png" alt="关于我" style="width:100%;height:100%;object-fit:cover;border-radius:18px">
     </figure>
     <div class="about-prose">
       <span class="eyebrow">关于我</span>
@@ -274,7 +273,6 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
         从后端架构师，<br>到 AI Builder。
       </h2>
       <p>近 8 年的工作经历让我积累了丰富的后端开发和架构经验，专注于构建高性能、高并发、高稳定性的云服务系统。最近把更多精力投入到 <span class="hl">AI Agent</span>、<span class="hl">Workflow</span> 和 <span class="hl">Harness 框架</span> 等 AI 工程落地方向的探索。</p>
-      <p>我搭建了个人 Agent 平台 OpenClaw，也设计了 VibeFlow —— 一套让 AI 走完 Think → Plan → Build → Ship 闭环的交付框架。</p>
       <a href="about.html" class="btn btn-ghost" style="margin-top:28px;display:inline-flex">了解更多关于我 →</a>
     </div>
   </div>
@@ -328,18 +326,60 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
     <div class="proj">
       <a href="/vibeflow" class="proj-link">
       <article class="proj-card feature">
-        <!-- 贴图位 C：VibeFlow 作品封面 -->
-        <!-- gpt-image-2 prompt: "Abstract flow diagram, eight connected nodes Think Plan Requirements Design Build Review Test Ship, warm cream background, burnt orange #f54001 active node, hand-drawn editorial style, soft shadows, 16:10" -->
-        <figure class="img-ph proj-thumb" data-img-prompt="VibeFlow 8-stage flow diagram, cream + orange, editorial, 16:10">
-          <span class="tag">贴图位 C · 16:10</span>
-          <span class="desc">VibeFlow 流程图封面</span>
+        <figure class="proj-thumb">
+          <img src="source/pic/index/vibeflow.png" alt="VibeFlow 流程图" style="width:100%;height:100%;object-fit:cover;border-radius:0">
         </figure>
         <div class="proj-body">
           <span class="proj-kicker">框架 · Framework</span>
           <h3>VibeFlow —— 让 AI 按工程纪律交付</h3>
-          <p>一个面向 Claude Code 的结构化交付框架。把需求、设计、实现、审查、测试、发布和复盘串成一条可恢复、可追踪、可自动继续的工作流：前半程你拍板，后半程系统自己推进，卡住了再回来问你。</p>
+          <p>一个面向 Claude Code 的结构化交付框架。把需求、设计、实现、审查、测试、发布和复盘串成一条可恢复、可追踪的工作流。</p>
           <div class="proj-tags">
             <span>Claude Code</span><span>工作流</span><span>文件即状态</span><span>TDD</span>
+          </div>
+        </div>
+      </article>
+      </a>
+      <a href="portfolio.html" class="proj-link">
+      <article class="proj-card">
+        <figure class="proj-thumb">
+          <img src="source/pic/index/understand-arch.png" alt="understand-arch" style="width:100%;height:100%;object-fit:cover;border-radius:0">
+        </figure>
+        <div class="proj-body">
+          <span class="proj-kicker">工具 · Tool</span>
+          <h3>understand-arch</h3>
+          <p>让 AI 真正读懂代码——扫描仓库、构建知识图谱、生成架构文档与评审意见，知识随代码演进持续更新。</p>
+          <div class="proj-tags">
+            <span>代码分析</span><span>知识图谱</span><span>架构评审</span>
+          </div>
+        </div>
+      </article>
+      </a>
+      <a href="portfolio.html" class="proj-link">
+      <article class="proj-card">
+        <figure class="proj-thumb">
+          <img src="source/pic/index/tower.png" alt="巡塔 · Tower" style="width:100%;height:100%;object-fit:cover;border-radius:0">
+        </figure>
+        <div class="proj-body">
+          <span class="proj-kicker">桌面应用 · Desktop</span>
+          <h3>巡塔 · Tower</h3>
+          <p>国风美学项目管理——五层塔模型、三条叙事线、全离线桌面应用，用空间感代替列表，用叙事代替进度条。</p>
+          <div class="proj-tags">
+            <span>Electron</span><span>React 19</span><span>国风</span><span>本地优先</span>
+          </div>
+        </div>
+      </article>
+      </a>
+      <a href="portfolio.html" class="proj-link">
+      <article class="proj-card">
+        <figure class="proj-thumb">
+          <img src="source/pic/index/ni-skill.png" alt="ni-skill" style="width:100%;height:100%;object-fit:cover;border-radius:0">
+        </figure>
+        <div class="proj-body">
+          <span class="proj-kicker">技能套件 · Skill Suite</span>
+          <h3>ni-skill</h3>
+          <p>从选题到微信发布的端到端文章流水线——6 阶段自动化、5 种文章原型、断点续写，面向技术创作者。</p>
+          <div class="proj-tags">
+            <span>Claude Code Skills</span><span>内容创作</span><span>自动化</span>
           </div>
         </div>
       </article>
@@ -413,43 +453,28 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
       </div>
       <a class="link-more" href="toolbox.html">查看全部 →</a>
     </div>
-    <div class="proj">
-      <a href="/prompts" class="proj-link">
-      <article class="proj-card">
-        <!-- 贴图位 F：神秘咒语盒封面 -->
-        <!-- gpt-image-2 prompt: "Mystical warm editorial illustration, abstract code scrolls with glowing runes, warm cream paper, burnt orange highlights, soft ink textures, cozy library mood, 16:9" -->
-        <figure class="img-ph proj-thumb" data-img-prompt="神秘咒语盒封面，code scrolls + warm ink, cream + orange, 16:9">
-          <span class="tag">贴图位 F · 16:9</span>
-          <span class="desc">神秘咒语盒封面</span>
-        </figure>
-        <div class="proj-body">
-          <span class="proj-kicker">研究 · Research</span>
-          <h3>神秘咒语盒</h3>
-          <p>收集主流 AI 工具的系统提示词与工具定义——Claude Code、Cursor、Devin、Gemini CLI——探索不同 AI 的"思维方式"。</p>
-          <div class="proj-tags">
-            <span>提示词</span><span>系统架构</span><span>开源收集</span>
+    <div class="overlay-hero" style="position:relative;border-radius:18px;overflow:hidden">
+      <img src="source/pic/index/工具箱.png" alt="工具箱" style="width:100%;display:block">
+      <div class="overlay-cards" style="position:absolute;bottom:0;left:0;right:0;padding:24px 28px;display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end;background:linear-gradient(0deg,rgba(79,72,62,.55) 0%,rgba(79,72,62,0) 100%)">
+        <a href="/prompts" class="proj-link" style="flex:0 1 260px">
+        <article class="proj-card" style="background:rgba(255,251,245,.92);backdrop-filter:blur(12px);border-color:rgba(226,216,203,.5)">
+          <div class="proj-body" style="padding:20px 22px">
+            <span class="proj-kicker">研究 · Research</span>
+            <h3 style="font-size:20px;margin:8px 0 6px">神秘咒语盒</h3>
+            <p style="font-size:13px;margin:0">主流 AI 工具的系统提示词与工具定义收集。</p>
           </div>
-        </div>
-      </article>
-      </a>
-      <a href="/design-showcase" class="proj-link">
-      <article class="proj-card">
-        <!-- 贴图位 G：设计样板间封面 -->
-        <!-- gpt-image-2 prompt: "Editorial design moodboard with warm cream palette, typography samples, UI component sketches, burnt orange accent details, soft natural light, 16:9" -->
-        <figure class="img-ph proj-thumb" data-img-prompt="设计样板间封面，typography + UI sketches, cream + orange, 16:9">
-          <span class="tag">贴图位 G · 16:9</span>
-          <span class="desc">设计样板间封面</span>
-        </figure>
-        <div class="proj-body">
-          <span class="proj-kicker">设计 · Design</span>
-          <h3>设计样板间</h3>
-          <p>归档前端设计样式与实验：组件库、排版系统、色彩方案、动效原型——展示前沿 UI/UX 的创意实现。</p>
-          <div class="proj-tags">
-            <span>UI/UX</span><span>组件库</span><span>动效</span>
+        </article>
+        </a>
+        <a href="/design-showcase" class="proj-link" style="flex:0 1 260px">
+        <article class="proj-card" style="background:rgba(255,251,245,.92);backdrop-filter:blur(12px);border-color:rgba(226,216,203,.5)">
+          <div class="proj-body" style="padding:20px 22px">
+            <span class="proj-kicker">设计 · Design</span>
+            <h3 style="font-size:20px;margin:8px 0 6px">设计样板间</h3>
+            <p style="font-size:13px;margin:0">前端设计样式与实验：组件库、排版、色彩、动效。</p>
           </div>
-        </div>
-      </article>
-      </a>
+        </article>
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -464,116 +489,37 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
       </div>
       <a class="link-more" href="tutorials.html">查看全部 →</a>
     </div>
-    <div class="proj proj-col3">
-      <a href="/lobster" class="proj-link">
-      <article class="proj-card">
-        <!-- 贴图位 D：OpenClaw 架构封面 -->
-        <!-- gpt-image-2 prompt: "Layered system architecture illustration, gateway + multi-agent nodes + memory store, warm cream palette, burnt orange highlights, technical but soft editorial style, 16:9" -->
-        <figure class="img-ph proj-thumb" data-img-prompt="OpenClaw layered architecture, gateway + multi-agent + memory, cream + orange, 16:9">
-          <span class="tag">贴图位 D · 16:9</span>
-          <span class="desc">OpenClaw 架构封面</span>
-        </figure>
-        <div class="proj-body">
-          <span class="proj-kicker">架构 · Architecture</span>
-          <h3>OpenClaw 架构实践</h3>
-          <p>个人 Agent 平台的核心架构拆解：网关设计、多 Agent 天然支持、用户记忆系统，从 0 到部署的完整路径。</p>
-          <div class="proj-tags">
-            <span>多 Agent</span><span>网关</span><span>记忆系统</span>
+    <div class="overlay-hero" style="position:relative;border-radius:18px;overflow:hidden">
+      <img src="source/pic/index/教程.png" alt="教程" style="width:100%;display:block">
+      <div class="overlay-cards" style="position:absolute;bottom:0;left:0;right:0;padding:24px 28px;display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end;background:linear-gradient(0deg,rgba(79,72,62,.55) 0%,rgba(79,72,62,0) 100%)">
+        <a href="/lobster" class="proj-link" style="flex:0 1 220px">
+        <article class="proj-card" style="background:rgba(255,251,245,.92);backdrop-filter:blur(12px);border-color:rgba(226,216,203,.5)">
+          <div class="proj-body" style="padding:20px 22px">
+            <span class="proj-kicker">架构</span>
+            <h3 style="font-size:20px;margin:8px 0 6px">OpenClaw</h3>
+            <p style="font-size:13px;margin:0">个人 Agent 平台核心架构拆解。</p>
           </div>
-        </div>
-      </article>
-      </a>
-      <a href="tutorials.html" class="proj-link">
-      <article class="proj-card">
-        <!-- 贴图位 E：AI 日记封面 -->
-        <!-- gpt-image-2 prompt: "Warm illustrated open diary with a small friendly AI character peeking out, cream paper, burnt orange accents, gentle hand-drawn editorial style, cozy, 16:9" -->
-        <figure class="img-ph proj-thumb" data-img-prompt="小泥巴 AI diary, friendly character + open journal, cream + orange, cozy, 16:9">
-          <span class="tag">贴图位 E · 16:9</span>
-          <span class="desc">小泥巴 · AI 日记封面</span>
-        </figure>
-        <div class="proj-body">
-          <span class="proj-kicker">连载 · Series</span>
-          <h3>小泥巴 · AI 日记</h3>
-          <p>从 AI 第一人称视角写的成长日记：诞生、第一次心态崩、获得超能力、学会自动化——一个真实的人机共生故事。</p>
-          <div class="proj-tags">
-            <span>叙事</span><span>人机共生</span><span>连载</span>
+        </article>
+        </a>
+        <a href="tutorials.html" class="proj-link" style="flex:0 1 220px">
+        <article class="proj-card" style="background:rgba(255,251,245,.92);backdrop-filter:blur(12px);border-color:rgba(226,216,203,.5)">
+          <div class="proj-body" style="padding:20px 22px">
+            <span class="proj-kicker">连载</span>
+            <h3 style="font-size:20px;margin:8px 0 6px">小泥巴日记</h3>
+            <p style="font-size:13px;margin:0">一个 AI 第一人称的成长故事。</p>
           </div>
-        </div>
-      </article>
-      </a>
-      <a href="/learn-cc" class="proj-link">
-      <article class="proj-card">
-        <!-- 贴图位 H：Agent 教程封面 -->
-        <!-- gpt-image-2 prompt: "Warm editorial illustration of a learning path, 12 numbered nodes forming a journey, warm cream background, burnt orange progress line, friendly educational mood, 16:9" -->
-        <figure class="img-ph proj-thumb" data-img-prompt="Agent 入门教程封面，12-step journey, cream + orange, 16:9">
-          <span class="tag">贴图位 H · 16:9</span>
-          <span class="desc">Agent 入门教程封面</span>
-        </figure>
-        <div class="proj-body">
-          <span class="proj-kicker">教程 · Tutorial</span>
-          <h3>Agent 入门教程</h3>
-          <p>从零掌握 AI Agent 的 12 堂课——基于 Claude Code 的系统化学习路径，覆盖安装、配置、Skills 扩展到自动化实战。</p>
-          <div class="proj-tags">
-            <span>Claude Code</span><span>12 课</span><span>系统化</span>
+        </article>
+        </a>
+        <a href="/learn-cc" class="proj-link" style="flex:0 1 220px">
+        <article class="proj-card" style="background:rgba(255,251,245,.92);backdrop-filter:blur(12px);border-color:rgba(226,216,203,.5)">
+          <div class="proj-body" style="padding:20px 22px">
+            <span class="proj-kicker">教程</span>
+            <h3 style="font-size:20px;margin:8px 0 6px">Agent 入门</h3>
+            <p style="font-size:13px;margin:0">基于 Claude Code 的 12 堂系统课。</p>
           </div>
-        </div>
-      </article>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- ===== ARTICLES ===== -->
-<section class="articles" id="writing">
-  <div class="wrap">
-    <div class="sec-head">
-      <div>
-        <span class="eyebrow">全部文章</span>
-        <h2>最近写的东西。</h2>
+        </article>
+        </a>
       </div>
-      <a class="link-more" href="blog.html">进入博客 →</a>
-    </div>
-    <div class="art-list">
-      <a href="article.html?article=understand-arch" class="art-row">
-        <span class="art-date">2026.05.13</span>
-        <div class="art-main">
-          <h3>Agent 友好的代码库知识引擎 understand-arch 的设计与实现</h3>
-          <p>如何让 AI Agent 在大型代码库中快速建立全局理解，而不只是逐文件阅读。</p>
-        </div>
-        <span class="art-cat">AI 工程</span>
-      </a>
-      <a href="article.html?article=vibeflow-birth" class="art-row">
-        <span class="art-date">2026.05.10</span>
-        <div class="art-main">
-          <h3>用了两个月 Superpowers + gstack 之后，我自己造了一个 VibeFlow</h3>
-          <p>从"提示词 → 生成代码"到真正的 AI 协作工程化，我需要的不是更好的 Prompt，而是一套完整的交付框架。</p>
-        </div>
-        <span class="art-cat">Workflow</span>
-      </a>
-      <a href="article.html?article=harness-foundation" class="art-row">
-        <span class="art-date">2026.04.18</span>
-        <div class="art-main">
-          <h3>地基不牢，Harness 白搭——对 AI 工程知识资产的思考</h3>
-          <p>别让知识资产成了摆设——从目录设计到治理节奏，一步步搭好 Harness 的地基。</p>
-        </div>
-        <span class="art-cat">AI 工程</span>
-      </a>
-      <a href="article.html?article=context-debt" class="art-row">
-        <span class="art-date">2026.04.16</span>
-        <div class="art-main">
-          <h3>上下文债：项目隐性知识的管理</h3>
-          <p>随着对话越来越多，我发现项目里积累了一种看不见的"债"——上下文债。</p>
-        </div>
-        <span class="art-cat">AI 工程</span>
-      </a>
-      <a href="article.html?article=judgment-matters" class="art-row">
-        <span class="art-date">2026.03.22</span>
-        <div class="art-main">
-          <h3>当造东西变得简单，最贵的是判断力</h3>
-          <p>AI 时代造东西变简单了，但什么是值得造的？怎么判断一个功能该不该加？</p>
-        </div>
-        <span class="art-cat">产品设计</span>
-      </a>
     </div>
   </div>
 </section>
@@ -582,17 +528,32 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
 <section id="contact">
   <div class="wrap">
     <div class="contact-card">
-      <div>
+      <div class="contact-intro">
         <span class="eyebrow">联系我</span>
         <h2>和我交流<br>AI 应用开发。</h2>
         <p>如果你也在做 AI Agent、微服务或 DevOps，或者只是想聊聊人和 AI 怎么协作——欢迎随时找我。</p>
       </div>
-      <div class="social">
-        <a href="mailto:ncz1993107@gmail.com">邮箱 / Email <span class="arr">→</span></a>
-        <a href="https://github.com/ttttstc" target="_blank" rel="noopener">GitHub <span class="arr">→</span></a>
-        <a href="https://x.com/ttttstc2025" target="_blank" rel="noopener">X / @ttttstc2025 <span class="arr">→</span></a>
-        <a>微信 / nicongzheng <span class="arr"></span></a>
+      <div class="contact-channels">
+        <a href="mailto:ncz1993107@gmail.com" class="contact-item">
+          <span class="contact-label">邮箱</span>
+          <span class="contact-value">ncz1993107@gmail.com</span>
+        </a>
+        <a href="https://github.com/ttttstc" target="_blank" rel="noopener" class="contact-item">
+          <span class="contact-label">GitHub</span>
+          <span class="contact-value">ttttstc</span>
+        </a>
+        <a href="https://x.com/ttttstc2025" target="_blank" rel="noopener" class="contact-item">
+          <span class="contact-label">X</span>
+          <span class="contact-value">@ttttstc2025</span>
+        </a>
+        <span class="contact-item">
+          <span class="contact-label">微信</span>
+          <span class="contact-value">nicongzheng</span>
+        </span>
       </div>
+      <figure style="grid-column:1/-1;margin:0;border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.2)">
+        <img src="source/pic/index/联系我.png" alt="联系我" style="width:100%;display:block">
+      </figure>
     </div>
   </div>
 </section>

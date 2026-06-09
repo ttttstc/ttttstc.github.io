@@ -73,6 +73,37 @@ header.nav{position:sticky;top:0;z-index:50;background:color-mix(in oklab,var(--
 
 .empty-note{font-size:15px;color:var(--muted);padding:32px 0;text-align:center;font-style:italic}
 
+/* project detail layout */
+.proj-detail{background:var(--card);border:1px solid var(--border);border-radius:20px;
+  overflow:hidden;margin-bottom:36px;transition:.25s}
+.proj-detail:hover{box-shadow:var(--shadow-card)}
+.proj-detail-head{display:grid;grid-template-columns:1.1fr .9fr;gap:0;border-bottom:1px solid var(--border)}
+.proj-detail-meta{padding:40px 44px;display:flex;flex-direction:column;justify-content:center}
+.proj-detail-meta .eyebrow{margin-bottom:12px}
+.proj-detail-meta h2{font-family:var(--font-display);font-weight:700;
+  font-size:clamp(24px,3vw,34px);line-height:1.12;margin:0 0 16px;letter-spacing:-.01em}
+.proj-detail-desc{font-size:15.5px;color:var(--muted);line-height:1.75;margin:0 0 20px}
+.proj-detail-cover{min-height:280px;border-radius:0;border-left:1px solid var(--border)}
+.proj-detail-body{padding:36px 44px 40px}
+.proj-section{margin-bottom:32px}
+.proj-section:last-of-type{margin-bottom:0}
+.proj-section h3{font-family:var(--font-display);font-weight:600;font-size:19px;
+  margin:0 0 14px;color:var(--fg)}
+.proj-section p{font-size:15px;color:var(--muted);line-height:1.75;margin:0 0 12px}
+.proj-section ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.proj-section li{font-size:14.5px;color:var(--muted);line-height:1.7;padding-left:20px;position:relative}
+.proj-section li::before{content:'';position:absolute;left:0;top:9px;width:6px;height:6px;
+  border-radius:50%;background:var(--accent-soft)}
+.proj-section li strong{color:var(--fg);font-weight:500}
+.proj-section code{font-family:var(--font-mono);font-size:13px;background:var(--surface);
+  border:1px solid var(--border);padding:2px 6px;border-radius:5px}
+.proj-links{margin-top:28px;padding-top:24px;border-top:1px solid var(--border)}
+.proj-link-btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);
+  font-size:13.5px;letter-spacing:.03em;color:var(--accent);padding:10px 20px;
+  border:1px solid var(--accent);border-radius:10px;transition:.2s;text-decoration:none}
+.proj-link-btn:hover{background:var(--accent);color:#fff}
+.proj-link-btn.disabled{color:var(--muted);border-color:var(--border);cursor:default;pointer-events:none}
+
 footer{padding:44px 0;border-top:1px solid var(--border)}
 .foot-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:13.5px}
 .foot-inner .font-note{font-family:var(--font-mono);font-size:11.5px}
@@ -83,6 +114,9 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
   .proj-card.feature{flex-direction:column}
   .proj-card.feature .proj-thumb{border-right:0;border-bottom:1px solid var(--border);min-height:200px}
   .proj-col3{grid-template-columns:1fr}
+  .proj-detail-head{grid-template-columns:1fr}
+  .proj-detail-cover{border-left:0;border-top:1px solid var(--border);min-height:220px}
+  .proj-detail-meta,.proj-detail-body{padding:28px 28px}
 }
 @media(max-width:560px){.wrap{padding:0 20px}.port-head{padding:44px 0 32px}}
 </style>
@@ -108,29 +142,189 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
   <div class="wrap">
     <span class="eyebrow">作品集 · Portfolio</span>
     <h1>认真做过的事。</h1>
-    <p>从框架到平台——每一项都是真刀真枪在做的东西，不是演示。</p>
+    <p>从框架到平台、从工具到桌面应用——每一项都是真刀真枪在做的东西，不是演示。</p>
   </div>
 </div>
 
-<!-- ===== 作品 ===== -->
+<!-- ===== VibeFlow ===== -->
 <section>
   <div class="wrap">
-    <div class="proj">
-      <a href="/vibeflow" class="proj-link">
-      <article class="proj-card feature">
-        <figure class="img-ph proj-thumb" data-img-prompt="VibeFlow 8-stage flow diagram, cream + orange, editorial, 16:10">
-          <span class="tag">贴图位 · 16:10</span><span class="desc">VibeFlow 流程图封面</span>
-        </figure>
-        <div class="proj-body">
-          <span class="proj-kicker">框架 · Framework</span>
-          <h3>VibeFlow —— 让 AI 按工程纪律交付</h3>
-          <p>一个面向 Claude Code 的结构化交付框架。把需求、设计、实现、审查、测试、发布和复盘串成一条可恢复、可追踪、可自动继续的工作流：前半程你拍板，后半程系统自己推进，卡住了再回来问你。</p>
+    <div class="proj-detail">
+      <div class="proj-detail-head">
+        <div class="proj-detail-meta">
+          <span class="eyebrow">框架 · Framework</span>
+          <h2>VibeFlow —— 让 AI 按工程纪律交付</h2>
+          <p class="proj-detail-desc">一个面向 Claude Code 的结构化交付框架。把需求、设计、实现、审查、测试、发布和复盘串成一条可恢复、可追踪、可自动继续的工作流：前半程你拍板，后半程系统自己推进，卡住了再回来问你。</p>
           <div class="proj-tags">
             <span>Claude Code</span><span>工作流</span><span>文件即状态</span><span>TDD</span>
           </div>
         </div>
-      </article>
-      </a>
+        <figure class="proj-detail-cover" style="overflow:hidden">
+          <img src="source/pic/index/vibeflow.png" alt="VibeFlow" style="width:100%;height:100%;object-fit:cover">
+        </figure>
+      </div>
+      <div class="proj-detail-body">
+        <div class="proj-section">
+          <h3>核心能力</h3>
+          <ul>
+            <li><strong>8 阶段结构化流水线</strong> — 需求 → 设计 → 实现 → 审查 → 测试 → 发布 → 复盘，每阶段有明确的输入/输出契约和质量门禁</li>
+            <li><strong>文件即状态</strong> — 所有中间产物（spec、design doc、task list、review notes）以 Markdown 文件落盘，对话中断后可从任意断点恢复</li>
+            <li><strong>冻结/解冻机制</strong> — 关键决策点用 freeze/unfreeze 锁定上下文，防止 AI 在后续步骤中"创造性地"偏离已确认的方向</li>
+            <li><strong>TDD 驱动实现</strong> — 先写测试再写实现，测试即规格，AI 生成的代码必须通过预定义的验收标准</li>
+            <li><strong>多角色协作</strong> — 内置 Coder（执行）、Codex（审核）、Gemini（设计顾问）三种 AI 角色，按阶段自动切换</li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h3>技术架构</h3>
+          <p>VibeFlow 采用 <strong>状态机 + 文件系统</strong> 的混合架构：每个阶段是一个状态节点，状态转换由 Skill 文件定义（<code>vibeflow-*.md</code>），所有上下文通过 <code>.vibeflow/</code> 目录下的结构化文件持久化。框架本身不运行服务——它是一套 Claude Code Skills，通过对话循环驱动。</p>
+          <p>设计决策：拒绝引入数据库或运行时依赖。文件系统是最可靠的"数据库"——Git 可追踪、人类可阅读、任何编辑器可修改。</p>
+        </div>
+        <div class="proj-section">
+          <h3>适用场景</h3>
+          <p>需要 AI 参与但不信任 AI "自由发挥"的团队。VibeFlow 的核心价值不是让 AI 写更多代码，而是让 AI 写的代码可审计、可回滚、可解释。</p>
+        </div>
+        <div class="proj-links">
+          <a href="/vibeflow" class="proj-link-btn">进入项目 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== understand-arch ===== -->
+<section>
+  <div class="wrap">
+    <div class="proj-detail">
+      <div class="proj-detail-head">
+        <div class="proj-detail-meta">
+          <span class="eyebrow">工具 · Tool</span>
+          <h2>understand-arch —— 让 AI 真正读懂你的代码</h2>
+          <p class="proj-detail-desc">一个 Claude Code 架构助手，能扫描真实代码仓库、构建知识图谱、推断架构意图，并将架构知识转化为文档、评审意见、图表和仪表盘。不是一次性快照——架构知识随代码演进而持续更新。</p>
+          <div class="proj-tags">
+            <span>代码分析</span><span>知识图谱</span><span>架构评审</span><span>Claude Code</span>
+          </div>
+        </div>
+        <figure class="proj-detail-cover" style="overflow:hidden">
+          <img src="source/pic/index/understand-arch.png" alt="understand-arch" style="width:100%;height:100%;object-fit:cover">
+        </figure>
+      </div>
+      <div class="proj-detail-body">
+        <div class="proj-section">
+          <h3>核心能力</h3>
+          <ul>
+            <li><strong>/arch-onboard</strong> — 扫描代码仓库、构建知识图谱、推断架构，快速建立全局理解</li>
+            <li><strong>/arch-design</strong> — 根据 PRD 或变更请求生成三档候选方案（最小 / 改进 / 长期演化），由高级审核子代理交叉检查</li>
+            <li><strong>/arch-audit</strong> — 对比基线架构与当前代码状态，发现架构漂移</li>
+            <li><strong>/arch-wiki</strong> — 生成 14 章架构文档，支持多受众模式（CTO / 新人 / PM / 架构师视角）</li>
+            <li><strong>/arch-diagram</strong> — 输出 SVG / PNG / PlantUML / Mermaid 架构图</li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h3>技术架构</h3>
+          <p>基于 Claude Code 的对话循环运行，核心是<strong>确定性代码扫描引擎</strong>（源自 Understand-Anything）+ <strong>AI 推断层</strong>的双层架构。扫描引擎负责提取符号、依赖、调用关系等结构化数据；AI 层在此基础上推断意图、生成文档和设计方案。</p>
+          <p>知识库是"活的"——从日常 commit、Code Review、ADR（架构决策记录）中持续学习，而非一次性快照。所有输出存储在 <code>.understand-arch/{project}/</code> 下，不污染仓库根目录。</p>
+          <p>跨运行时安装器支持 Codex、Cursor、VS Code Copilot 等多个 AI 编码工具。</p>
+        </div>
+        <div class="proj-section">
+          <h3>适用场景</h3>
+          <p>需要快速理解遗留系统、做架构评审、生成 onboarding 文档的团队。尤其适合新成员入职、跨团队代码交接、架构合规审计。</p>
+        </div>
+        <div class="proj-links">
+          <a href="https://github.com/ttttstc/understand-arch" target="_blank" rel="noopener" class="proj-link-btn">GitHub 源码 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Tower ===== -->
+<section>
+  <div class="wrap">
+    <div class="proj-detail">
+      <div class="proj-detail-head">
+        <div class="proj-detail-meta">
+          <span class="eyebrow">桌面应用 · Desktop</span>
+          <h2>巡塔 · Tower —— 当项目管理长出了山水</h2>
+          <p class="proj-detail-desc">一个用国风 + 黑神话美学把项目管理从列表/看板重塑为沉浸式塔楼空间体验的本地优先桌面应用。拒绝退化成 SaaS 后台——每个组件都必须回答"它属于山水、书架、卷轴还是纸页"。</p>
+          <div class="proj-tags">
+            <span>Electron</span><span>React 19</span><span>国风美学</span><span>本地优先</span>
+          </div>
+        </div>
+        <figure class="proj-detail-cover" style="overflow:hidden">
+          <img src="source/pic/index/tower.png" alt="巡塔 · Tower" style="width:100%;height:100%;object-fit:cover">
+        </figure>
+      </div>
+      <div class="proj-detail-body">
+        <div class="proj-section">
+          <h3>核心能力</h3>
+          <ul>
+            <li><strong>五层塔模型</strong> — 愿景层（星殿）、协同层（书院）、实现层（禅房）、基础设施层（工坊）、设计层（佛堂），每层有独立情绪和场景</li>
+            <li><strong>三条叙事线</strong> — 事项推进（藏经阁书架）、风险管理（妖关图妖怪战斗）、里程碑（群像殿 28 神像），用叙事代替进度条</li>
+            <li><strong>塔林</strong> — 多项目并存，山水画中散落多座塔，每座塔是一个独立项目</li>
+            <li><strong>Excel 往返</strong> — 导入导出 Tower.xlsx 全字段无损，兼容传统协作流程</li>
+            <li><strong>全离线</strong> — 数据存于 <code>~/Documents/Tower/tower.json</code>，零网络依赖</li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h3>技术架构</h3>
+          <p><strong>React 19 + TypeScript + Vite 7</strong> 构建 UI 层，<strong>Electron 42 + electron-builder</strong> 打包为桌面应用（NSIS 安装器，< 200MB）。状态管理用 <strong>Zustand 5 + immer + persist</strong>，数据持久化到本地 JSON 文件。</p>
+          <p>视觉层采用<strong>预渲染序列帧 + CSS <code>steps()</code> + 4 层视差</strong>实现塔楼运镜——不是 Three.js，不是 Canvas，是纯 CSS 动画。设计系统用自研 CSS Design Token，不依赖 Tailwind 或组件库。</p>
+          <p>测试策略：<strong>Vitest</strong>（单元）+ <strong>Playwright</strong>（E2E），覆盖核心数据流和交互路径。</p>
+        </div>
+        <div class="proj-section">
+          <h3>适用场景</h3>
+          <p>受够了 SaaS 后台千篇一律的 PM、设计师、技术负责人。Tower 不是一个"更好看的看板"——它是一种不同的项目管理心智模型：用空间感代替列表，用叙事代替进度条，用美感代替焦虑。</p>
+        </div>
+        <div class="proj-links">
+          <span class="proj-link-btn disabled">本地项目 · 暂未开源</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ni-skill ===== -->
+<section>
+  <div class="wrap">
+    <div class="proj-detail">
+      <div class="proj-detail-head">
+        <div class="proj-detail-meta">
+          <span class="eyebrow">技能套件 · Skill Suite</span>
+          <h2>ni-skill —— 从选题到发布的端到端文章流水线</h2>
+          <p class="proj-detail-desc">面向技术创作者的 Claude Code 技能套件，覆盖从选题研究到微信公众号发布的完整文章生产链路。每个技能可独立使用，也可被编排为自动化流水线。</p>
+          <div class="proj-tags">
+            <span>Claude Code Skills</span><span>内容创作</span><span>微信公众号</span><span>自动化</span>
+          </div>
+        </div>
+        <figure class="proj-detail-cover" style="overflow:hidden">
+          <img src="source/pic/index/ni-skill.png" alt="ni-skill" style="width:100%;height:100%;object-fit:cover">
+        </figure>
+      </div>
+      <div class="proj-detail-body">
+        <div class="proj-section">
+          <h3>核心能力</h3>
+          <ul>
+            <li><strong>6 阶段流水线</strong> — <code>ni-research</code>（趋势分析）→ <code>ni-insight</code>（核心论点）→ <code>ni-writer</code>（写作）→ <code>ni-formatter</code>（排版）→ <code>ni-inspect</code>（质检）→ <code>ni-draft</code>（推送微信草稿箱）</li>
+            <li><strong>5 种文章原型</strong> — 动手评测、速读摘要、工程手册、技术论战、个人随笔，各有字数和灵魂定义</li>
+            <li><strong>ni-url2md</strong> — 支持 JS 渲染 + 登录态页面抓取，解决传统爬虫抓不到 SPA 内容的问题</li>
+            <li><strong>断点续写</strong> — <code>ni-article-workflow</code> 串联全流程，任何阶段中断后可从断点恢复</li>
+            <li><strong>自验证</strong> — 每个技能内置质检逻辑，输出前自动检查格式、长度、引用完整性</li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h3>技术架构</h3>
+          <p>基于 <strong>Claude Code 技能系统</strong>构建，每个 Skill 是一个独立的 Markdown 指令文件，通过对话循环驱动。流水线编排层（<code>ni-article-workflow</code>）负责阶段衔接和状态传递。</p>
+          <p>外部依赖最小化：<strong>Python 3.10+</strong> 用于微信公众号 API 推送（<code>ni-draft</code>），<strong>Node.js + Chrome</strong> 用于网页抓取（<code>ni-url2md</code>），其余全部在 Claude Code 对话内完成。</p>
+          <p>三条设计准则贯穿始终：<strong>诚实输出</strong>（不编造）、<strong>自验证</strong>（每技能自检）、<strong>显式降级</strong>（外部依赖不可用时明确标记而非静默失败）。</p>
+        </div>
+        <div class="proj-section">
+          <h3>适用场景</h3>
+          <p>需要高效产出高质量技术文章的个人创作者，尤其写 AI、工程管理、架构主题。从选题到发布全程自动化，同时保留人工审核和风格控制的节点。</p>
+        </div>
+        <div class="proj-links">
+          <a href="https://github.com/ttttstc/ni-skill" target="_blank" rel="noopener" class="proj-link-btn">GitHub 源码 →</a>
+        </div>
+      </div>
     </div>
   </div>
 </section>

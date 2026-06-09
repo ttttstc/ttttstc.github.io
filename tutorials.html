@@ -54,16 +54,21 @@ header.nav{position:sticky;top:0;z-index:50;background:color-mix(in oklab,var(--
 .page-head h1{font-family:var(--font-display);font-weight:800;font-size:clamp(34px,5vw,56px);line-height:1.06;letter-spacing:-.015em;margin:14px 0 0}
 .page-head p{color:var(--muted);font-size:17px;max-width:50ch;margin:16px 0 0}
 
-.proj{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin-bottom:20px}
-.proj-card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:.25s;display:flex;flex-direction:column;text-decoration:none;color:inherit}
-.proj-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover)}
-.proj-thumb{min-height:220px;flex:0 0 46%;border-radius:0}
-.proj-body{padding:28px 30px;display:flex;flex-direction:column;flex:1}
-.proj-kicker{font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.proj-body h3{font-family:var(--font-display);font-weight:700;font-size:25px;margin:10px 0 10px;line-height:1.15}
-.proj-body p{font-size:15px;color:var(--muted);line-height:1.7;margin:0 0 18px}
-.proj-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
-.proj-tags span{font-family:var(--font-mono);font-size:11.5px;color:var(--fg);background:var(--surface);border:1px solid var(--border);padding:5px 11px;border-radius:7px}
+/* image hero with embedded cards */
+.hero-img-wrap{position:relative;border-radius:20px;overflow:hidden;margin-bottom:36px;
+  box-shadow:var(--shadow-card)}
+.hero-img-wrap img{display:block;width:100%;height:auto}
+.hero-img-overlay{position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(79,72,62,.0) 40%,rgba(79,72,62,.55) 100%)}
+.hero-cards{position:absolute;right:28px;bottom:24px;display:flex;gap:14px;z-index:2}
+.hero-card{background:color-mix(in oklab,var(--card) 88%,transparent);
+  backdrop-filter:blur(12px);border:1px solid color-mix(in oklab,var(--border) 70%,transparent);
+  border-radius:14px;padding:18px 22px;width:260px;text-decoration:none;color:inherit;transition:.25s}
+.hero-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);background:var(--card)}
+.hero-card h3{font-family:var(--font-display);font-weight:700;font-size:18px;margin:0 0 6px}
+.hero-card p{font-size:13px;color:var(--muted);line-height:1.6;margin:0 0 10px}
+.hero-card .proj-tags span{font-family:var(--font-mono);font-size:10.5px;color:var(--fg);
+  background:var(--surface);border:1px solid var(--border);padding:3px 8px;border-radius:6px}
 
 /* diary list */
 .diary-list{display:flex;flex-direction:column;gap:2px}
@@ -82,7 +87,8 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
 
 @media(max-width:880px){
   .nav-links{display:none}
-  .proj{grid-template-columns:1fr}
+  .hero-cards{flex-direction:column;right:16px;bottom:16px}
+  .hero-card{width:220px}
   .diary-row{grid-template-columns:1fr;gap:8px}
 }
 @media(max-width:560px){.wrap{padding:0 20px}.page-head{padding:44px 0 32px}}
@@ -115,52 +121,21 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
 
 <section>
   <div class="wrap">
-    <div class="proj">
-      <a href="/lobster" class="proj-link">
-      <article class="proj-card">
-        <figure class="img-ph proj-thumb" data-img-prompt="Layered system architecture, gateway + multi-agent + memory, cream + orange, 16:9">
-          <span class="tag">贴图位 · 16:9</span><span class="desc">OpenClaw 架构封面</span>
-        </figure>
-        <div class="proj-body">
-          <span class="proj-kicker">架构 · Architecture</span>
+    <div class="hero-img-wrap">
+      <img src="source/pic/index/教程.png" alt="教程">
+      <div class="hero-img-overlay"></div>
+      <div class="hero-cards">
+        <a href="/lobster" class="hero-card proj-link">
           <h3>OpenClaw 架构实践</h3>
-          <p>个人 Agent 平台的核心架构拆解：网关设计、多 Agent 天然支持、用户记忆系统，从 0 到部署的完整路径。</p>
-          <div class="proj-tags">
-            <span>多 Agent</span><span>网关</span><span>记忆系统</span>
-          </div>
-        </div>
-      </article>
-      </a>
-      <a href="blog.html" class="proj-link">
-      <article class="proj-card">
-        <figure class="img-ph proj-thumb" data-img-prompt="小泥巴 AI diary, friendly character + open journal, cream + orange, cozy, 16:9">
-          <span class="tag">贴图位 · 16:9</span><span class="desc">小泥巴 · AI 日记封面</span>
-        </figure>
-        <div class="proj-body">
-          <span class="proj-kicker">连载 · Series</span>
-          <h3>小泥巴 · AI 日记</h3>
-          <p>从 AI 第一人称视角写的成长日记：诞生、第一次心态崩、获得超能力、学会自动化——一个真实的人机共生故事。</p>
-          <div class="proj-tags">
-            <span>叙事</span><span>人机共生</span><span>连载</span>
-          </div>
-        </div>
-      </article>
-      </a>
-      <a href="/learn-cc" class="proj-link">
-      <article class="proj-card">
-        <figure class="img-ph proj-thumb" data-img-prompt="12-step learning path, cream + orange progress line, friendly educational, 16:9">
-          <span class="tag">贴图位 · 16:9</span><span class="desc">Agent 入门教程封面</span>
-        </figure>
-        <div class="proj-body">
-          <span class="proj-kicker">教程 · Tutorial</span>
+          <p>个人 Agent 平台核心架构拆解：网关设计、多 Agent 支持、记忆系统。</p>
+          <div class="proj-tags"><span>多 Agent</span><span>网关</span></div>
+        </a>
+        <a href="/learn-cc" class="hero-card proj-link">
           <h3>Agent 入门教程</h3>
-          <p>从零掌握 AI Agent 的 12 堂课——基于 Claude Code 的系统化学习路径，覆盖安装、配置、Skills 扩展到自动化实战。</p>
-          <div class="proj-tags">
-            <span>Claude Code</span><span>12 课</span><span>系统化</span>
-          </div>
-        </div>
-      </article>
-      </a>
+          <p>从零掌握 AI Agent 的 12 堂课——基于 Claude Code 的系统化学习路径。</p>
+          <div class="proj-tags"><span>Claude Code</span><span>12 课</span></div>
+        </a>
+      </div>
     </div>
   </div>
 </section>

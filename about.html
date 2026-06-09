@@ -139,14 +139,14 @@ section.alt{background:color-mix(in oklab, var(--surface) 60%, transparent);
 
 /* — contact links — */
 .contact-links{display:flex;flex-direction:column;gap:2px}
-.contact-links a{
-  display:flex;align-items:center;gap:14px;padding:18px 20px;
-  font-family:var(--font-mono);font-size:14px;letter-spacing:.02em;
-  border-bottom:1px solid var(--border);color:var(--fg);transition:.2s;
+.contact-links .contact-item{
+  display:flex;align-items:baseline;gap:16px;padding:18px 22px;
+  border-radius:14px;transition:.2s;cursor:pointer;text-decoration:none;color:inherit;
 }
-.contact-links a:hover{background:var(--card);padding-left:28px;color:var(--accent)}
-.contact-links a .c-icon{font-size:20px;width:28px;text-align:center;flex-shrink:0}
-.contact-links a .c-label{color:var(--muted);font-size:12px;letter-spacing:.1em;text-transform:uppercase;width:56px;flex-shrink:0}
+.contact-links .contact-item:hover{background:var(--card);padding-left:28px}
+.contact-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent);min-width:52px;flex-shrink:0}
+.contact-value{font-family:var(--font-body);font-size:15.5px;color:var(--fg);letter-spacing:.01em}
 
 /* — newsletter — */
 .newsletter{
@@ -187,7 +187,7 @@ footer{padding:44px 0}
   .hobby-grid{grid-template-columns:1fr}
   .newsletter{padding:40px 28px}
   .newsletter .sub-form{flex-direction:column}
-  .contact-links a{gap:12px;font-size:13px;padding:16px 14px}
+  .contact-links .contact-item{gap:12px;font-size:13px;padding:16px 14px}
 }
 </style>
 </head>
@@ -322,26 +322,22 @@ footer{padding:44px 0}
     <span class="sec-label">联系方式</span>
     <h2 class="sec-title">来交流。</h2>
     <div class="contact-links">
-      <a href="mailto:ncz1993107@gmail.com">
-        <span class="c-icon">📧</span>
-        <span class="c-label">邮件</span>
-        <span>ncz1993107@gmail.com</span>
+      <a href="mailto:ncz1993107@gmail.com" class="contact-item">
+        <span class="contact-label">邮箱</span>
+        <span class="contact-value">ncz1993107@gmail.com</span>
       </a>
-      <a href="https://github.com/ttttstc" target="_blank" rel="noopener">
-        <span class="c-icon">⌨</span>
-        <span class="c-label">GitHub</span>
-        <span>@ttttstc</span>
+      <a href="https://github.com/ttttstc" target="_blank" rel="noopener" class="contact-item">
+        <span class="contact-label">GitHub</span>
+        <span class="contact-value">ttttstc</span>
       </a>
-      <a href="https://x.com/ttttstc2025" target="_blank" rel="noopener">
-        <span class="c-icon">𝕏</span>
-        <span class="c-label">X</span>
-        <span>@ttttstc2025</span>
+      <a href="https://x.com/ttttstc2025" target="_blank" rel="noopener" class="contact-item">
+        <span class="contact-label">X</span>
+        <span class="contact-value">@ttttstc2025</span>
       </a>
-      <a>
-        <span class="c-icon">💬</span>
-        <span class="c-label">微信</span>
-        <span>nicongzheng</span>
-      </a>
+      <span class="contact-item">
+        <span class="contact-label">微信</span>
+        <span class="contact-value">nicongzheng</span>
+      </span>
     </div>
   </div>
 </section>
