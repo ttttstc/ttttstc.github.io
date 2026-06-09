@@ -76,6 +76,15 @@ header.nav{position:sticky;top:0;z-index:50;
 .nav-links a:hover{color:var(--fg)}
 .nav-links a.active{color:var(--fg);font-weight:500}
 .nav-toggle{display:none;background:none;border:0;color:var(--fg);font-size:22px;cursor:pointer}
+.nav-links.open{
+  display:flex!important;flex-direction:column;gap:0;
+  position:absolute;top:68px;left:0;right:0;
+  background:color-mix(in oklab, var(--bg) 94%, transparent);
+  backdrop-filter:saturate(150%) blur(14px);
+  border-bottom:1px solid var(--border);
+  padding:12px 0;
+}
+.nav-links.open a{padding:14px 32px;font-size:15px}
 
 /* ---------- hero ---------- */
 .hero{
@@ -201,7 +210,7 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
 
 /* ---------- responsive ---------- */
 @media(max-width:900px){
-  .nav-links{display:none}
+  .nav-links:not(.open){display:none}
   .nav-toggle{display:block}
   .about-grid,.contact-card{grid-template-columns:1fr;gap:36px}
   .hero{min-height:80vh;padding:104px 0 88px}
@@ -209,15 +218,26 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
   .proj,.proj-col3{grid-template-columns:1fr}
   .proj-card.feature{flex-direction:column}
   .proj-card.feature .proj-thumb{border-right:0;border-bottom:1px solid var(--border)}
+  .proj-thumb{max-height:260px}
+  .proj-thumb img{height:100%;object-fit:cover}
   .art-row{grid-template-columns:1fr;gap:8px}
   .art-date{order:2}.art-cat{order:1;justify-self:start}
   .contact-card{padding:44px 30px}
+  .overlay-hero img{max-height:340px;object-fit:cover}
+  .overlay-cards{flex-direction:column!important;align-items:stretch!important}
+  .overlay-cards .proj-link{flex:1 1 auto!important}
 }
 @media(max-width:560px){
   .wrap{padding:0 20px}
-  .hero{padding:56px 0 40px}
+  .hero{padding:56px 0 40px;min-height:auto}
   section{padding:60px 0}
   .skill-grid{grid-template-columns:1fr}
+  .hero h1{font-size:clamp(32px,8vw,44px)}
+  .hero .lede{font-size:16px}
+  .contact-card{padding:32px 20px}
+  .overlay-hero img{max-height:260px}
+  .overlay-cards{padding:16px!important}
+  .overlay-cards .proj-card h3{font-size:17px!important}
 }
 </style>
 </head>
@@ -498,15 +518,6 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
             <span class="proj-kicker">架构</span>
             <h3 style="font-size:20px;margin:8px 0 6px">OpenClaw</h3>
             <p style="font-size:13px;margin:0">个人 Agent 平台核心架构拆解。</p>
-          </div>
-        </article>
-        </a>
-        <a href="tutorials.html" class="proj-link" style="flex:0 1 220px">
-        <article class="proj-card" style="background:rgba(255,251,245,.92);backdrop-filter:blur(12px);border-color:rgba(226,216,203,.5)">
-          <div class="proj-body" style="padding:20px 22px">
-            <span class="proj-kicker">连载</span>
-            <h3 style="font-size:20px;margin:8px 0 6px">小泥巴日记</h3>
-            <p style="font-size:13px;margin:0">一个 AI 第一人称的成长故事。</p>
           </div>
         </article>
         </a>
