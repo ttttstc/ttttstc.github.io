@@ -118,7 +118,7 @@ header.nav{position:sticky;top:0;z-index:50;
 .btn-ghost:hover{background:var(--fg);color:var(--card);border-color:var(--fg)}
 
 /* ---------- section scaffolding ---------- */
-section{padding:80px 0}
+section{padding:64px 0}
 .sec-head{display:flex;align-items:flex-end;justify-content:space-between;
   gap:24px;margin-bottom:44px;flex-wrap:wrap}
 .sec-head h2{font-family:var(--font-display);font-weight:700;
@@ -135,7 +135,7 @@ section{padding:80px 0}
 .about-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center}
 .about-prose p{font-size:17px;line-height:1.8;color:var(--fg);margin:0 0 18px}
 .about-prose p .hl{color:var(--accent);font-weight:500}
-.about-art{aspect-ratio:1/1;border-radius:18px}
+.about-art{aspect-ratio:1/1;border-radius:18px;max-height:360px;overflow:hidden}
 
 /* ---------- skills ---------- */
 .skill-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
@@ -153,7 +153,7 @@ section{padding:80px 0}
   overflow:hidden;transition:.25s;display:flex;flex-direction:column}
 .proj-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover)}
 .proj-card.feature{grid-column:1 / -1;flex-direction:row}
-.proj-thumb{min-height:230px;flex:0 0 46%;border-radius:0}
+.proj-thumb{min-height:180px;flex:0 0 42%;border-radius:0}
 .proj-card.feature .proj-thumb{border-right:1px solid var(--border)}
 .proj-body{padding:30px 32px;display:flex;flex-direction:column;flex:1}
 .proj-kicker{font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;
@@ -188,7 +188,7 @@ section{padding:80px 0}
 
 /* ---------- contact ---------- */
 .contact-card{background:var(--fg);color:var(--bg);border-radius:24px;
-  padding:64px 56px;display:grid;grid-template-columns:1.2fr .8fr;gap:56px;align-items:center}
+  padding:48px 48px;display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}
 .contact-card h2{font-family:var(--font-display);font-weight:700;font-size:clamp(30px,4vw,46px);
   line-height:1.1;margin:14px 0 0;color:var(--card)}
 .contact-card .eyebrow{color:var(--accent-soft)}
@@ -222,22 +222,23 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
   .proj-thumb img{height:100%;object-fit:cover}
   .art-row{grid-template-columns:1fr;gap:8px}
   .art-date{order:2}.art-cat{order:1;justify-self:start}
-  .contact-card{padding:44px 30px}
-  .overlay-hero img{max-height:340px;object-fit:cover}
+  .contact-card{padding:32px 28px}
+  .overlay-hero img{max-height:280px;object-fit:cover}
   .overlay-cards{flex-direction:column!important;align-items:stretch!important}
   .overlay-cards .proj-link{flex:1 1 auto!important}
 }
 @media(max-width:560px){
   .wrap{padding:0 20px}
   .hero{padding:56px 0 40px;min-height:auto}
-  section{padding:60px 0}
+  section{padding:48px 0}
   .skill-grid{grid-template-columns:1fr}
   .hero h1{font-size:clamp(32px,8vw,44px)}
   .hero .lede{font-size:16px}
-  .contact-card{padding:32px 20px}
-  .overlay-hero img{max-height:260px}
+  .contact-card{padding:28px 20px}
+  .overlay-hero img{max-height:220px}
   .overlay-cards{padding:16px!important}
   .overlay-cards .proj-card h3{font-size:17px!important}
+  .about-art{max-height:280px}
 }
 </style>
 </head>
@@ -473,7 +474,7 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
       <a class="link-more" href="toolbox.html">查看全部 →</a>
     </div>
     <div class="overlay-hero" style="position:relative;border-radius:18px;overflow:hidden">
-      <img src="source/pic/index/工具箱.png" alt="工具箱" style="width:100%;display:block">
+      <img src="source/pic/index/工具箱.png" alt="工具箱" style="width:100%;max-height:420px;object-fit:cover;display:block">
       <div class="overlay-cards" style="position:absolute;bottom:0;left:0;right:0;padding:24px 28px;display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end;background:linear-gradient(0deg,rgba(79,72,62,.55) 0%,rgba(79,72,62,0) 100%)">
         <a href="/prompts" class="proj-link" style="flex:0 1 260px">
         <article class="proj-card" style="background:rgba(255,251,245,.92);backdrop-filter:blur(12px);border-color:rgba(226,216,203,.5)">
@@ -509,7 +510,7 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
       <a class="link-more" href="tutorials.html">查看全部 →</a>
     </div>
     <div class="overlay-hero" style="position:relative;border-radius:18px;overflow:hidden">
-      <img src="source/pic/index/教程.png" alt="教程" style="width:100%;display:block">
+      <img src="source/pic/index/教程.png" alt="教程" style="width:100%;max-height:420px;object-fit:cover;display:block">
       <div class="overlay-cards" style="position:absolute;bottom:0;left:0;right:0;padding:24px 28px;display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end;background:linear-gradient(0deg,rgba(79,72,62,.55) 0%,rgba(79,72,62,0) 100%)">
         <a href="/lobster" class="proj-link" style="flex:0 1 220px">
         <article class="proj-card" style="background:rgba(255,251,245,.92);backdrop-filter:blur(12px);border-color:rgba(226,216,203,.5)">
@@ -561,8 +562,8 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
           <span class="contact-value">nicongzheng</span>
         </span>
       </div>
-      <figure style="grid-column:1/-1;margin:0;border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.2)">
-        <img src="source/pic/index/联系我.png" alt="联系我" style="width:100%;display:block">
+      <figure style="grid-column:1/-1;margin:0;border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.2);max-height:280px">
+        <img src="source/pic/index/联系我.png" alt="联系我" style="width:100%;height:100%;object-fit:cover;display:block">
       </figure>
     </div>
   </div>
