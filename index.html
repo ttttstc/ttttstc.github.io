@@ -1,8 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/png" href="source/pic/icon/icon.png">
 <title>泥巴猪的伊甸园 · AI Builder / 微服务架构 / DevOps</title>
 <meta name="description" content="泥巴猪的伊甸园 —— AI Builder、微服务架构师、DevOps & CICD 领域专家。与 AI 共建的工程化探索之路。" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -135,7 +136,7 @@ section{padding:64px 0}
 .about-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center}
 .about-prose p{font-size:17px;line-height:1.8;color:var(--fg);margin:0 0 18px}
 .about-prose p .hl{color:var(--accent);font-weight:500}
-.about-art{aspect-ratio:1/1;border-radius:18px;max-height:360px;overflow:hidden}
+.about-art{aspect-ratio:1/1;border-radius:18px;overflow:hidden}
 
 /* ---------- skills ---------- */
 .skill-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
@@ -188,7 +189,8 @@ section{padding:64px 0}
 
 /* ---------- contact ---------- */
 .contact-card{background:var(--fg);color:var(--bg);border-radius:24px;
-  padding:48px 48px;display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}
+  padding:48px 48px;max-width:960px;margin:0 auto;
+  display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:start}
 .contact-card h2{font-family:var(--font-display);font-weight:700;font-size:clamp(30px,4vw,46px);
   line-height:1.1;margin:14px 0 0;color:var(--card)}
 .contact-card .eyebrow{color:var(--accent-soft)}
@@ -201,6 +203,9 @@ section{padding:64px 0}
 .contact-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;
   text-transform:uppercase;color:var(--accent-soft);min-width:52px;flex-shrink:0}
 .contact-value{font-family:var(--font-body);font-size:15.5px;color:var(--card);letter-spacing:.01em}
+
+/* ---------- overlay sections (toolbox / tutorials) ---------- */
+.overlay-hero{max-width:960px;margin:0 auto}
 
 /* ---------- footer ---------- */
 footer{padding:44px 0;border-top:1px solid var(--border)}
@@ -219,11 +224,10 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
   .proj-card.feature{flex-direction:column}
   .proj-card.feature .proj-thumb{border-right:0;border-bottom:1px solid var(--border)}
   .proj-thumb{max-height:260px}
-  .proj-thumb img{height:100%;object-fit:cover}
+  .proj-thumb img{width:100%;height:100%;object-fit:cover}
   .art-row{grid-template-columns:1fr;gap:8px}
   .art-date{order:2}.art-cat{order:1;justify-self:start}
   .contact-card{padding:32px 28px}
-  .overlay-hero img{max-height:280px;object-fit:cover}
   .overlay-cards{flex-direction:column!important;align-items:stretch!important}
   .overlay-cards .proj-link{flex:1 1 auto!important}
 }
@@ -235,10 +239,8 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
   .hero h1{font-size:clamp(32px,8vw,44px)}
   .hero .lede{font-size:16px}
   .contact-card{padding:28px 20px}
-  .overlay-hero img{max-height:220px}
   .overlay-cards{padding:16px!important}
   .overlay-cards .proj-card h3{font-size:17px!important}
-  .about-art{max-height:280px}
 }
 </style>
 </head>
@@ -285,7 +287,7 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
 <section class="about" id="about">
   <div class="wrap about-grid">
     <figure class="about-art">
-      <img src="source/pic/index/关于我.png" alt="关于我" style="width:100%;height:100%;object-fit:cover;border-radius:18px">
+      <img src="source/pic/index/关于我.png" alt="关于我" style="width:100%;height:auto;border-radius:18px">
     </figure>
     <div class="about-prose">
       <span class="eyebrow">关于我</span>
@@ -420,23 +422,15 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
     </div>
     <div class="art-list">
       <a href="article.html?article=understand-arch" class="art-row">
-        <span class="art-date">2026.05.13</span>
+        <span class="art-date">2026.06.06</span>
         <div class="art-main">
           <h3>Agent 友好的代码库知识引擎 understand-arch 的设计与实现</h3>
           <p>如何让 AI Agent 在大型代码库中快速建立全局理解，而不只是逐文件阅读。</p>
         </div>
         <span class="art-cat">AI 工程</span>
       </a>
-      <a href="article.html?article=vibeflow-birth" class="art-row">
-        <span class="art-date">2026.05.10</span>
-        <div class="art-main">
-          <h3>用了两个月 Superpowers + gstack 之后，我自己造了一个 VibeFlow</h3>
-          <p>从"提示词 → 生成代码"到真正的 AI 协作工程化，我需要的不是更好的 Prompt，而是一套完整的交付框架。</p>
-        </div>
-        <span class="art-cat">Workflow</span>
-      </a>
       <a href="article.html?article=harness-foundation" class="art-row">
-        <span class="art-date">2026.04.18</span>
+        <span class="art-date">2026.06.01</span>
         <div class="art-main">
           <h3>地基不牢，Harness 白搭——对 AI 工程知识资产的思考</h3>
           <p>别让知识资产成了摆设——从目录设计到治理节奏，一步步搭好 Harness 的地基。</p>
@@ -444,7 +438,7 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
         <span class="art-cat">AI 工程</span>
       </a>
       <a href="article.html?article=context-debt" class="art-row">
-        <span class="art-date">2026.04.16</span>
+        <span class="art-date">2026.05.27</span>
         <div class="art-main">
           <h3>上下文债：项目隐性知识的管理</h3>
           <p>随着对话越来越多，我发现项目里积累了一种看不见的"债"——上下文债。当对话超过五轮，信息就开始散落各处。</p>
@@ -452,12 +446,20 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
         <span class="art-cat">AI 工程</span>
       </a>
       <a href="article.html?article=judgment-matters" class="art-row">
-        <span class="art-date">2026.03.22</span>
+        <span class="art-date">2026.05.18</span>
         <div class="art-main">
           <h3>当造东西变得简单，最贵的是判断力</h3>
           <p>AI 时代造东西变简单了，但什么是值得造的？怎么判断一个功能该不该加？</p>
         </div>
         <span class="art-cat">产品设计</span>
+      </a>
+      <a href="article.html?article=vibeflow-birth" class="art-row">
+        <span class="art-date">2026.05.11</span>
+        <div class="art-main">
+          <h3>用了两个月 Superpowers + gstack 之后，我自己造了一个 VibeFlow</h3>
+          <p>从"提示词 → 生成代码"到真正的 AI 协作工程化，我需要的不是更好的 Prompt，而是一套完整的交付框架。</p>
+        </div>
+        <span class="art-cat">Workflow</span>
       </a>
     </div>
   </div>
@@ -474,7 +476,7 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
       <a class="link-more" href="toolbox.html">查看全部 →</a>
     </div>
     <div class="overlay-hero" style="position:relative;border-radius:18px;overflow:hidden">
-      <img src="source/pic/index/工具箱.png" alt="工具箱" style="width:100%;max-height:420px;object-fit:cover;display:block">
+      <img src="source/pic/index/工具箱.png" alt="工具箱" style="width:100%;height:auto;display:block">
       <div class="overlay-cards" style="position:absolute;bottom:0;left:0;right:0;padding:24px 28px;display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end;background:linear-gradient(0deg,rgba(79,72,62,.55) 0%,rgba(79,72,62,0) 100%)">
         <a href="/prompts" class="proj-link" style="flex:0 1 260px">
         <article class="proj-card" style="background:rgba(255,251,245,.92);backdrop-filter:blur(12px);border-color:rgba(226,216,203,.5)">
@@ -510,7 +512,7 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
       <a class="link-more" href="tutorials.html">查看全部 →</a>
     </div>
     <div class="overlay-hero" style="position:relative;border-radius:18px;overflow:hidden">
-      <img src="source/pic/index/教程.png" alt="教程" style="width:100%;max-height:420px;object-fit:cover;display:block">
+      <img src="source/pic/index/教程.png" alt="教程" style="width:100%;height:auto;display:block">
       <div class="overlay-cards" style="position:absolute;bottom:0;left:0;right:0;padding:24px 28px;display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-end;background:linear-gradient(0deg,rgba(79,72,62,.55) 0%,rgba(79,72,62,0) 100%)">
         <a href="/lobster" class="proj-link" style="flex:0 1 220px">
         <article class="proj-card" style="background:rgba(255,251,245,.92);backdrop-filter:blur(12px);border-color:rgba(226,216,203,.5)">
@@ -562,8 +564,8 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
           <span class="contact-value">nicongzheng</span>
         </span>
       </div>
-      <figure style="grid-column:1/-1;margin:0;border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.2);max-height:280px">
-        <img src="source/pic/index/联系我.png" alt="联系我" style="width:100%;height:100%;object-fit:cover;display:block">
+      <figure style="grid-column:1/-1;margin:0;border-radius:14px;overflow:hidden">
+        <img src="source/pic/index/联系我.png" alt="联系我" style="width:100%;height:auto;display:block">
       </figure>
     </div>
   </div>

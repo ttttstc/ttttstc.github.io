@@ -462,19 +462,3 @@ arch-constraint-miner 一次产三份:
 \[5\] **dependency-cruiser**, [https://github.com/sverweij/dependency-cruiser](https://github.com/sverweij/dependency-cruiser)
 
 \[6\] understand-arch, [https://github.com/ttttstc/understand-arch](https://github.com/ttttstc/understand-arch)
-
-技术文章 · 目录
-
-作者提示: 个人观点，仅供参考
-
-继续滑动看下一个
-
-低卧扑食
-
-向上滑动看下一个
-
-拖拽到此处完成下载
-
-图片将完成下载
-
-AIX智能下载器

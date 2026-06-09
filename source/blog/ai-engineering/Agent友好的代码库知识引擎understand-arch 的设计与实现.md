@@ -222,20 +222,3 @@ understand-arch 用两个相互独立、又相互喂养的飞轮,让知识库随
 
 \[8\] **dependency-cruiser**, [https://github.com/sverweij/dependency-cruiser](https://github.com/sverweij/dependency-cruiser)
 
----
-
-技术文章 · 目录
-
-作者提示: 个人观点，仅供参考
-
-继续滑动看下一个
-
-低卧扑食
-
-向上滑动看下一个
-
-拖拽到此处完成下载
-
-图片将完成下载
-
-AIX智能下载器
