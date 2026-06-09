@@ -62,6 +62,15 @@ header.nav{position:sticky;top:0;z-index:50;
 .nav-links a:hover{color:var(--fg)}
 .nav-links a.active{color:var(--fg);font-weight:500}
 .nav-toggle{display:none;background:none;border:0;color:var(--fg);font-size:22px;cursor:pointer}
+.nav-links.open{
+  display:flex!important;flex-direction:column;gap:0;
+  position:absolute;top:68px;left:0;right:0;
+  background:color-mix(in oklab, var(--bg) 94%, transparent);
+  backdrop-filter:saturate(150%) blur(14px);
+  border-bottom:1px solid var(--border);
+  padding:12px 0;
+}
+.nav-links.open a{padding:14px 32px;font-size:15px}
 
 /* — hero — */
 .about-hero{padding:96px 0 64px;text-align:center}
@@ -184,6 +193,8 @@ footer{padding:44px 0}
 
 /* — responsive — */
 @media(max-width:680px){
+  .nav-links:not(.open){display:none}
+  .nav-toggle{display:block}
   .hobby-grid{grid-template-columns:1fr}
   .newsletter{padding:40px 28px}
   .newsletter .sub-form{flex-direction:column}
@@ -232,20 +243,6 @@ footer{padding:44px 0}
   </div>
 </section>
 
-<!-- ===== 目前在做的事 ===== -->
-<section class="alt">
-  <div class="wrap">
-    <span class="sec-label">目前在做什么</span>
-    <h2 class="sec-title">持续打磨交付。<br>让 AI Agent 真正可落地。</h2>
-    <div class="current-card">
-      <div class="icon-row">
-        <span class="icon">田</span>
-        <h3>泥巴猪的伊甸园</h3>
-      </div>
-      <p>这里是我的数字花园。记录了三样东西：OpenClaw Agent 平台的架构演进、VibeFlow 结构化交付框架的迭代、以及「小泥巴」——一个 AI 从零开始认识世界的成长日记。希望通过这些真实的记录，让更多工程师看到人机协作的可行路径，也帮你少踩一些坑。</p>
-    </div>
-  </div>
-</section>
 
 <!-- ===== 技术栈 ===== -->
 <section>
@@ -258,15 +255,8 @@ footer{padding:44px 0}
       <span class="tag">Python</span>
       <span class="tag">CI/CD</span>
       <span class="tag">GitHub Actions</span>
-      <span class="tag">Docker &amp; K8s</span>
-      <span class="tag">Agent 架构</span>
       <span class="tag">Workflow</span>
       <span class="tag">Harness 框架</span>
-      <span class="tag">OpenTelemetry</span>
-      <span class="tag">多 Agent 编排</span>
-      <span class="tag">RAG</span>
-      <span class="tag">MCP</span>
-      <span class="tag">Claude Code</span>
       <span class="tag">微服务架构</span>
       <span class="tag">平台工程</span>
     </div>

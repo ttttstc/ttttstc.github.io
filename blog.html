@@ -56,6 +56,15 @@ header.nav{position:sticky;top:0;z-index:50;background:color-mix(in oklab,var(--
 .nav-links a{font-size:14.5px;color:var(--muted);transition:color .2s}
 .nav-links a:hover,.nav-links a.active{color:var(--fg)}
 .nav-toggle{display:none;background:none;border:0;color:var(--fg);font-size:22px;cursor:pointer}
+.nav-links.open{
+  display:flex!important;flex-direction:column;gap:0;
+  position:absolute;top:68px;left:0;right:0;
+  background:color-mix(in oklab, var(--bg) 94%, transparent);
+  backdrop-filter:saturate(150%) blur(14px);
+  border-bottom:1px solid var(--border);
+  padding:12px 0;
+}
+.nav-links.open a{padding:14px 32px;font-size:15px}
 
 /* page head */
 .blog-head{padding:64px 0 44px;border-bottom:1px solid var(--border)}
@@ -127,7 +136,8 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
 .foot-inner .font-note{font-family:var(--font-mono);font-size:11.5px}
 
 @media(max-width:880px){
-  .nav-links{display:none}
+  .nav-links:not(.open){display:none}
+  .nav-toggle{display:block}
   .blog-grid{grid-template-columns:1fr;gap:34px}
   .side{position:static}
   .cat-list{flex-direction:row;flex-wrap:wrap;gap:8px;margin-bottom:28px}

@@ -49,6 +49,15 @@ header.nav{position:sticky;top:0;z-index:50;background:color-mix(in oklab,var(--
 .nav-links a:hover{color:var(--fg)}
 .nav-links a.active{color:var(--fg);font-weight:500}
 .nav-toggle{display:none;background:none;border:0;color:var(--fg);font-size:22px;cursor:pointer}
+.nav-links.open{
+  display:flex!important;flex-direction:column;gap:0;
+  position:absolute;top:68px;left:0;right:0;
+  background:color-mix(in oklab, var(--bg) 94%, transparent);
+  backdrop-filter:saturate(150%) blur(14px);
+  border-bottom:1px solid var(--border);
+  padding:12px 0;
+}
+.nav-links.open a{padding:14px 32px;font-size:15px}
 
 .page-head{padding:64px 0 48px}
 .page-head h1{font-family:var(--font-display);font-weight:800;font-size:clamp(34px,5vw,56px);line-height:1.06;letter-spacing:-.015em;margin:14px 0 0}
@@ -75,11 +84,18 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
 .foot-inner .font-note{font-family:var(--font-mono);font-size:11.5px}
 
 @media(max-width:880px){
-  .nav-links{display:none}
+  .nav-links:not(.open){display:none}
+  .nav-toggle{display:block}
   .hero-cards{flex-direction:column;right:16px;bottom:16px}
-  .hero-card{width:220px}
+  .hero-card{width:auto}
 }
-@media(max-width:560px){.wrap{padding:0 20px}.page-head{padding:44px 0 32px}}
+@media(max-width:560px){.wrap{padding:0 20px}.page-head{padding:44px 0 32px}
+  .hero-cards{right:12px;bottom:12px;left:12px;flex-direction:column!important}
+  .hero-card{width:auto!important;padding:14px 16px}
+  .hero-img-wrap img{max-height:280px;object-fit:cover}
+  .hero-card h3{font-size:16px}
+  .hero-card p{font-size:12px}
+}
 </style>
 </head>
 <body>
