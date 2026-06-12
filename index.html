@@ -99,7 +99,16 @@ header.nav{position:sticky;top:0;z-index:50;
   content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
   background:radial-gradient(ellipse 70% 60% at 50% 45%, rgba(79,72,62,.20) 0%, rgba(79,72,62,.04) 55%, transparent 100%);
 }
-.hero-inner{max-width:800px;margin:0 auto;position:relative;z-index:1}
+.hero-veil{
+  position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:rgba(236,228,217,.40);
+  backdrop-filter:saturate(.45) brightness(1.05);
+  -webkit-backdrop-filter:saturate(.45) brightness(1.05);
+}
+.hero-glow{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+}
+.hero-inner{max-width:800px;margin:0 auto;position:relative;z-index:3}
 .hero .eyebrow{display:inline-block}
 .hero h1{font-family:var(--font-display);font-weight:800;
   font-size:clamp(44px,6vw,80px);line-height:1.04;letter-spacing:-.015em;margin:18px 0 0;
@@ -270,6 +279,8 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
 
 <!-- ===== HERO ===== -->
 <section class="hero">
+  <div class="hero-veil" aria-hidden="true"></div>
+  <canvas class="hero-glow" id="heroGlow" aria-hidden="true"></canvas>
   <div class="wrap hero-inner">
     <h1>与 AI 共建的<br><em>工程化探索之路</em>。</h1>
     <p class="lede">CICD流水线架构师，专注于高性能云服务系统。最近在探索 AI Agent、Workflow 和 Harness 框架的工程化落地。</p>
@@ -594,6 +605,76 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
       window.location.href='/index.html';
     });
   });
+  // Hero 光标揭示：默认油画被淡化，光标经过处揭开原画鲜明颜色，拖尾慢慢淡回
+  (function(){
+    const hero=document.querySelector('.hero');
+    const canvas=document.getElementById('heroGlow');
+    if(!hero||!canvas||!canvas.getContext) return;
+    const ctx=canvas.getContext('2d');
+    const mask=document.createElement('canvas');
+    const mctx=mask.getContext('2d');
+    const img=new Image();let imgReady=false;
+    img.onload=()=>{imgReady=true;start();};
+    img.src='source/pic/index-pic.jpg';
+    let W=0,H=0,dpr=1,mx=-999,my=-999,inside=false,idle=0,raf=null;
+    function resize(){
+      dpr=Math.min(window.devicePixelRatio||1,2);
+      const r=hero.getBoundingClientRect();
+      W=r.width;H=r.height;
+      [canvas,mask].forEach(cv=>{cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);});
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      mctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    resize();
+    window.addEventListener('resize',resize);
+    function cover(){
+      // 与 body 固定背景(cover/center)严格对齐：用 clientWidth/Height(不含滚动条)
+      const vw=document.documentElement.clientWidth,vh=document.documentElement.clientHeight;
+      const iw=img.naturalWidth||1,ih=img.naturalHeight||1;
+      const s=Math.max(vw/iw,vh/ih);
+      const dw=iw*s,dh=ih*s;
+      const r=hero.getBoundingClientRect();
+      return {dw,dh,dx:(vw-dw)/2-r.left,dy:(vh-dh)/2-r.top};
+    }
+    function frame(){
+      // 拖尾：每帧削弱遮罩 → 已揭开区域慢慢淡回淡化态(衰减越小拖尾越久)
+      mctx.globalCompositeOperation='destination-out';
+      mctx.fillStyle='rgba(0,0,0,0.018)';
+      mctx.fillRect(0,0,W,H);
+      if(inside){
+        mctx.globalCompositeOperation='source-over';
+        const R=230;
+        const g=mctx.createRadialGradient(mx,my,0,mx,my,R);
+        // 多段羽化，避免可见圆形硬边
+        g.addColorStop(0,'rgba(0,0,0,0.85)');
+        g.addColorStop(.22,'rgba(0,0,0,0.55)');
+        g.addColorStop(.45,'rgba(0,0,0,0.28)');
+        g.addColorStop(.68,'rgba(0,0,0,0.11)');
+        g.addColorStop(.85,'rgba(0,0,0,0.03)');
+        g.addColorStop(1,'rgba(0,0,0,0)');
+        mctx.fillStyle=g;mctx.beginPath();mctx.arc(mx,my,R,0,Math.PI*2);mctx.fill();
+        idle=0;
+      }else idle++;
+      // 渲染：把原画按遮罩揭开
+      ctx.clearRect(0,0,W,H);
+      if(imgReady){
+        const c=cover();
+        ctx.globalCompositeOperation='source-over';
+        ctx.drawImage(img,c.dx,c.dy,c.dw,c.dh);
+        ctx.globalCompositeOperation='destination-in';
+        ctx.drawImage(mask,0,0,W,H);
+      }
+      if(!inside&&idle>340){ctx.clearRect(0,0,W,H);raf=null;return;}
+      raf=requestAnimationFrame(frame);
+    }
+    function start(){if(!raf)raf=requestAnimationFrame(frame);}
+    hero.addEventListener('pointermove',e=>{
+      const r=hero.getBoundingClientRect();
+      mx=e.clientX-r.left;my=e.clientY-r.top;inside=true;start();
+    });
+    hero.addEventListener('pointerenter',()=>{inside=true;start();});
+    hero.addEventListener('pointerleave',()=>{inside=false;});
+  })();
   // 滚动渐入
   const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity=1;e.target.style.transform='none';io.unobserve(e.target)}}),{threshold:.12});
   document.querySelectorAll('section > .wrap > *, .skill, .proj-card, .art-row').forEach(el=>{
