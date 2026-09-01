@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -337,6 +337,138 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
         </div>
         <div class="proj-links">
           <a href="https://github.com/ttttstc/ni-skill" target="_blank" rel="noopener" class="proj-link-btn">GitHub 源码 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Typola ===== -->
+<section>
+  <div class="wrap">
+    <div class="proj-detail">
+      <div class="proj-detail-head">
+        <div class="proj-detail-meta">
+          <span class="eyebrow">桌面应用 · Desktop</span>
+          <h2>Typola —— 写作、AI 改稿与交付一体的 Markdown 工作台</h2>
+          <p class="proj-detail-desc">面向 Windows 的桌面写作工作台：Markdown 编辑器 + AI 文档助手 + 本地产物中心。一份文档从写作、审阅、AI 协作到交付，不必在编辑器、聊天网页、终端和导出工具之间反复搬运。</p>
+          <div class="proj-tags">
+            <span>Tauri v2</span><span>Rust</span><span>React</span><span>CodeMirror 6</span>
+          </div>
+        </div>
+        <figure class="proj-detail-cover" style="overflow:hidden">
+          <img src="source/pic/index/typola.jpg" alt="Typola" style="width:100%;height:100%;object-fit:cover">
+        </figure>
+      </div>
+      <div class="proj-detail-body">
+        <div class="proj-section">
+          <h3>核心能力</h3>
+          <ul>
+            <li><strong>写作不脱离 Markdown</strong> — 写作模式与源码模式共用同一份 Markdown；表格、代码、公式、Mermaid 图表直接预览，表格支持单元格/行列操作与 TSV 粘贴</li>
+            <li><strong>AI 改稿可控可撤销</strong> — 选中内容即可润色、改写、缩写、扩写、校对；结果先以差异展示，确认后才写回正文，检视意见可附着段落并导出 <code>review.md</code></li>
+            <li><strong>复用本机 AI 环境</strong> — 接入本机已有的 Claude Code 与 OpenCode，模型、权限、额度继续由你自己的 CLI 环境管理，不锁定账号</li>
+            <li><strong>交付物回到本地</strong> — AI 产物统一收纳 <code>.typola-output/</code>，可对比、归档、覆盖或撤销；同一份 Markdown 可导出 PDF / Word / HTML</li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h3>技术架构</h3>
+          <p><strong>Tauri v2 + Rust</strong> 承载桌面层与终端集成（portable-pty），<strong>React + TypeScript + Vite</strong> 构建前端，编辑器基于 <strong>CodeMirror 6</strong>，渲染链路含 KaTeX、Mermaid、DOMPurify。Word 导出使用内置 TypeScript <code>docx</code> 生成器，不依赖 Pandoc 等外部转换器。</p>
+          <p>设计取舍：<strong>Markdown 是唯一事实来源</strong>——编辑、预览和导出由同一份 source 驱动；<strong>危险改动显式确认</strong>——AI 替换、覆盖原文和未保存关闭都保留可见的确认与撤销路径。</p>
+        </div>
+        <div class="proj-section">
+          <h3>适用场景</h3>
+          <p>用 Markdown 写长文、报告、技术文档或内容稿的 Windows 用户——希望看到接近成品的排版，希望 AI 协助润色审阅，但每一次改动都由自己确认，且文稿与交付物始终留在本地工作目录。</p>
+        </div>
+        <div class="proj-links">
+          <a href="https://github.com/ttttstc/Typola" target="_blank" rel="noopener" class="proj-link-btn">GitHub 源码 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== gha-book ===== -->
+<section>
+  <div class="wrap">
+    <div class="proj-detail">
+      <div class="proj-detail-head">
+        <div class="proj-detail-meta">
+          <span class="eyebrow">书籍 · Book</span>
+          <h2>gha-book —— 讲透 GitHub Actions 的实现逻辑</h2>
+          <p class="proj-detail-desc">一本不复述官方字段清单的中文技术书。沿着一次 workflow 从事件发生到落地执行的完整生命周期，把平台的实现逻辑、设计取舍与行为边界系统讲清——读完不只是会配置，而是清楚如何自己实现一套等价的流水线系统。</p>
+          <div class="proj-tags">
+            <span>GitHub Actions</span><span>技术写作</span><span>中文书籍</span><span>Mermaid</span>
+          </div>
+        </div>
+        <figure class="proj-detail-cover" style="overflow:hidden">
+          <img src="source/pic/index/gha-book.jpg" alt="gha-book" style="width:100%;height:100%;object-fit:cover">
+        </figure>
+      </div>
+      <div class="proj-detail-body">
+        <div class="proj-section">
+          <h3>本书特点</h3>
+          <ul>
+            <li><strong>一条主线贯穿</strong> — GitHub Actions 是"服务端编排 + Runner 执行"的分离架构，绝大多数反直觉行为都能追溯到"这一步发生在哪一侧、用的是哪份信任"</li>
+            <li><strong>三层展开每个机制</strong> — 实现现象 → 运行机制 → 设计原因，不停留在"字段叫什么、能取什么值"</li>
+            <li><strong>18 个工程案例</strong> — CI 基础、缓存提速、制品发布、多环境部署、安全配置、可重用治理等完整可运行的 YAML，与原理部分双向对照</li>
+            <li><strong>行为锚定</strong> — 锚定 2026 年 6 月的 GitHub.com，附录含"行为漂移编年"记录平台行为变更</li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h3>内容结构</h3>
+          <p>第一部分按执行链路组织为五卷：<strong>事件触发链路</strong>（架构总览、事件发现、触发判定、特殊触发）、<strong>调度与执行链路</strong>（上下文体系、Job 编排、Runner 协议、Step 执行）、<strong>数据、安全与组合</strong>（数据协议、安全信任、可重用组合、缓存制品）、<strong>执行环境扩展</strong>（服务容器）、<strong>概念辨析</strong>（SHA、ref 与上下文易混淆辨析）。</p>
+          <p>第二部分为 18 个案例组成的工程模板库；附录含行为漂移编年、开源兼容实现对照、术语表与 FAQ 总索引。书稿为标准 Markdown（图表用 Mermaid 内联），可在线阅读，也可用 mdbook、pandoc 构建为 HTML / PDF / EPUB。</p>
+        </div>
+        <div class="proj-section">
+          <h3>适用场景</h3>
+          <p>应用开发者、平台与工具开发者、流水线配置与治理者——想理解"为什么是现在这个样子"、当结果不符合预期时能定位根因落在哪一层的人。</p>
+        </div>
+        <div class="proj-links">
+          <a href="https://github.com/ttttstc/gha-book" target="_blank" rel="noopener" class="proj-link-btn">GitHub 源码 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== chief-of-staff ===== -->
+<section>
+  <div class="wrap">
+    <div class="proj-detail">
+      <div class="proj-detail-head">
+        <div class="proj-detail-meta">
+          <span class="eyebrow">技能套件 · Skill Suite</span>
+          <h2>chief-of-staff —— 让 AI 辅佐你思考，而不是替你思考</h2>
+          <p class="proj-detail-desc">一组面向 Claude Code 与 Codex 的认知增强技能：像参谋长一样给出明确建议，同时把问题定义、证据判断、价值取舍和最终决策权留在你手里，并把对话形成的知识沉淀进个人知识库。</p>
+          <div class="proj-tags">
+            <span>Claude Code</span><span>Codex</span><span>Skills</span><span>认知增强</span>
+          </div>
+        </div>
+        <figure class="proj-detail-cover" style="overflow:hidden">
+          <img src="source/pic/index/chief-of-staff.jpg" alt="chief-of-staff" style="width:100%;height:100%;object-fit:cover">
+        </figure>
+      </div>
+      <div class="proj-detail-body">
+        <div class="proj-section">
+          <h3>核心能力</h3>
+          <ul>
+            <li><strong>ask-lyl</strong> — 顾问模式与自主思考双模式深度分析：挑战假设、基于证据做判断，覆盖工作、技术、产品、战略、学习和人生问题</li>
+            <li><strong>test-me</strong> — 检验真实理解：针对你的理解程度、迁移能力、证据素养或方案做压力测试，不把"同意 AI 的回答"当作正确</li>
+            <li><strong>restore-knowledge</strong> — 把对话中形成的知识沉淀进个人知识库，可检索、可复用，避免结论随会话结束而消散</li>
+            <li><strong>决策权保留</strong> — 目标不是让 AI 替你思考，而是让你在充分利用 AI 之后，仍能独立解释问题、发现缺口并作出关键决定</li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h3>技术架构</h3>
+          <p>纯技能文件实现，无运行时依赖：每个技能是一个独立的 Markdown 指令文件，同时适配 <strong>Claude Code</strong> 与 <strong>Codex</strong> 两套技能系统，复制到 <code>~/.claude/skills</code> 或 <code>~/.codex/skills</code> 即可使用，MIT 开源。</p>
+          <p>设计理念与 VibeFlow 互补：VibeFlow 管"AI 如何交付代码"，chief-of-staff 管"人如何保留思考"——前者约束执行，后者锻炼判断。</p>
+        </div>
+        <div class="proj-section">
+          <h3>适用场景</h3>
+          <p>需要认真判断的时刻：方案取舍、职业规划、学习路径、战略讨论——想借 AI 加深思考而非外包思考的人。</p>
+        </div>
+        <div class="proj-links">
+          <a href="https://github.com/ttttstc/chief-of-staff" target="_blank" rel="noopener" class="proj-link-btn">GitHub 源码 →</a>
         </div>
       </div>
     </div>
