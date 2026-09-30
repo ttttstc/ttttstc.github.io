@@ -9,6 +9,14 @@
       (function() {
         var path = location.pathname;
 
+        // 产品独立介绍页：干净 URL 直达静态文件，不进 SPA 中转。
+        // 例：/typola -> /typola.html（replace 不产生历史记录，回退键行为正常）
+        var STATIC_PAGES = { '/typola': 1, '/nimo': 1 };
+        if (STATIC_PAGES[path]) {
+          location.replace(path + '.html');
+          return;
+        }
+
         // 排除静态资源路径
         var isStaticResource = path.startsWith('/source/') ||
                               path.startsWith('/assets/') ||

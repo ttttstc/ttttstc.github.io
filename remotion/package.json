@@ -1,0 +1,27 @@
+{
+  "name": "eden-product-videos",
+  "private": true,
+  "version": "1.0.0",
+  "description": "泥巴猪的伊甸园 — 产品页 hero 动效视频（Remotion）",
+  "scripts": {
+    "studio": "remotion studio",
+    "render:typola-loop": "remotion render TypolaHeroLoop ../source/video/typola-hero-loop.mp4",
+    "render:typola-film": "remotion render TypolaFilm ../source/video/typola-film.mp4",
+    "render:nimo-loop": "remotion render NimoHeroLoop ../source/video/nimo-hero-loop.mp4",
+    "render:nimo-film": "remotion render NimoFilm ../source/video/nimo-film.mp4",
+    "render:all": "npm run render:typola-loop && npm run render:typola-film && npm run render:nimo-loop && npm run render:nimo-film",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "@remotion/google-fonts": "^4.0.0",
+    "@remotion/transitions": "4.0.529",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.8.0"
+  }
+}
