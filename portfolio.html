@@ -110,7 +110,8 @@ header.nav{position:sticky;top:0;z-index:50;background:color-mix(in oklab,var(--
 .proj-section li strong{color:var(--fg);font-weight:500}
 .proj-section code{font-family:var(--font-mono);font-size:13px;background:var(--surface);
   border:1px solid var(--border);padding:2px 6px;border-radius:5px}
-.proj-links{margin-top:28px;padding-top:24px;border-top:1px solid var(--border)}
+.proj-links{margin-top:28px;padding-top:24px;border-top:1px solid var(--border);
+  display:flex;gap:12px;flex-wrap:wrap}
 .proj-link-btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);
   font-size:13.5px;letter-spacing:.03em;color:var(--accent);padding:10px 20px;
   border:1px solid var(--accent);border-radius:10px;transition:.2s;text-decoration:none}
@@ -159,6 +160,95 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
     <p>从框架到平台、从工具到桌面应用——每一项都是真刀真枪在做的东西，不是演示。</p>
   </div>
 </div>
+
+<!-- ===== Typola ===== -->
+<section>
+  <div class="wrap">
+    <div class="proj-detail">
+      <div class="proj-detail-head">
+        <div class="proj-detail-meta">
+          <span class="eyebrow">桌面应用 · Desktop</span>
+          <h2>Typola —— 写作、AI 改稿与交付一体的 Markdown 工作台</h2>
+          <p class="proj-detail-desc">面向 Windows 的桌面写作工作台：Markdown 编辑器 + AI 文档助手 + 本地产物中心。一份文档从写作、审阅、AI 协作到交付，不必在编辑器、聊天网页、终端和导出工具之间反复搬运。</p>
+          <div class="proj-tags">
+            <span>Tauri v2</span><span>Rust</span><span>React</span><span>CodeMirror 6</span>
+          </div>
+        </div>
+        <figure class="proj-detail-cover" style="overflow:hidden">
+          <img src="source/pic/index/typola.jpg" alt="Typola" style="width:100%;height:100%;object-fit:cover">
+        </figure>
+      </div>
+      <div class="proj-detail-body">
+        <div class="proj-section">
+          <h3>核心能力</h3>
+          <ul>
+            <li><strong>写作不脱离 Markdown</strong> — 写作模式与源码模式共用同一份 Markdown；表格、代码、公式、Mermaid 图表直接预览，表格支持单元格/行列操作与 TSV 粘贴</li>
+            <li><strong>AI 改稿可控可撤销</strong> — 选中内容即可润色、改写、缩写、扩写、校对；结果先以差异展示，确认后才写回正文，检视意见可附着段落并导出 <code>review.md</code></li>
+            <li><strong>复用本机 AI 环境</strong> — 接入本机已有的 Claude Code 与 OpenCode，模型、权限、额度继续由你自己的 CLI 环境管理，不锁定账号</li>
+            <li><strong>交付物回到本地</strong> — AI 产物统一收纳 <code>.typola-output/</code>，可对比、归档、覆盖或撤销；同一份 Markdown 可导出 PDF / Word / HTML</li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h3>技术架构</h3>
+          <p><strong>Tauri v2 + Rust</strong> 承载桌面层与终端集成（portable-pty），<strong>React + TypeScript + Vite</strong> 构建前端，编辑器基于 <strong>CodeMirror 6</strong>，渲染链路含 KaTeX、Mermaid、DOMPurify。Word 导出使用内置 TypeScript <code>docx</code> 生成器，不依赖 Pandoc 等外部转换器。</p>
+          <p>设计取舍：<strong>Markdown 是唯一事实来源</strong>——编辑、预览和导出由同一份 source 驱动；<strong>危险改动显式确认</strong>——AI 替换、覆盖原文和未保存关闭都保留可见的确认与撤销路径。</p>
+        </div>
+        <div class="proj-section">
+          <h3>适用场景</h3>
+          <p>用 Markdown 写长文、报告、技术文档或内容稿的 Windows 用户——希望看到接近成品的排版，希望 AI 协助润色审阅，但每一次改动都由自己确认，且文稿与交付物始终留在本地工作目录。</p>
+        </div>
+        <div class="proj-links">
+          <a href="typola.html" class="proj-link-btn">进入产品页 →</a>
+          <a href="https://github.com/ttttstc/Typola" target="_blank" rel="noopener" class="proj-link-btn">GitHub 源码 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ===== nimo ===== -->
+<section>
+  <div class="wrap">
+    <div class="proj-detail">
+      <div class="proj-detail-head">
+        <div class="proj-detail-meta">
+          <span class="eyebrow">工程方法层 · Harness</span>
+          <h2>nimo —— AI 研发的护栏：写得更少，测得更稳，结果都有证据</h2>
+          <p class="proj-detail-desc">一套可运行的 AI 原生研发工程方法。它不运行模型、不执行工具，只做工程纪律本身：原则、playbook、能力合同与验收规则。大家把越来越多的活交给 agent：写得越来越快，验证得越来越少，交付越来越像抽奖——nimo 是给这件事建的护栏。</p>
+          <div class="proj-tags">
+            <span>SKILL.md</span><span>Playbook</span><span>Node.js 22+</span><span>5 宿主</span>
+          </div>
+        </div>
+        <figure class="proj-detail-cover" style="overflow:hidden">
+          <img src="source/pic/index/nimo.jpg" alt="nimo：一座黄铜闸机立在奶油色纸面上，一条陶土橙路径线穿过闸机，旁边摊开的工程台账上压着圆形印章与铜放大镜" style="width:100%;height:100%;object-fit:cover">
+        </figure>
+      </div>
+      <div class="proj-detail-body">
+        <div class="proj-section">
+          <h3>核心能力</h3>
+          <ul>
+            <li><strong>统一入口 <code>/nimo</code></strong> — 它读你的请求，从 playbook 里选，按步骤调用其他 skill；无需配置即可使用默认方法</li>
+            <li><strong>可审计的交付</strong> — 子 agent 说「已完成」不算数，主 agent 核对过才算数；结论只有三种：通过 · 失败 · 未验证</li>
+            <li><strong>23 条工程原则 + 23 个 playbook</strong> — 每条原则是一个独立 skill，入口按需读取正文；playbook 覆盖 bug-fix、feature、重构等，大项目编排不会因为「任务有多个步骤」就触发</li>
+            <li><strong>项目知识飞轮</strong> — 工程事实 → 变化信号 → 知识审计 → 知识编译 → 低成本查询 → 下一轮工程活动；配置只保存引用，不复制原资料</li>
+          </ul>
+        </div>
+        <div class="proj-section">
+          <h3>技术架构</h3>
+          <p>纯技能文件实现：核心只用标准 <strong>SKILL.md、Markdown 和 Node.js 工具</strong>，模型、Agent、权限、会话由当前宿主提供。五个宿主（Codex、Claude Code、OpenCode、Cursor、dsh）共用同一套 <strong>47 个 skill</strong>（3 个入口 + 21 个任务 + 23 个原则），安装器对数字做强校验。</p>
+          <p>在 AI 研发栈里站在<strong>工程方法层</strong>：上不碰模型与运行时，下不替代项目资产；不可绕过的强制门禁交给具备控制权的 CI 与仓库保护——只写在提示词里的「必须通过」不是强制门禁。</p>
+        </div>
+        <div class="proj-section">
+          <h3>适用场景</h3>
+          <p>把越来越多的活交给 agent、但验证跟不上的人。nimo 让「做完了」变成可审计的结论：每个结论挂在产物和证据上，没验证就标未验证，缺条件就报告受阻，跳过的检查如实标注。</p>
+        </div>
+        <div class="proj-links">
+          <a href="nimo.html" class="proj-link-btn">进入产品页 →</a>
+          <a href="https://github.com/ttttstc/nimo" target="_blank" rel="noopener" class="proj-link-btn">GitHub 源码 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ===== VibeFlow ===== -->
 <section>
@@ -297,95 +387,7 @@ footer{padding:44px 0;border-top:1px solid var(--border)}
   </div>
 </section>
 
-<!-- ===== ni-skill ===== -->
-<section>
-  <div class="wrap">
-    <div class="proj-detail">
-      <div class="proj-detail-head">
-        <div class="proj-detail-meta">
-          <span class="eyebrow">技能套件 · Skill Suite</span>
-          <h2>ni-skill —— 从选题到发布的端到端文章流水线</h2>
-          <p class="proj-detail-desc">面向技术创作者的 Claude Code 技能套件，覆盖从选题研究到微信公众号发布的完整文章生产链路。每个技能可独立使用，也可被编排为自动化流水线。</p>
-          <div class="proj-tags">
-            <span>Claude Code Skills</span><span>内容创作</span><span>微信公众号</span><span>自动化</span>
-          </div>
-        </div>
-        <figure class="proj-detail-cover" style="overflow:hidden">
-          <img src="source/pic/index/ni-skill.png" alt="ni-skill" style="width:100%;height:100%;object-fit:cover">
-        </figure>
-      </div>
-      <div class="proj-detail-body">
-        <div class="proj-section">
-          <h3>核心能力</h3>
-          <ul>
-            <li><strong>6 阶段流水线</strong> — <code>ni-research</code>（趋势分析）→ <code>ni-insight</code>（核心论点）→ <code>ni-writer</code>（写作）→ <code>ni-formatter</code>（排版）→ <code>ni-inspect</code>（质检）→ <code>ni-draft</code>（推送微信草稿箱）</li>
-            <li><strong>5 种文章原型</strong> — 动手评测、速读摘要、工程手册、技术论战、个人随笔，各有字数和灵魂定义</li>
-            <li><strong>ni-url2md</strong> — 支持 JS 渲染 + 登录态页面抓取，解决传统爬虫抓不到 SPA 内容的问题</li>
-            <li><strong>断点续写</strong> — <code>ni-article-workflow</code> 串联全流程，任何阶段中断后可从断点恢复</li>
-            <li><strong>自验证</strong> — 每个技能内置质检逻辑，输出前自动检查格式、长度、引用完整性</li>
-          </ul>
-        </div>
-        <div class="proj-section">
-          <h3>技术架构</h3>
-          <p>基于 <strong>Claude Code 技能系统</strong>构建，每个 Skill 是一个独立的 Markdown 指令文件，通过对话循环驱动。流水线编排层（<code>ni-article-workflow</code>）负责阶段衔接和状态传递。</p>
-          <p>外部依赖最小化：<strong>Python 3.10+</strong> 用于微信公众号 API 推送（<code>ni-draft</code>），<strong>Node.js + Chrome</strong> 用于网页抓取（<code>ni-url2md</code>），其余全部在 Claude Code 对话内完成。</p>
-          <p>三条设计准则贯穿始终：<strong>诚实输出</strong>（不编造）、<strong>自验证</strong>（每技能自检）、<strong>显式降级</strong>（外部依赖不可用时明确标记而非静默失败）。</p>
-        </div>
-        <div class="proj-section">
-          <h3>适用场景</h3>
-          <p>需要高效产出高质量技术文章的个人创作者，尤其写 AI、工程管理、架构主题。从选题到发布全程自动化，同时保留人工审核和风格控制的节点。</p>
-        </div>
-        <div class="proj-links">
-          <a href="https://github.com/ttttstc/ni-skill" target="_blank" rel="noopener" class="proj-link-btn">GitHub 源码 →</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ===== Typola ===== -->
-<section>
-  <div class="wrap">
-    <div class="proj-detail">
-      <div class="proj-detail-head">
-        <div class="proj-detail-meta">
-          <span class="eyebrow">桌面应用 · Desktop</span>
-          <h2>Typola —— 写作、AI 改稿与交付一体的 Markdown 工作台</h2>
-          <p class="proj-detail-desc">面向 Windows 的桌面写作工作台：Markdown 编辑器 + AI 文档助手 + 本地产物中心。一份文档从写作、审阅、AI 协作到交付，不必在编辑器、聊天网页、终端和导出工具之间反复搬运。</p>
-          <div class="proj-tags">
-            <span>Tauri v2</span><span>Rust</span><span>React</span><span>CodeMirror 6</span>
-          </div>
-        </div>
-        <figure class="proj-detail-cover" style="overflow:hidden">
-          <img src="source/pic/index/typola.jpg" alt="Typola" style="width:100%;height:100%;object-fit:cover">
-        </figure>
-      </div>
-      <div class="proj-detail-body">
-        <div class="proj-section">
-          <h3>核心能力</h3>
-          <ul>
-            <li><strong>写作不脱离 Markdown</strong> — 写作模式与源码模式共用同一份 Markdown；表格、代码、公式、Mermaid 图表直接预览，表格支持单元格/行列操作与 TSV 粘贴</li>
-            <li><strong>AI 改稿可控可撤销</strong> — 选中内容即可润色、改写、缩写、扩写、校对；结果先以差异展示，确认后才写回正文，检视意见可附着段落并导出 <code>review.md</code></li>
-            <li><strong>复用本机 AI 环境</strong> — 接入本机已有的 Claude Code 与 OpenCode，模型、权限、额度继续由你自己的 CLI 环境管理，不锁定账号</li>
-            <li><strong>交付物回到本地</strong> — AI 产物统一收纳 <code>.typola-output/</code>，可对比、归档、覆盖或撤销；同一份 Markdown 可导出 PDF / Word / HTML</li>
-          </ul>
-        </div>
-        <div class="proj-section">
-          <h3>技术架构</h3>
-          <p><strong>Tauri v2 + Rust</strong> 承载桌面层与终端集成（portable-pty），<strong>React + TypeScript + Vite</strong> 构建前端，编辑器基于 <strong>CodeMirror 6</strong>，渲染链路含 KaTeX、Mermaid、DOMPurify。Word 导出使用内置 TypeScript <code>docx</code> 生成器，不依赖 Pandoc 等外部转换器。</p>
-          <p>设计取舍：<strong>Markdown 是唯一事实来源</strong>——编辑、预览和导出由同一份 source 驱动；<strong>危险改动显式确认</strong>——AI 替换、覆盖原文和未保存关闭都保留可见的确认与撤销路径。</p>
-        </div>
-        <div class="proj-section">
-          <h3>适用场景</h3>
-          <p>用 Markdown 写长文、报告、技术文档或内容稿的 Windows 用户——希望看到接近成品的排版，希望 AI 协助润色审阅，但每一次改动都由自己确认，且文稿与交付物始终留在本地工作目录。</p>
-        </div>
-        <div class="proj-links">
-          <a href="https://github.com/ttttstc/Typola" target="_blank" rel="noopener" class="proj-link-btn">GitHub 源码 →</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ===== gha-book ===== -->
 <section>
