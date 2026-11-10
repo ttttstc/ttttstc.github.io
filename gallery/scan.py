@@ -58,7 +58,7 @@ while url:
                 scanned_dates.append(datetime.strptime(date, "%b %d, %Y · %I:%M %p UTC").replace(tzinfo=timezone.utc).isoformat())
             except ValueError:
                 pass
-        if images and len(blocks) == 1 and len(blocks[0]) >= 60 and re.search(r"提示词|prompt", text, re.I):
+        if images and len(blocks) == 1 and len(blocks[0]) >= 60 and not blocks[0].lstrip().startswith("❯") and re.search(r"提示词|prompt", text, re.I):
             prompt = blocks[0]
             note = text.replace("```\n" + prompt + "\n```", "").strip()
             image_reference = re.search(r"(?:图|第)\s*([一二三四1234])\s*(?:张)?\s*(?:的)?\s*提示词", text)
