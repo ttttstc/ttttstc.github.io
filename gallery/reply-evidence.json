@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "collected_for": "Read-only public-post collection feasibility sample",
+  "account": "@xiaoxiaodong",
+  "collected_on": "2026-11-10",
+  "access_summary": {
+    "public_mirror": "teapawt.net",
+    "pages_reviewed": [
+      "profile timeline; latest page and one Load more page",
+      "Tweets & Replies timeline",
+      "Media timeline",
+      "one status detail thread"
+    ],
+    "expanded_threads": 1,
+    "candidate_threads_with_prompt_reply_verified_on_mirror": 1,
+    "prompt_replies_captured": 1,
+    "parent_media_assets_found_in_html": 3,
+    "limitations": [
+      "Direct x.com status fetch returned 403 in web access.",
+      "After several requests, teapawt returned: This instance has reached its upstream rate limit. No further teapawt requests were made.",
+      "The image CDN URLs were extracted from the mirror HTML, but this session could not visually inspect the images; visual correspondence to the prompt is unverified.",
+      "Exact prompt text is visible in the public mirror thread; it was not independently cross-checked against a successful direct X fetch."
+    ]
+  },
+  "items": [
+    {
+      "parent_post": {
+        "mirror_url": "https://teapawt.net/xiaoxiaodong/status/2114003295341834270",
+        "original_x_url": "https://x.com/xiaoxiaodong/status/2114003295341834270",
+        "tweet_id": "2114003295341834270",
+        "text": "GPT2 x 信息图鉴 x 灵活度 x 美学提示词 一个提示词，如果只是照猫画虎，那么没意思了 提示词应该是一个美学孵化器 一切可以在此自然发生 无限可能 比如这组提示词的汤底，你只要加上自己想要的佐料 那么，风味万千。提示词汤底见评论区",
+        "time_utc": "2026-10-24T14:37:16.548Z",
+        "time_basis": "Mirror page visibly shows Oct 24, 2026 · 2:37 PM UTC; seconds are decoded from the X Snowflake ID."
+      },
+      "author_reply": {
+        "mirror_url": "https://teapawt.net/xiaoxiaodong/status/2114003326492966952",
+        "original_x_url": "https://x.com/xiaoxiaodong/status/2114003326492966952",
+        "tweet_id": "2114003326492966952",
+        "author": "@xiaoxiaodong",
+        "time_utc": "2026-10-24T14:37:23.975Z",
+        "time_basis": "Reply ID was present as a same-author reply link in the parent thread HTML; seconds are decoded from the X Snowflake ID. The reply page itself was not fetched after rate limiting.",
+        "prompt_text_exact_as_rendered": "巨大立体球状核心以密集突起向外扩展，细线几何框架贴近其轮廓，小形体与核心形成鲜明尺度对照，构成清晰的三维与线性张力。版面以不对称网格组织，上部安排主视觉与标题，下部切分为整齐资料栏；主形偏右，左侧文字形成稳定竖向块面，各栏以细线和间距取得视觉平衡，适配任何画幅。图像层以实体体积和真实光影吸引视线，文字层与主形并置，局部细线靠近形体建立联系；阅读从醒目的标题进入主形，再沿下方栏格依序扫读，中心明确而路径清楚。文字采用醒目大标题、较轻副标题、细小说明与标注的多级排印，粗细和字号形成明显节奏；字形以简洁无衬线构造为准，笔画利落、字面清楚、间距均匀，识读方向顺应文字本身。文字无论多少都守这个层级；文字不足时依主题补足次级小字。标题可拆成数行组成紧凑块面，辅助文字贴合图表和分栏排列。留白以标题周围的净空托出字形，以主形周边的呼吸边距强调体量，并以栏间空隙分隔资料、建立清楚的阅读停顿。图像内容密度约占一半，集中于主视觉及下方简明资料图解；有分量的形体保持端正，斜势只交给轻细线条和延展部分。画面里只有主题指定的图解物象，其余是洁净平整的浅色底与明确空白，不生出任何景物。采用三维建模与数字渲染塑造圆整体积、柔和阴影和真实景深，用矢量描线组织几何关系，用平面图表、符号和简化示意承载辅助信息，最后以清晰数字排印整齐叠上；整体像三维医学建模与矢量制图的合成。配色遵循低彩度无彩底色衬托单一重点色的对比原理，整体高明度、偏冷、轻薄而洁净；重点色浓亮集中在标题、关键标记和数据强调处，其余形体以柔和灰阶承接。色相随主题变化，但这种明暗、厚薄、冷暖倾向与浓淡形成的理性、清冽、安定感无论什么主题都保持。整体气质理性、清晰、易读；末尾追加的主题、准确文字、用途与画幅优先，网格分栏、主形与文字的尺度对照、清楚的阅读动线、克制配色和三维结合矢量的表现方式保持不变。"
+      },
+      "image_urls": [
+        "https://pbs.twimg.com/media/HVZyVuLbkAAP2S6.jpg?name=small&format=webp",
+        "https://pbs.twimg.com/media/HVZydPCaMAAYY3X.jpg?name=small&format=webp",
+        "https://pbs.twimg.com/media/HVZyeXRagAE1ctw.jpg?name=small&format=webp"
+      ],
+      "image_evidence": {
+        "basis": "Three pbs.twimg.com/media img src values with alt text 'Image from 小小东 (@xiaoxiaodong)' appeared in the fetched mirror status HTML before the reply avatar; this supports that the images are attached to the parent post.",
+        "correspondence_to_prompt": "Unverified visually. The parent post and reply are in the same thread and the parent says the prompt base is in comments, but no visual inspection was completed."
+      },
+      "confidence": {
+        "mirror_parent_and_reply_text": "visible in public mirror status thread",
+        "reply_author_and_thread_relation": "same-author reply shown directly below parent; reply ID link extracted from parent HTML",
+        "original_x_consistency": "not independently verified because direct X returned 403",
+        "prompt_completeness": "the whole reply text was rendered by the mirror; no inferred completion added",
+        "image_mapping": "attached-to-parent supported by HTML order; semantic match unverified"
+      }
+    }
+  ]
+}

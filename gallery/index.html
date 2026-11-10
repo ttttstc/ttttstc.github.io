@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#e8e1d4">
+  <meta name="description" content="小小东的 AI 生图作品与提示词收藏。">
+  <title>提示词画室 · Prompt Atelier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script>
+</head>
+<body>
+  <canvas id="studio" aria-hidden="true"></canvas>
+  <div class="room-shade" aria-hidden="true"></div>
+  <div id="look-controls" hidden><span>3D 预览 · 展示部分作品 · 拖动画面环顾，点击画册查看</span><button id="look-left" aria-label="向左环顾">←</button><button id="look-right" aria-label="向右环顾">→</button><button id="look-exit">返回 2D 画室 ↗</button></div>
+  <header class="topbar">
+    <a class="home-link" href="/">← <span>泥巴猪的伊甸园</span></a>
+    <a class="brand" href="/gallery/">PROMPT <i>ATELIER</i><small>AN IMAGE STUDY</small></a>
+    <div class="top-actions"><div class="mode-switch" role="group" aria-label="选择画室版本"><button id="mode-2d" type="button" aria-pressed="true">2D 画室</button><button id="mode-3d" type="button" aria-pressed="false" disabled>3D 画室 · 预览</button></div><a class="author-link" href="https://x.com/xiaoxiaodong" target="_blank" rel="noopener noreferrer">作品来源 <span>↗</span></a></div>
+  </header>
+  <p id="mode-status" class="mode-status" role="status" hidden></p>
+  <main>
+    <section class="introduction">
+      <div class="intro-title"><span class="eyebrow">A COLLECTION BY @XIAOXIAODONG</span><h1>灵感，<i>在这里</i><br>慢慢展开。</h1></div>
+      <div class="intro-copy"><p>一间收藏图像与想法的画室。<br>翻开一本，看看它是怎样被想象出来的。</p><span>SCROLL TO EXPLORE <span aria-hidden="true">↓</span></span></div>
+    </section>
+    <section class="collection" aria-labelledby="collection-title">
+      <div class="collection-head"><div><span class="eyebrow">THE COLLECTION / 作品收藏</span><h2 id="collection-title">画架上的灵感 <em id="count">—</em></h2></div><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="搜索风格、提示词" autocomplete="off" aria-label="搜索作品、提示词"></label></div>
+      <div id="shelves" class="shelves" aria-live="polite"><p class="loading">正在整理画架上的作品…</p></div>
+      <p id="empty" class="empty" hidden>没有找到相关作品，试试其他关键词。</p>
+    </section>
+  </main>
+  <footer><span>PROMPT ATELIER <i>—</i> A LITTLE ROOM FOR IDEAS</span><a href="#coverage">关于收录与来源 ↓</a></footer>
+  <section class="coverage" id="coverage"><h2>关于这间画室</h2><p>作品与提示词来自 <a href="https://x.com/xiaoxiaodong" target="_blank" rel="noopener noreferrer">@xiaoxiaodong ↗</a> 的公开帖子。点击作品可查看原帖；图片版权归原作者及相关权利人所有。</p><p id="coverage-text">正在读取收录记录。</p><p>公开镜像可能存在遗漏或显示差异。请以原帖为准；没有确认的内容不会作为完整提示词收录。</p></section>
+  <dialog id="detail" aria-labelledby="detail-title"><div class="detail-shell"><button class="close" aria-label="关闭详情">×</button><div class="detail-media"><img id="detail-image" alt=""><div class="image-nav"><button id="prev" aria-label="上一张图片">←</button><span id="image-count"></span><button id="next" aria-label="下一张图片">→</button></div></div><div class="detail-copy"><span class="eyebrow">PROMPT ATELIER / ARCHIVE</span><h2 id="detail-title"></h2><p id="detail-date" class="detail-date"></p><div class="rule"></div><p class="section-label">作者说明 <span>THE STORY</span></p><p id="detail-note" class="note"></p><div class="prompt-head"><p class="section-label">提示词 <span>THE PROMPT</span></p><button id="copy" class="copy">复制提示词 <span>↗</span></button></div><pre id="prompt"></pre><p id="source-note" class="source-note"></p><a id="original" class="original" target="_blank" rel="noopener noreferrer">查看 X 原帖 ↗</a> · <a id="mirror" class="original" target="_blank" rel="noopener noreferrer">查看公开镜像 ↗</a> <a id="reply" class="original" target="_blank" rel="noopener noreferrer" hidden> · 查看作者回复 ↗</a></div></div></dialog>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
