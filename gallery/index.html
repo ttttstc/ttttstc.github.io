@@ -15,7 +15,10 @@
 <body>
   <canvas id="studio" aria-hidden="true"></canvas>
   <div class="room-shade" aria-hidden="true"></div>
-  <div id="look-controls" hidden><span>3D 预览 · 展示部分作品 · 拖动画面环顾，点击画册查看</span><button id="look-left" aria-label="向左环顾">←</button><button id="look-right" aria-label="向右环顾">→</button><button id="look-exit">返回 2D 画室 ↗</button></div>
+  <div id="look-controls" hidden>
+    <span class="look-guide">封面滚轮切换 · 空白滚轮走近或远离 · 拖动环顾</span>
+    <div class="look-actions"><label class="sr-only" for="studio-style">筛选 3D 画室风格</label><select id="studio-style"></select><button id="rack-prev" aria-label="上一组画册">画册 ‹</button><span id="rack-count" aria-live="polite"></span><button id="rack-next" aria-label="下一组画册">画册 ›</button><button id="look-near" aria-label="走近">＋</button><button id="look-far" aria-label="远离">−</button><button id="look-left" aria-label="向左环顾">←</button><button id="look-right" aria-label="向右环顾">→</button><button id="look-exit">返回 2D 画室 ↗</button></div>
+  </div>
   <header class="topbar">
     <a class="home-link" href="/">← <span>泥巴猪的伊甸园</span></a>
     <a class="brand" href="/gallery/">PROMPT <i>ATELIER</i><small>AN IMAGE STUDY</small></a>
@@ -28,14 +31,14 @@
       <div class="intro-copy"><p>一间收藏图像与想法的画室。<br>翻开一本，看看它是怎样被想象出来的。</p><span>SCROLL TO EXPLORE <span aria-hidden="true">↓</span></span></div>
     </section>
     <section class="collection" aria-labelledby="collection-title">
-      <div class="collection-head"><div><span class="eyebrow">THE COLLECTION / 作品收藏</span><h2 id="collection-title">画架上的灵感 <em id="count">—</em></h2></div><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="搜索风格、提示词" autocomplete="off" aria-label="搜索作品、提示词"></label></div>
+      <div class="collection-head"><div><span class="eyebrow">THE COLLECTION / 作品收藏</span><h2 id="collection-title">画架上的灵感 <em id="count">—</em></h2></div><div class="collection-tools"><label class="sr-only" for="style-filter">按风格筛选</label><select id="style-filter" aria-label="按风格筛选"></select><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="搜索风格、提示词" autocomplete="off" aria-label="搜索作品、提示词"></label></div></div>
       <div id="shelves" class="shelves" aria-live="polite"><p class="loading">正在整理画架上的作品…</p></div>
       <p id="empty" class="empty" hidden>没有找到相关作品，试试其他关键词。</p>
     </section>
   </main>
   <footer><span>PROMPT ATELIER <i>—</i> A LITTLE ROOM FOR IDEAS</span><a href="#coverage">关于收录与来源 ↓</a></footer>
-  <section class="coverage" id="coverage"><h2>关于这间画室</h2><p>作品与提示词来自 <a href="https://x.com/xiaoxiaodong" target="_blank" rel="noopener noreferrer">@xiaoxiaodong ↗</a> 的公开帖子。点击作品可查看原帖；图片版权归原作者及相关权利人所有。</p><p id="coverage-text">正在读取收录记录。</p><p>公开镜像可能存在遗漏或显示差异。请以原帖为准；没有确认的内容不会作为完整提示词收录。</p></section>
-  <dialog id="detail" aria-labelledby="detail-title"><div class="detail-shell"><button class="close" aria-label="关闭详情">×</button><div class="detail-media"><img id="detail-image" alt=""><div class="image-nav"><button id="prev" aria-label="上一张图片">←</button><span id="image-count"></span><button id="next" aria-label="下一张图片">→</button></div></div><div class="detail-copy"><span class="eyebrow">PROMPT ATELIER / ARCHIVE</span><h2 id="detail-title"></h2><p id="detail-date" class="detail-date"></p><div class="rule"></div><p class="section-label">作者说明 <span>THE STORY</span></p><p id="detail-note" class="note"></p><div class="prompt-head"><p class="section-label">提示词 <span>THE PROMPT</span></p><button id="copy" class="copy">复制提示词 <span>↗</span></button></div><pre id="prompt"></pre><p id="source-note" class="source-note"></p><a id="original" class="original" target="_blank" rel="noopener noreferrer">查看 X 原帖 ↗</a> · <a id="mirror" class="original" target="_blank" rel="noopener noreferrer">查看公开镜像 ↗</a> <a id="reply" class="original" target="_blank" rel="noopener noreferrer" hidden> · 查看作者回复 ↗</a></div></div></dialog>
+  <section class="coverage" id="coverage"><h2>关于这间画室</h2><p>作品与提示词来自 <a href="https://x.com/xiaoxiaodong" target="_blank" rel="noopener noreferrer">@xiaoxiaodong ↗</a> 的公开帖子。点击作品可查看原帖；图片版权归原作者及相关权利人所有。</p><p id="coverage-text">正在读取收录记录。</p><p>公开镜像可能存在遗漏或显示差异，镜像提取内容尚未逐条与原帖核对。风格分类根据标题和提示词归纳，仅供检索；请以原帖为准。</p></section>
+  <dialog id="detail" aria-labelledby="detail-title"><div class="detail-shell"><button class="close" aria-label="关闭详情">×</button><div class="detail-media"><img id="detail-image" alt=""><div class="image-nav"><button id="prev" aria-label="上一张图片">←</button><span id="image-count"></span><button id="next" aria-label="下一张图片">→</button></div></div><div class="detail-copy"><span class="eyebrow">PROMPT ATELIER / ARCHIVE</span><h2 id="detail-title"></h2><p id="detail-date" class="detail-date"></p><p id="detail-styles" class="detail-styles" aria-label="归纳的风格分类"></p><div class="rule"></div><p class="section-label">作者说明 <span>THE STORY</span></p><p id="detail-note" class="note"></p><div class="prompt-head"><p class="section-label">提示词 <span>THE PROMPT</span></p><button id="copy" class="copy">复制提示词 <span>↗</span></button></div><pre id="prompt"></pre><p id="source-note" class="source-note"></p><a id="original" class="original" target="_blank" rel="noopener noreferrer">查看 X 原帖 ↗</a> · <a id="mirror" class="original" target="_blank" rel="noopener noreferrer">查看公开镜像 ↗</a> <a id="reply" class="original" target="_blank" rel="noopener noreferrer" hidden> · 查看作者回复 ↗</a></div></div></dialog>
   <script type="module" src="./app.js"></script>
 </body>
 </html>
