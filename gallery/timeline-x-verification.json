@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "account": "@xiaoxiaodong",
+  "collected_on": "2026-11-10",
+  "source_and_method": {
+    "source": "X profile Posts tab in the existing signed-in Chrome session; all browser interaction via CUA_REPL under the requested web-access workflow.",
+    "profile_url": "https://x.com/xiaoxiaodong",
+    "profile_count_displayed": "3,542 posts",
+    "method": "Manual one-page-at-a-time scrolling and reading visible timeline cards; expanded two collapsed post bodies; opened one image directly from the visible X photo link.",
+    "rate_limit_observed": false,
+    "paid_or_private_content_accessed": false,
+    "browser_automation_or_limit_bypass": false
+  },
+  "timeline_coverage": {
+    "date_range": {
+      "newest_seen": "2026-11-09",
+      "oldest_seen": "2026-11-08"
+    },
+    "unique_author_status_ids_seen": 10,
+    "top_level_timeline_status_ids": [
+      "2119793406675407266",
+      "2119745842827624655",
+      "2119723903472075078",
+      "2119714857121611854",
+      "2119624981277712839",
+      "2119616397802414316",
+      "2119454093156704547",
+      "2119452423177765138"
+    ],
+    "nested_author_quote_status_ids_seen": [
+      "2119448198091768033",
+      "2119288894617510004"
+    ],
+    "observation_note": "Count is the distinct author post IDs visible across the manually scrolled window, including two author-authored quoted posts discovered inside timeline cards; it is not the full profile history.",
+    "partial_or_non_candidate_examples": [
+      {
+        "id": "2119616397802414316",
+        "url": "https://x.com/xiaoxiaodong/status/2119616397802414316",
+        "time_displayed": "Nov 9, 2026",
+        "reason": "Contains a short color-adjustment prompt and four images, plus a reference to a ChatGPT generation log; the complete prompt is not in the post body and the external log was not opened."
+      },
+      {
+        "id": "2119452423177765138",
+        "url": "https://x.com/xiaoxiaodong/status/2119452423177765138",
+        "time_displayed": "Nov 8, 2026",
+        "reason": "Shows four sample images and says they come from the author's prompt library, but the post body does not provide a complete prompt or direct the reader to an author reply."
+      }
+    ],
+    "stop_reason": "Stopped after reaching Nov 8 and capturing two complete, image-attached prompt examples. The goal was a bounded sample, not an exhaustive crawl of the 3,542-post profile."
+  },
+  "candidates": [
+    {
+      "id": "2119714857121611854",
+      "post_url": "https://x.com/xiaoxiaodong/status/2119714857121611854",
+      "time_x_display": "4:52 PM · Nov 9, 2026",
+      "time_utc_snowflake_derived": "2026-11-09T08:52:58.992Z",
+      "parent_text_exact": "GPT2 x 旧 x 海报 x 美学提示词\n\n其实我不喜欢：噪点、印刷质感之类的提示词\n因为GPT-image2.5 很喜欢过度发挥...\n\n这个毛病真的持续了n个月了\n\n不过还是有一些提示词，能是这种风格下\n很好的效果\n\n给第四张的提示词：",
+      "full_prompt_exact": "围绕任意主题对象生成一张强信息感的图像海报：画面先读到大面积纯净高饱和的主题情绪色场，色彩来自主题自身的材质、文化语义与情绪温度，作为主背景占据绝大部分面积；深色信息文字承担结构重量，以极粗、紧凑、几何感强的无衬线标题压在一侧上方，字距收紧、行距紧密，形成像标识一样的黑色视觉锚点，并配少量细字说明、短横线、圆形方向符号或小型索引元素，制造冷静、直接、带宣言感的阅读节奏。主题对象作为主要影像载体，不以完整陈列出现，而被一个巨大的弧形或近圆形色块边界从画面边缘切入、遮挡和释放，形成色场与影像之间的强烈图底张力；影像内部使用高反差单色处理，保留真实纹理、明暗层次和颗粒感，与平整背景形成材料差异。中下部可放一段紧凑说明文字，让它部分压过色场与影像交界，增强拼贴压力和信息密度；底部使用超大数字或日期式编号与一条细长水平线建立秩序感。整体颜色保持明亮、干净、锋利、有能量：大面积主题派生亮色负责情绪冲击，黑色或极深色负责文字和结构，小面积浅灰单色层次承载影像细节，饱和度集中而不浑浊，边界清晰，留白大胆，完成一种鲜明、现代、纪念性、编辑设计感强的视觉表达。 —————— 主题：城市咖啡馆春季新品海报，突出一杯具有鲜明风味的冷萃咖啡 补充：加入一个清晰新品卖点，保留少量价格或口味信息 画幅：竖版 9:16",
+      "prompt_location": "Full code block in the public X post body.",
+      "image_urls": [
+        "https://x.com/xiaoxiaodong/status/2119714857121611854/photo/1",
+        "https://x.com/xiaoxiaodong/status/2119714857121611854/photo/2",
+        "https://x.com/xiaoxiaodong/status/2119714857121611854/photo/3",
+        "https://x.com/xiaoxiaodong/status/2119714857121611854/photo/4"
+      ],
+      "image_count": 4,
+      "visual_match_check": {
+        "checked": "photo/4 opened through its X link in the same signed-in browser session.",
+        "result": "The fourth image is a bright green SPRING COLD BREW café poster, with a monochrome cold-brew glass photo, bold headline, a Chinese flavor/selling-point block, price and date. Its subject and main layout directly match the prompt's city café spring product theme, saturated color field, high-contrast monochrome subject, prominent typography and product information.",
+        "confidence": "high for the fourth image; other three images were not visually inspected in this check."
+      },
+      "replies": {
+        "reply_count_observed": 0,
+        "reply_tree_checked": false
+      },
+      "confirmation": "High: the X post body visibly contains the full prompt and X associates four photo links with that post; photo/4 was visually verified against the prompt."
+    },
+    {
+      "id": "2119723903472075078",
+      "post_url": "https://x.com/xiaoxiaodong/status/2119723903472075078",
+      "time_x_display": "23 hours ago at observation; dated Nov 9, 2026 in the timeline",
+      "time_utc_snowflake_derived": "2026-11-09T09:28:55.810Z",
+      "parent_text_exact": "GPT2 x 卡牌 x 细线 x 繁饰 x 美学提示词\n\n从会员邮件中\n看到这个提示词风格\n感觉很小红书...\n\n分享出来原始提示词：",
+      "full_prompt_exact": "大片洁白空场中，以一个居中偏上的精绘焦点形成中央密、四周疏的强烈反差，细长连接线向上下延展，边饰与垂饰收束最细密的细节，整体轻而精巧。版式以明确内外场建立层级，外围由连续的高对比装饰图形收边，内场保持宽阔空净；中央重心稳定，角落文字与垂直线势平衡偏心构图，在任何画幅都保持外圈紧、内场疏、中心密、边缘静的关系。图像层是精细装饰性线描，文字层是清晰排印；中心图像先被看见，细线带动视线向上下延展，再由角落短标题和边缘小字接续阅读，文字偶尔轻触图形但不遮断关键轮廓。文字按极大标题、较小短词、极细说明字形成明确级差，粗窄醒目的字形与细衬线字、微小字相互调节，字距和行距收紧而清楚；各级文字依角落和边缘分布，主标题压在下方一侧，短词置于上方两角，细字紧邻所属文字。文字无论多少都守这个层级；文字不足时依主题补足次级小字。文字层像最后在电脑里平整叠上去的一层，纯黑实心，边缘锐利，是全画面唯一不受手绘影响的元素。留白以大面积纯白净空承托主标题与中央图像，围绕主体形成呼吸边界，外围密集装饰则把空场框定；用正负形对照凸显中心，用疏密节奏避免空白被填满。画面只有一处主要物象，内容密度集中在中央约三成的区域，其余是空白与外围简洁图形，不生出任何景物；主体轮廓精细、内部繁密，重心有分量的部分端正安定，只有细长延伸部分带出斜势。采用几种手法的复合：用利落数字线描勾出外轮廓和内部结构，以平涂填充局部形面，再用细线重复描绘装饰纹样；外圈用硬边黑白图形拼接，文字以锐利数字排印独立叠加。整体如精细线描与数字排印合成的装饰插画。色彩以高明度无彩色底场为主，彩色少量、鲜明而集中，最浓处落在主体细节与外围零星装饰；以强明暗对比和有限彩色形成节制的冷暖呼应，心理感受精巧、鲜活、从容，像清洁的哑光平面上叠合细线与实色块；色相跟随主题，明暗、厚薄、冷暖倾向与浓淡性格无论什么主题都保持这种性格。气质是繁复而轻巧的精致感，依靠中央细线装饰与广阔净空的疏密反差成立。末尾追加的主题、准确文字、用途与画幅优先；中央聚焦、外围收边、角落排字、空白呼吸、细线平涂与克制鲜明的色彩关系保持不变。",
+      "prompt_location": "Full code block in the public X post body.",
+      "image_urls": [
+        "https://x.com/xiaoxiaodong/status/2119723903472075078/photo/1",
+        "https://x.com/xiaoxiaodong/status/2119723903472075078/photo/2"
+      ],
+      "image_count": 2,
+      "visual_match_check": {
+        "checked": "Both attached poster images were visible in the X timeline screenshot.",
+        "result": "The examples use white space, elaborate ornamental linework, corner typography and limited color, matching the post's described decorative editorial style.",
+        "confidence": "high for broad style match; not a claim that the prompt alone proves generation provenance."
+      },
+      "replies": {
+        "reply_count_observed": 1,
+        "reply_tree_checked": false
+      },
+      "confirmation": "High: the post says it is sharing the original prompt, the complete text is visible in the same X post, and X displays two attached image links."
+    }
+  ]
+}
