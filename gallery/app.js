@@ -1,7 +1,9 @@
+import {classifyStyle, styleRules} from './styles.mjs';
+
 const $ = id => document.getElementById(id);
 const shelves = $('shelves');
 const dialog = $('detail');
-let entries = [], current = null, imageIndex = 0;
+let entries = [], visibleEntries = [], current = null, imageIndex = 0, studio = null;
 
 function render(list) {
   shelves.replaceChildren();
@@ -19,7 +21,9 @@ function render(list) {
     const info = document.createElement('span'); info.className = 'book-info';
     const title = document.createElement('b'); title.textContent = item.title;
     const number = document.createElement('span'); number.textContent = `NO. ${String(index + 1).padStart(3, '0')}`;
-    info.append(title, number); button.append(cover, info);
+    const style = document.createElement('span'); style.className = 'book-style';
+    style.textContent = item.styles.slice(0, 2).join(' / ');
+    info.append(title, number); button.append(cover, info, style);
     button.addEventListener('click', () => openDetail(item));
     shelves.append(button);
   });
@@ -35,6 +39,7 @@ function openDetail(item) {
   current = item; imageIndex = 0; showImage();
   $('detail-title').textContent = item.title;
   $('detail-date').textContent = item.date ? `${item.date} · 原帖发布时间` : '发布时间待核对';
+  $('detail-styles').textContent = `归纳风格  ${item.styles.join(' / ')}`;
   $('detail-note').textContent = item.note || '原帖未提供其他说明。';
   $('prompt').textContent = item.prompt;
   $('original').href = item.url;
@@ -58,10 +63,32 @@ $('copy').addEventListener('click', async () => {
     $('copy').textContent = '复制失败，请手动选择下方文字';
   }
 });
-$('search').addEventListener('input', e => {
-  const query = e.target.value.trim().toLocaleLowerCase();
-  render(entries.filter(item => `${item.title}\n${item.note}\n${item.prompt}`.toLocaleLowerCase().includes(query)));
-});
+function updateResults() {
+  const query = $('search').value.trim().toLocaleLowerCase();
+  const style = $('style-filter').value;
+  visibleEntries = entries.filter(item => (!style || item.styles.includes(style)) &&
+    `${item.title}\n${item.note}\n${item.prompt}\n${item.styles.join(' ')}`.toLocaleLowerCase().includes(query));
+  render(visibleEntries);
+  document.querySelector('.look-guide').textContent = query
+    ? `搜索“${$('search').value.trim()}” · 封面滚轮切换 · 空白滚轮走近或远离`
+    : '封面滚轮切换 · 空白滚轮走近或远离 · 拖动环顾';
+  if (studio) studio.setEntries(visibleEntries);
+}
+function setupStyles() {
+  for (const select of [$('style-filter'), $('studio-style')]) {
+    const all = new Option(`全部风格 (${entries.length})`, '');
+    select.replaceChildren(all);
+    for (const name of [...styleRules.map(([label]) => label), '其他']) {
+      const count = entries.filter(item => item.styles.includes(name)).length;
+      if (count) select.add(new Option(`${name} (${count})`, name));
+    }
+    select.addEventListener('change', () => {
+      $('style-filter').value = $('studio-style').value = select.value;
+      updateResults();
+    });
+  }
+}
+$('search').addEventListener('input', updateResults);
 
 try {
   const response = await fetch('./data.json');
@@ -82,19 +109,21 @@ try {
       }));
     }
   } catch { /* Main collection remains usable if reply evidence cannot load. */ }
-  entries = [...data.entries, ...replyItems.filter(item => !data.entries.some(entry => entry.id === item.id))];
-  render(entries);
+  const excluded = data.entries.filter(item => item.excludeReason);
+  entries = [...data.entries.filter(item => !item.excludeReason), ...replyItems.filter(item => !data.entries.some(entry => entry.id === item.id))]
+    .map(item => ({...item, styles:classifyStyle(item)}));
+  setupStyles();
+  updateResults();
   $('mode-3d').disabled = false;
   const dates = (data.scannedRange || []).map(Date.parse).filter(Number.isFinite);
   const period = dates.length === 2 ? `${new Date(dates[0]).toISOString().slice(0, 10)} 至 ${new Date(dates[1]).toISOString().slice(0, 10)}（UTC）` : '暂无可确认的扫描时间范围';
-  $('coverage-text').textContent = `采集时间：${new Date(data.scannedAt).toLocaleString('zh-CN', {timeZone:'Asia/Shanghai'})}（北京时间）。公开镜像请求 ${data.pages} 页、去重 ${data.posts} 帖，正文筛出 ${data.count} 条；${data.uncertain} 条提及提示词的帖子未通过正文筛选，需另行核对。另核查 1 个帖子线程，收录 ${replyItems.length} 条作者回复样本，提示词已与 X 页面核对，图片与提示词的逐张对应尚未确认。扫描帖子时间：${period}。${data.scope} ${data.reason}。`;
+  $('coverage-text').textContent = `采集时间：${new Date(data.scannedAt).toLocaleString('zh-CN', {timeZone:'Asia/Shanghai'})}（北京时间）。公开镜像请求 ${data.pages} 页、去重 ${data.posts} 帖，正文筛出 ${data.count} 条候选；其中 ${excluded.length} 条代码块为对话内容，已排除并待核对。另有 ${data.uncertain} 条提及提示词的帖子未通过正文筛选，需另行核对。另核查 1 个帖子线程，收录 ${replyItems.length} 条作者回复样本，提示词已与 X 页面核对，图片与提示词的逐张对应尚未确认。扫描帖子时间：${period}。${data.scope} ${data.reason}。`;
 } catch {
   shelves.textContent = '作品暂时无法加载，请稍后重试。';
   $('coverage-text').textContent = '收录记录暂时无法加载。';
 }
 
 // Start the heavier scene only when the visitor explicitly chooses 3D.
-let studio = null;
 const modeStatus = $('mode-status');
 $('mode-3d').addEventListener('click', async () => {
   const button = $('mode-3d');
@@ -107,7 +136,7 @@ $('mode-3d').addEventListener('click', async () => {
         import('https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js'),
         import('./studio.js')
       ]);
-      studio = module.startStudio(THREE, entries);
+      studio = module.startStudio(THREE, visibleEntries, entries);
       if (!studio) throw new Error('WebGL unavailable');
     }
     studio.enter();
